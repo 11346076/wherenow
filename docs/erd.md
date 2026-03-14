@@ -14,7 +14,7 @@
 
 # ERD 圖
 
-![WhereNow ERD](./ERD.png)
+![WhereNow ERD](./images/ERD.png)
 
 ---
 
