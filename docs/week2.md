@@ -500,6 +500,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from places.models import Place
 
+
 class Memory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
@@ -517,14 +518,16 @@ class Memory(models.Model):
     def __str__(self):
         return f"{self.user} - {self.place}"
 
-
 class MemoryPhoto(models.Model):
     memory = models.ForeignKey(Memory, on_delete=models.CASCADE)
+
     image = models.ImageField(upload_to="memory_photos/")
+
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Photo of {self.memory}"
+
 ```
 
 執行：
