@@ -3,7 +3,7 @@
 ## 1. 下載專案
 
 ```bash
-git clone <你的 repository 網址>
+git clone https://github.com/11346076/wherenow.git
 ```
 
 ---
