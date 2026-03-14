@@ -1,20 +1,23 @@
 # 第 3 週
 
 ## 目標
-完成使用者註冊功能與基本頁面流程。
+完成使用者帳號系統的基本功能，包括註冊、登入、登出與首頁流程。
 
 ---
 
-## 本週目前進度
+## 本週完成內容
 
 - 建立 `users/forms.py`
 - 建立註冊表單 `RegisterForm`
-- 建立註冊 view
+- 建立註冊功能 `register_view`
 - 建立 `users/urls.py`
-- 將 users 路由接到主系統
+- 將 `users` 路由接到主系統
 - 建立註冊頁面 `register.html`
-- 確認 `settings.py` 的 templates 設定
-- 測試 `/register/` 頁面
+- 使用 Django 內建 `LoginView` 完成登入功能
+- 使用 Django 內建 `LogoutView` 完成登出功能
+- 建立簡單首頁 `home`
+- 確認 `settings.py` 的模板與登入跳轉設定
+- 測試註冊、登入、登出與首頁流程
 
 ---
 
@@ -44,7 +47,7 @@ class RegisterForm(UserCreationForm):
 
 ## 這段程式的作用
 
-這個是 **註冊表單**，它會自動處理：
+這個是註冊表單，會自動處理：
 
 - username
 - email
@@ -53,7 +56,7 @@ class RegisterForm(UserCreationForm):
 - 密碼一致檢查
 - 建立 User
 
-因此不需要自己另外寫密碼驗證邏輯。
+所以不用自己另外寫密碼驗證邏輯。
 
 ---
 
@@ -69,6 +72,7 @@ users/views.py
 
 ```python
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from .forms import RegisterForm
 
 
@@ -82,16 +86,24 @@ def register_view(request):
         form = RegisterForm()
 
     return render(request, 'users/register.html', {'form': form})
+
+
+def home(request):
+    return HttpResponse("Welcome to WhereNow")
 ```
 
 ## 這段程式的作用
 
-這個 view 會做以下事情：
+### `register_view`
+負責註冊功能：
 
 - 進入註冊頁時，顯示空白表單
 - 按送出後，接收使用者輸入
 - 如果資料正確，就建立帳號
 - 建立成功後，跳轉到登入頁面
+
+### `home`
+建立一個最簡單的首頁，登入成功後可以跳轉到這裡。
 
 ---
 
@@ -107,28 +119,39 @@ users/urls.py
 
 ```python
 from django.urls import path
-from .views import register_view
+from .views import register_view, home
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
+    path('', home, name='home'),
+
     path('register/', register_view, name='register'),
+
+    path('login/', auth_views.LoginView.as_view(
+        template_name='users/login.html'
+    ), name='login'),
+
+    path('logout/', auth_views.LogoutView.as_view(
+        next_page='login'
+    ), name='logout'),
 ]
 ```
 
 ## 這段程式的作用
 
-這是在告訴 Django：
+它告訴 Django：
 
-當使用者開啟：
+- `/` → 首頁
+- `/register/` → 註冊頁
+- `/login/` → 登入頁
+- `/logout/` → 登出功能
 
-```text
-/register/
-```
+其中登入與登出使用 Django 內建的：
 
-就執行：
+- `LoginView`
+- `LogoutView`
 
-```text
-register_view
-```
+所以不用自己寫登入邏輯。
 
 ---
 
@@ -160,7 +183,12 @@ urlpatterns = [
 /admin/
 ```
 
-你現在把 `users/urls.py` 接進主系統後，`/register/` 才會生效。
+現在把 `users/urls.py` 接進主系統後，以下網址才會生效：
+
+- `/`
+- `/register/`
+- `/login/`
+- `/logout/`
 
 ---
 
@@ -203,13 +231,59 @@ templates/users/register.html
 
 ---
 
-# 六、確認 `settings.py`
+# 六、建立登入頁面
+
+在同一個資料夾：
+
+```text
+templates/users/
+```
+
+新增檔案：
+
+```text
+templates/users/login.html
+```
+
+貼上以下程式：
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+
+<h1>登入</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">登入</button>
+</form>
+
+<p>
+沒有帳號？
+<a href="/register/">註冊</a>
+</p>
+
+</body>
+</html>
+```
+
+---
+
+# 七、確認 `settings.py`
 
 打開：
 
 ```text
 wherenow/settings.py
 ```
+
+## 1. 確認模板設定
 
 找到：
 
@@ -235,35 +309,75 @@ TEMPLATES = [
 ]
 ```
 
-如果沒有，請補上。
+## 2. 加入登入與登出跳轉設定
+
+```python
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
+```
+
+### 作用說明
+
+| 行為 | 跳轉位置 |
+|---|---|
+| 登入成功 | `/` |
+| 登出成功 | `/login/` |
 
 ---
 
-# 七、測試註冊功能
+# 八、測試功能
 
-在終端機輸入：
+在 terminal 輸入：
 
 ```bash
 python manage.py runserver
 ```
 
-然後打開：
+測試以下網址：
+
+## 註冊頁
 
 ```text
 http://127.0.0.1:8000/register/
 ```
 
-如果看到註冊表單頁面，表示設定成功。
+## 登入頁
+
+```text
+http://127.0.0.1:8000/login/
+```
+
+## 首頁
+
+```text
+http://127.0.0.1:8000/
+```
 
 ---
 
-# 本週目前成果
+# 九、成功流程
 
-目前已完成使用者註冊功能的基礎結構，包括：
+如果功能正常，流程會是：
 
-- 註冊表單
-- 註冊 view
-- 註冊路由
-- 註冊頁面
+1. 使用者進入註冊頁
+2. 建立新帳號
+3. 跳轉到登入頁
+4. 使用者登入
+5. 登入成功後跳到首頁
+6. 使用者可點擊登出並回到登入頁
+
+---
+
+# 本週成果
+
+本週已完成使用者帳號系統的基礎功能，包括：
+
+- 使用者註冊
+- 使用者登入
+- 使用者登出
+- 基本首頁
+- 路由設定
 - 模板設定
-- 註冊頁面測試
+- 註冊與登入流程測試
+
+目前系統已具備帳號系統雛形，後續可繼續開發地點管理與回憶功能。
