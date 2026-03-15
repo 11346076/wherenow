@@ -13,23 +13,25 @@
 - 建立 `users/urls.py`
 - 將 `users` 路由接到主系統
 - 建立註冊頁面 `register.html`
+- 建立登入頁面 `login.html`
 - 使用 Django 內建 `LoginView` 完成登入功能
 - 使用 Django 內建 `LogoutView` 完成登出功能
-- 建立簡單首頁 `home`
-- 確認 `settings.py` 的模板與登入跳轉設定
+- 建立首頁 `home`
+- 確認 `settings.py` 的模板與登入 / 登出跳轉設定
 - 測試註冊、登入、登出與首頁流程
+- 修正登出 `HTTP 405` 問題（改為使用 `POST` 登出）
 
 ---
 
 # 一、建立 `users/forms.py`
 
-在 `users` 資料夾裡新增檔案：
+在 `users` 資料夾中建立表單檔案：
 
-```text
+```
 users/forms.py
 ```
 
-貼上以下程式：
+程式碼如下：
 
 ```python
 from django import forms
@@ -45,34 +47,29 @@ class RegisterForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 ```
 
-## 這段程式的作用
+### 功能說明
 
-這個是註冊表單，會自動處理：
+此表單繼承 Django 內建的 `UserCreationForm`，可以自動完成：
 
-- username
-- email
-- password1
-- password2
-- 密碼一致檢查
-- 建立 User
-
-所以不用自己另外寫密碼驗證邏輯。
+- 使用者名稱輸入
+- 密碼驗證
+- 密碼一致性檢查
+- 建立 `User` 帳號
 
 ---
 
-# 二、修改 `users/views.py`
+# 二、建立註冊功能 `register_view`
 
-打開：
+檔案位置：
 
-```text
+```
 users/views.py
 ```
 
-貼上以下程式：
+程式碼如下：
 
 ```python
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .forms import RegisterForm
 
 
@@ -86,45 +83,62 @@ def register_view(request):
         form = RegisterForm()
 
     return render(request, 'users/register.html', {'form': form})
-
-
-def home(request):
-    return HttpResponse("Welcome to WhereNow")
 ```
 
-## 這段程式的作用
+### 功能說明
 
-### `register_view`
-負責註冊功能：
+`register_view` 的流程：
 
-- 進入註冊頁時，顯示空白表單
-- 按送出後，接收使用者輸入
-- 如果資料正確，就建立帳號
-- 建立成功後，跳轉到登入頁面
-
-### `home`
-建立一個最簡單的首頁，登入成功後可以跳轉到這裡。
+1. 使用者進入註冊頁面時顯示空白表單  
+2. 使用者送出資料時接收 `POST` 請求  
+3. 若資料驗證成功則建立帳號  
+4. 註冊完成後跳轉到登入頁  
 
 ---
 
-# 三、建立 `users/urls.py`
+# 三、建立首頁 `home`
 
-在 `users` 資料夾裡新增檔案：
+檔案位置：
 
-```text
+```
+wherenow/views.py
+```
+
+程式碼如下：
+
+```python
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'home.html')
+```
+
+### 功能說明
+
+首頁主要用來：
+
+- 顯示登入中的使用者名稱
+- 提供登入 / 註冊 / 登出入口
+- 作為登入成功後的跳轉頁面
+
+---
+
+# 四、建立 `users/urls.py`
+
+檔案位置：
+
+```
 users/urls.py
 ```
 
-貼上以下程式：
+程式碼如下：
 
 ```python
 from django.urls import path
-from .views import register_view, home
 from django.contrib.auth import views as auth_views
+from .views import register_view
 
 urlpatterns = [
-    path('', home, name='home'),
-
     path('register/', register_view, name='register'),
 
     path('login/', auth_views.LoginView.as_view(
@@ -132,81 +146,68 @@ urlpatterns = [
     ), name='login'),
 
     path('logout/', auth_views.LogoutView.as_view(
-        next_page='login'
+        next_page='home'
     ), name='logout'),
 ]
 ```
 
-## 這段程式的作用
+### 功能說明
 
-它告訴 Django：
+設定以下網址路由：
 
-- `/` → 首頁
-- `/register/` → 註冊頁
-- `/login/` → 登入頁
-- `/logout/` → 登出功能
+- `/users/register/` → 註冊頁  
+- `/users/login/` → 登入頁  
+- `/users/logout/` → 登出  
 
-其中登入與登出使用 Django 內建的：
+登入與登出使用 Django 內建：
 
 - `LoginView`
 - `LogoutView`
 
-所以不用自己寫登入邏輯。
-
 ---
 
-# 四、把 users 的網址接到主系統
+# 五、將 users 路由接到主系統
 
-打開主專案的 `urls.py`：
+檔案位置：
 
-```text
+```
 wherenow/urls.py
 ```
 
-改成：
+程式碼如下：
 
 ```python
 from django.contrib import admin
 from django.urls import path, include
+from .views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('users.urls')),
+    path('', home, name='home'),
+    path('users/', include('users.urls')),
 ]
 ```
 
-## 為什麼要這樣做
+### 功能說明
 
-因為 Django 預設只知道：
+此設定讓系統可以識別：
 
-```text
-/admin/
-```
-
-現在把 `users/urls.py` 接進主系統後，以下網址才會生效：
-
-- `/`
-- `/register/`
-- `/login/`
-- `/logout/`
+- `/` → 首頁  
+- `/users/register/`  
+- `/users/login/`  
+- `/users/logout/`  
 
 ---
 
-# 五、建立註冊頁面
+# 六、建立註冊頁面
 
-在 `templates` 裡建立資料夾：
+檔案位置：
 
-```text
-templates/users
 ```
-
-然後建立檔案：
-
-```text
 templates/users/register.html
 ```
 
-貼上以下程式：
+程式碼：
 
 ```html
 <!DOCTYPE html>
@@ -225,27 +226,26 @@ templates/users/register.html
     <button type="submit">註冊</button>
 </form>
 
+<p>
+已有帳號？
+<a href="{% url 'login' %}">前往登入</a>
+</p>
+
 </body>
 </html>
 ```
 
 ---
 
-# 六、建立登入頁面
+# 七、建立登入頁面
 
-在同一個資料夾：
+檔案位置：
 
-```text
-templates/users/
 ```
-
-新增檔案：
-
-```text
 templates/users/login.html
 ```
 
-貼上以下程式：
+程式碼：
 
 ```html
 <!DOCTYPE html>
@@ -266,7 +266,7 @@ templates/users/login.html
 
 <p>
 沒有帳號？
-<a href="/register/">註冊</a>
+<a href="{% url 'register' %}">註冊</a>
 </p>
 
 </body>
@@ -275,109 +275,115 @@ templates/users/login.html
 
 ---
 
-# 七、確認 `settings.py`
+# 八、建立首頁模板
 
-打開：
+檔案位置：
 
-```text
+```
+templates/home.html
+```
+
+程式碼：
+
+```html
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>WhereNow 首頁</title>
+</head>
+<body>
+
+<h1>歡迎來到 WhereNow</h1>
+
+{% if user.is_authenticated %}
+    <p>你好，{{ user.username }}！你已經登入。</p>
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">登出</button>
+    </form>
+
+{% else %}
+    <p>你目前還沒登入。</p>
+
+    <a href="{% url 'login' %}">登入</a>
+    <a href="{% url 'register' %}">註冊</a>
+
+{% endif %}
+
+</body>
+</html>
+```
+
+---
+
+# 九、確認 `settings.py`
+
+檔案位置：
+
+```
 wherenow/settings.py
 ```
 
-## 1. 確認模板設定
-
-找到：
+### 模板設定
 
 ```python
-TEMPLATES
+'DIRS': [BASE_DIR / 'templates']
 ```
 
-確認裡面有：
+### 登入 / 登出跳轉設定
 
 ```python
-'DIRS': [BASE_DIR / 'templates'],
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 ```
-
-完整範例如下：
-
-```python
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-    },
-]
-```
-
-## 2. 加入登入與登出跳轉設定
-
-```python
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/login/'
-```
-
-### 作用說明
-
-| 行為 | 跳轉位置 |
-|---|---|
-| 登入成功 | `/` |
-| 登出成功 | `/login/` |
 
 ---
 
-# 八、測試功能
+# 十、測試功能
 
-在 terminal 輸入：
+啟動 Django 伺服器：
 
-```bash
+```
 python manage.py runserver
 ```
 
-測試以下網址：
+測試網址：
 
-## 註冊頁
-
-```text
-http://127.0.0.1:8000/register/
 ```
-
-## 登入頁
-
-```text
-http://127.0.0.1:8000/login/
-```
-
-## 首頁
-
-```text
 http://127.0.0.1:8000/
 ```
 
----
+測試流程：
 
-# 九、成功流程
-
-如果功能正常，流程會是：
-
-1. 使用者進入註冊頁
-2. 建立新帳號
-3. 跳轉到登入頁
-4. 使用者登入
-5. 登入成功後跳到首頁
-6. 使用者可點擊登出並回到登入頁
+1. 進入註冊頁面  
+2. 建立新帳號  
+3. 跳轉至登入頁  
+4. 使用新帳號登入  
+5. 登入成功後進入首頁  
+6. 首頁顯示登入使用者名稱  
+7. 點擊登出  
+8. 回到未登入狀態首頁  
 
 ---
 
 # 本週成果
 
-本週已完成使用者帳號系統的基礎功能，包括：
+本週已完成 WhereNow 系統的帳號基礎功能：
 
 - 使用者註冊
 - 使用者登入
 - 使用者登出
-- 基本首頁
-- 路由設定
-- 模板設定
-- 註冊與登入流程測試
+- 首頁登入狀態顯示
+- 路由整合
+- 模板整合
+- 功能流程測試
 
-目前系統已具備帳號系統雛形，後續可繼續開發地點管理與回憶功能。
+目前系統已具備完整的帳號流程，後續可以繼續開發：
+
+- 個人資料功能
+- 頭貼上傳
+- 地點清單管理
+- 回憶功能
+- 情侶共享功能
