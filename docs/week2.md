@@ -1,34 +1,51 @@
 # 第 2 週
 
 ## 目標
-完成核心 Models 與 Django Admin 設定。
+完成 WhereNow 系統的核心資料模型（Models）建立，並在 Django Admin 後台註冊與測試資料表。
+
+本週主要建立系統的基礎資料結構，包括：
+
+- 使用者個人資料
+- 情侶邀請與關係
+- 地點分類與標籤
+- 地點清單
+- 回憶紀錄與照片
+
+這些資料模型將作為後續功能開發的基礎。
 
 ---
 
-## 本週必做
+# 本週完成內容
 
-- 建立 `Profile` model
-- 建立 `CoupleInvitation` model
-- 建立 `CoupleRelationship` model
-- 建立 `Category` model
-- 建立 `Tag` model
-- 建立 `Place` model
-- 建立 `PlaceTag` model
-- 建立 `Memory` model
-- 建立 `MemoryPhoto` model
-- 在 Admin 後台完成註冊與確認
+本週完成以下 Models 建立：
 
-> 以下步驟大致相同：  
-> 1. 撰寫 model  
-> 2. 執行 migration  
-> 3. 註冊 admin  
-> 4. 執行伺服器檢查成果
+- `Profile`
+- `CoupleInvitation`
+- `CoupleRelationship`
+- `Category`
+- `Tag`
+- `Place`
+- `PlaceTag`
+- `Memory`
+- `MemoryPhoto`
+
+並完成：
+
+- Django Admin 註冊
+- 資料表 migration
+- Admin 後台測試
 
 ---
 
-# 一、建立 `Profile` model
+# 一、建立 Profile Model
 
-建立檔案：`users/models.py`
+檔案位置
+
+```
+users/models.py
+```
+
+程式碼：
 
 ```python
 from django.db import models
@@ -45,58 +62,31 @@ class Profile(models.Model):
         return self.nickname
 ```
 
-## 欄位說明
+### 欄位說明
 
-| 欄位 | 用途 |
-|---|---|
-| user | 連接 Django User |
+| 欄位 | 說明 |
+|-----|-----|
+| user | 連結 Django 內建 User |
 | nickname | 使用者暱稱 |
-| avatar | 頭像圖片 |
+| avatar | 使用者頭像 |
 | bio | 自我介紹 |
 
-執行：
-
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-
-建立檔案：`users/admin.py`
-
-```python
-from django.contrib import admin
-from .models import Profile
-
-admin.site.register(Profile)
-```
-
-建立管理員帳號：
-
-```bash
-python manage.py createsuperuser
-```
-
-啟動伺服器：
-
-```bash
-python manage.py runserver
-```
-
-登入後台：
-
-```text
-http://127.0.0.1:8000/admin/
-```
-
 ---
 
-# 二、建立 `CoupleInvitation` model
+# 二、建立 CoupleInvitation Model
 
-建立檔案：`couples/models.py`
+檔案位置
+
+```
+couples/models.py
+```
+
+程式碼：
 
 ```python
 from django.db import models
 from django.contrib.auth.models import User
+
 
 class CoupleInvitation(models.Model):
     sender = models.ForeignKey(
@@ -104,11 +94,13 @@ class CoupleInvitation(models.Model):
         on_delete=models.CASCADE,
         related_name="sent_invitations"
     )
+
     receiver = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="received_invitations"
     )
+
     status = models.CharField(max_length=20, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -116,74 +108,43 @@ class CoupleInvitation(models.Model):
         return f"{self.sender} -> {self.receiver} ({self.status})"
 ```
 
-## 說明
+### 功能說明
 
-- `sender`：送出邀請的人
-- `receiver`：收到邀請的人
-- `status`：邀請狀態，預設為 `pending`
-- `created_at`：建立時間
+此模型用來記錄情侶邀請。
 
-執行：
-
-```bash
-python manage.py makemigrations couples
-python manage.py migrate
-```
-
-建立檔案：`couples/admin.py`
-
-```python
-from django.contrib import admin
-from .models import CoupleInvitation
-
-admin.site.register(CoupleInvitation)
-```
-
-啟動伺服器：
-
-```bash
-python manage.py runserver
-```
+| 欄位 | 說明 |
+|-----|-----|
+| sender | 發送邀請的使用者 |
+| receiver | 接收邀請的使用者 |
+| status | 邀請狀態 |
+| created_at | 建立時間 |
 
 ---
 
-# 三、建立 `CoupleRelationship` model
+# 三、建立 CoupleRelationship Model
 
-修改檔案：`couples/models.py`
+檔案位置
+
+```
+couples/models.py
+```
+
+程式碼：
 
 ```python
-from django.db import models
-from django.contrib.auth.models import User
-
-class CoupleInvitation(models.Model):
-    sender = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="sent_invitations"
-    )
-    receiver = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="received_invitations"
-    )
-    status = models.CharField(max_length=20, default="pending")
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.sender} -> {self.receiver} ({self.status})"
-
-
 class CoupleRelationship(models.Model):
     user_1 = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="relationship_user1"
     )
+
     user_2 = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="relationship_user2"
     )
+
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -191,37 +152,32 @@ class CoupleRelationship(models.Model):
         return f"{self.user_1} ❤️ {self.user_2}"
 ```
 
-執行：
+### 功能說明
 
-```bash
-python manage.py makemigrations couples
-python manage.py migrate
-```
+此模型用來記錄情侶關係。
 
-修改檔案：`couples/admin.py`
-
-```python
-from django.contrib import admin
-from .models import CoupleInvitation, CoupleRelationship
-
-admin.site.register(CoupleInvitation)
-admin.site.register(CoupleRelationship)
-```
-
-啟動伺服器：
-
-```bash
-python manage.py runserver
-```
+| 欄位 | 說明 |
+|-----|-----|
+| user_1 | 情侶其中一方 |
+| user_2 | 情侶另一方 |
+| is_active | 是否仍為情侶關係 |
+| created_at | 建立時間 |
 
 ---
 
-# 四、建立 `Category` model
+# 四、建立 Category Model
 
-修改檔案：`places/models.py`
+檔案位置
+
+```
+places/models.py
+```
+
+程式碼：
 
 ```python
 from django.db import models
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -230,44 +186,28 @@ class Category(models.Model):
         return self.name
 ```
 
-執行：
+### 功能說明
 
-```bash
-python manage.py makemigrations places
-python manage.py migrate
-```
+用來分類地點，例如：
 
-建立檔案：`places/admin.py`
-
-```python
-from django.contrib import admin
-from .models import Category
-
-admin.site.register(Category)
-```
-
-啟動伺服器：
-
-```bash
-python manage.py runserver
-```
+- 餐廳
+- 咖啡廳
+- 景點
+- 旅遊地
 
 ---
 
-# 五、建立 `Tag` model
+# 五、建立 Tag Model
 
-修改檔案：`places/models.py`
+檔案位置
+
+```
+places/models.py
+```
+
+程式碼：
 
 ```python
-from django.db import models
-
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
 class Tag(models.Model):
     name = models.CharField(max_length=50)
 
@@ -275,51 +215,29 @@ class Tag(models.Model):
         return self.name
 ```
 
-執行：
+### 功能說明
 
-```bash
-python manage.py makemigrations places
-python manage.py migrate
-```
+Tag 用來描述地點特性，例如：
 
-修改檔案：`places/admin.py`
-
-```python
-from django.contrib import admin
-from .models import Category, Tag
-
-admin.site.register(Category)
-admin.site.register(Tag)
-```
-
-啟動伺服器：
-
-```bash
-python manage.py runserver
-```
+- 約會
+- 夜景
+- 平價
+- 拍照
 
 ---
 
-# 六、建立 `Place` model
+# 六、建立 Place Model
 
-修改檔案：`places/models.py`
+檔案位置
+
+```
+places/models.py
+```
+
+程式碼：
 
 ```python
-from django.db import models
 from django.contrib.auth.models import User
-
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
 
 
 class Place(models.Model):
@@ -340,72 +258,23 @@ class Place(models.Model):
         return self.name
 ```
 
-執行：
+### 功能說明
 
-```bash
-python manage.py makemigrations places
-python manage.py migrate
-```
-
-修改檔案：`places/admin.py`
-
-```python
-from django.contrib import admin
-from .models import Category, Tag, Place
-
-admin.site.register(Category)
-admin.site.register(Tag)
-admin.site.register(Place)
-```
-
-啟動伺服器：
-
-```bash
-python manage.py runserver
-```
+Place 用來記錄使用者想去或去過的地點。
 
 ---
 
-# 七、建立 `PlaceTag` model
+# 七、建立 PlaceTag Model
 
-修改檔案：`places/models.py`
+檔案位置
+
+```
+places/models.py
+```
+
+程式碼：
 
 ```python
-from django.db import models
-from django.contrib.auth.models import User
-
-class Category(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
-class Place(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    name = models.CharField(max_length=200)
-    region = models.CharField(max_length=100)
-
-    google_map_link = models.URLField(blank=True)
-    note = models.TextField(blank=True)
-    budget = models.CharField(max_length=50, blank=True)
-
-    is_public = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-
 class PlaceTag(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
@@ -414,90 +283,23 @@ class PlaceTag(models.Model):
         return f"{self.place} - {self.tag}"
 ```
 
-執行：
+### 功能說明
 
-```bash
-python manage.py makemigrations places
-python manage.py migrate
-```
-
-修改檔案：`places/admin.py`
-
-```python
-from django.contrib import admin
-from .models import Category, Tag, Place, PlaceTag
-
-admin.site.register(Category)
-admin.site.register(Tag)
-admin.site.register(Place)
-admin.site.register(PlaceTag)
-```
-
-啟動伺服器：
-
-```bash
-python manage.py runserver
-```
+此模型用來建立 **Place 與 Tag 的多對多關係**。
 
 ---
 
-# 八、建立 `Memory` model
+# 八、建立 Memory Model
 
-修改檔案：`memories/models.py`
+檔案位置
+
+```
+memories/models.py
+```
+
+程式碼：
 
 ```python
-from django.db import models
-from django.contrib.auth.models import User
-from places.models import Place
-
-class Memory(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    place = models.ForeignKey(Place, on_delete=models.CASCADE)
-
-    visit_date = models.DateField()
-    comment = models.TextField(blank=True)
-
-    rating = models.IntegerField(default=0)
-    cost = models.IntegerField(default=0)
-
-    recommended = models.BooleanField(default=False)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user} - {self.place}"
-```
-
-執行：
-
-```bash
-python manage.py makemigrations memories
-python manage.py migrate
-```
-
-修改檔案：`memories/admin.py`
-
-```python
-from django.contrib import admin
-from .models import Memory
-
-admin.site.register(Memory)
-```
-
-啟動伺服器：
-
-```bash
-python manage.py runserver
-```
-
----
-
-# 九、建立 `MemoryPhoto` model
-
-修改檔案：`memories/models.py`
-
-```python
-from django.db import models
 from django.contrib.auth.models import User
 from places.models import Place
 
@@ -518,76 +320,98 @@ class Memory(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.place}"
+```
 
+### 功能說明
+
+Memory 用來記錄使用者在某個地點的回憶。
+
+---
+
+# 九、建立 MemoryPhoto Model
+
+檔案位置
+
+```
+memories/models.py
+```
+
+程式碼：
+
+```python
 class MemoryPhoto(models.Model):
     memory = models.ForeignKey(Memory, on_delete=models.CASCADE)
 
     image = models.ImageField(upload_to="memory_photos/")
-
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Photo of {self.memory}"
-
 ```
 
-執行：
+### 功能說明
 
-```bash
-python manage.py makemigrations memories
+此模型用來儲存回憶照片。
+
+---
+
+# 十、Migration 與 Admin 設定
+
+建立資料表：
+
+```
+python manage.py makemigrations
 python manage.py migrate
 ```
 
-修改檔案：`memories/admin.py`
+建立管理員帳號：
 
-```python
-from django.contrib import admin
-from .models import Memory, MemoryPhoto
-
-admin.site.register(Memory)
-admin.site.register(MemoryPhoto)
+```
+python manage.py createsuperuser
 ```
 
 啟動伺服器：
 
-```bash
+```
 python manage.py runserver
 ```
 
----
+登入 Admin：
 
-# Admin 後台確認項目
-
-在 admin 中應可管理以下資料：
-
-- [x] User
-- [x] Profile
-- [x] Couple Invitation
-- [x] Couple Relationship
-- [x] Category
-- [x] Tag
-- [x] Place
-- [x] PlaceTag
-- [x] Memory
-- [x] MemoryPhoto
-
-請確認以上項目都有出現在：
-
-```text
+```
 http://127.0.0.1:8000/admin/
 ```
 
 ---
 
+# Admin 後台確認
+
+Admin 中應可管理以下資料：
+
+- User
+- Profile
+- CoupleInvitation
+- CoupleRelationship
+- Category
+- Tag
+- Place
+- PlaceTag
+- Memory
+- MemoryPhoto
+
+---
+
 # 本週成果
 
-本週已完成核心資料表與後台管理設定，為後續功能開發奠定基礎。
-
-完成內容包含：
+本週完成 WhereNow 系統的核心資料模型設計與建立，包括：
 
 - 使用者個人資料模型
 - 情侶邀請與關係模型
 - 地點分類與標籤模型
-- 地點資料模型
-- 回憶紀錄與照片模型
-- Django Admin 管理介面註冊
+- 地點清單模型
+- 回憶紀錄模型
+- 回憶照片模型
+
+並成功在 Django Admin 後台完成註冊與測試，確認資料表可正常建立與管理。
+
+這些資料模型將作為後續功能開發（例如地點管理、回憶功能與情侶共享功能）的基礎。
