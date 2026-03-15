@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>收到的邀請</title>
+  </head>
+  <body>
+    <h1>收到的情侶邀請</h1>
+
+    {% if invitations %}
+
+    <ul>
+      {% for invitation in invitations %}
+
+      <li>
+        {{ invitation.sender.username }} 邀請你成為情侶
+
+        <a href="{% url 'accept_invitation' invitation.id %}">接受</a>
+        <a href="{% url 'reject_invitation' invitation.id %}">拒絕</a>
+
+      </li>
+
+      {% endfor %}
+    </ul>
+
+    {% else %}
+
+    <p>目前沒有邀請</p>
+
+    {% endif %}
+
+    <p>
+      <a href="{% url 'home' %}">回首頁</a>
+    </p>
+  </body>
+</html>

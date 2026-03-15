@@ -10,6 +10,8 @@
     {% if user.is_authenticated %}
         <p>你好，{{ user.username }}！你已經登入。</p>
         <p><a href="{% url 'profile' %}">查看個人資料</a></p>
+        <p><a href="{% url 'send_invitation' %}">送出情侶邀請</a></p>
+        <p><a href="{% url 'received_invitations' %}">查看收到的邀請</a></p>
 
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}

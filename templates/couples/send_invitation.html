@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>送出情侶邀請</title>
+</head>
+<body>
+    <h1>送出情侶邀請</h1>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">送出邀請</button>
+    </form>
+
+    <p><a href="{% url 'home' %}">回首頁</a></p>
+</body>
+</html>
