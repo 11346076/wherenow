@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>WhereNow 首頁</title>
+</head>
+<body>
+    <h1>歡迎來到 WhereNow</h1>
+
+    {% if user.is_authenticated %}
+        <p>你好，{{ user.username }}！你已經登入。</p>
+
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">登出</button>
+        </form>
+    {% else %}
+        <p>你目前還沒登入。</p>
+        <a href="{% url 'login' %}">登入</a>
+        <a href="{% url 'register' %}">註冊</a>
+    {% endif %}
+</body>
+</html>
