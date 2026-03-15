@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>地點列表</title>
+</head>
+<body>
+    <h1>我的地點列表</h1>
+
+    <a href="{% url 'place_create' %}">新增地點</a>
+    <hr>
+
+    {% for place in places %}
+        <div>
+            <h3>
+                <a href="{% url 'place_detail' place.pk %}">
+                    {{ place.name }}
+                </a>
+            </h3>
+            <p>分類：{{ place.category.name }}</p>
+            <p>地區：{{ place.region }}</p>
+            <p>預算：{{ place.budget }}</p>
+            <p>公開：{{ place.is_public }}</p>
+            <p>建立時間：{{ place.created_at }}</p>
+        </div>
+        <hr>
+    {% empty %}
+        <p>目前還沒有任何地點。</p>
+    {% endfor %}
+</body>
+</html>

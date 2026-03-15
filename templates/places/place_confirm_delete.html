@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>刪除地點</title>
+</head>
+
+<body>
+
+<h1>確定要刪除嗎？</h1>
+
+<p>地點名稱：{{ place.name }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">確定刪除</button>
+</form>
+
+<a href="{% url 'place_detail' place.pk %}">取消</a>
+
+</body>
+</html>

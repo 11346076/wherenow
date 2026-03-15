@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>新增地點</title>
+</head>
+<body>
+    <h1>新增地點</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">儲存</button>
+    </form>
+
+    <a href="{% url 'place_list' %}">返回列表</a>
+</body>
+</html>
