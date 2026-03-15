@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>個人資料</title>
+  </head>
+  <body>
+    <h1>個人資料</h1>
+
+    <p><strong>帳號：</strong>{{ request.user.username }}</p>
+    <p><strong>暱稱：</strong>{{ profile.nickname }}</p>
+    <p><strong>自我介紹：</strong>{{ profile.bio }}</p>
+
+    {% if profile.avatar %}
+    <p><strong>頭像：</strong></p>
+    <img src="{{ profile.avatar.url }}" alt="avatar" width="200" />
+    {% else %}
+    <p>目前沒有頭像</p>
+    {% endif %}
+    <p>
+      <a href="{% url 'edit_profile' %}">編輯個人資料</a>
+    </p>
+
+    <p><a href="{% url 'home' %}">回首頁</a></p>
+  </body>
+</html>

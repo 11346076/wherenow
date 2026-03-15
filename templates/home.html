@@ -9,6 +9,7 @@
 
     {% if user.is_authenticated %}
         <p>你好，{{ user.username }}！你已經登入。</p>
+        <p><a href="{% url 'profile' %}">查看個人資料</a></p>
 
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
