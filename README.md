@@ -1,118 +1,145 @@
-# WhereNow
-
-WhereNow 是一個幫助使用者記錄地點、管理清單與整理回憶的系統。
-
-使用者可以建立自己的地點清單、與伴侶共享地點、並在每個地點留下回憶與照片。
+# 📍 WhereNow  
+**地點清單與情侶回憶管理系統**
 
 ---
 
-## 系統功能
+## 📖 專案簡介
 
-### 使用者系統
-- 使用者註冊
-- 使用者登入 / 登出
-- 個人資料管理
-- 頭像上傳
+WhereNow 是一個基於 Django 開發的 Web 系統，  
+提供使用者記錄生活地點與回憶，並支援情侶共享功能。
 
-### 情侶關係系統
-- 發送情侶邀請
-- 接受 / 拒絕邀請
-- 建立共享空間
+使用者可以：
 
-### 地點管理
-- 建立地點
-- 編輯地點資訊
-- 地點分類與標籤
-
-### 回憶紀錄
-- 在地點新增回憶
+- 建立地點清單
+- 記錄去過的回憶
 - 上傳照片
-- 記錄心情與文字
+- 收藏喜歡的地點
+- 與情侶共享回憶
+- 隨機抽選地點
 
-### API 系統
-- 提供 RESTful API
-- 支援前端或 App 串接
+本系統結合「生活紀錄 + 社交互動」，提升使用體驗與情感連結。
 
 ---
 
-## 技術架構
+## 🎯 系統特色
 
-- Python
+- 📍 地點清單管理（Place System）
+- 📸 回憶紀錄與照片上傳（Memory System）
+- ❤️ 情侶共享回憶（Shared Memory）
+- ⭐ 收藏地點功能（Favorite）
+- 🎲 隨機地點抽選（Random Pick）
+- 🏠 情侶首頁整合資訊（Couple Home）
+- 🔐 帳號與情侶關係系統
+
+---
+
+## 🧩 系統模組
+
+| 模組名稱 | 說明 |
+|--------|------|
+| User System | 使用者註冊、登入 |
+| Couple System | 情侶邀請與關係建立 |
+| Place System | 地點建立與管理 |
+| Memory System | 回憶紀錄與照片 |
+| Shared Memory | 情侶共享回憶 |
+| Favorite System | 收藏地點 |
+| Random Pick | 隨機抽選地點 |
+| Couple Home | 情侶首頁資訊整合 |
+
+---
+
+## 🗂 專案結構
+
+```
+wherenow/
+├─ docs/
+│  ├─ 01-system-setup.md
+│  ├─ 02-database-models.md
+│  ├─ 03-user-authentication-system.md
+│  ├─ 04-profile-system.md
+│  ├─ 05-couple-system.md
+│  ├─ 06-place-system.md
+│  ├─ 07-memory-system.md
+│  ├─ 08-favorite-place-system.md
+│  ├─ 09-random-pick-system.md
+│  ├─ 10-shared-memory-system.md
+│  └─ 11-couple-home-system.md
+```
+
+---
+
+## ⚙️ 使用技術
+
+- Python 3
 - Django
-- Django REST Framework
-- MySQL
-- HTML / CSS / JavaScript
+- SQLite（開發環境）
+- HTML / CSS（Template）
+- Bootstrap（未來 UI 優化）
 
 ---
 
-## 專案結構
+## 🚀 系統功能概覽
 
-```
-WhereNow
-│
-├─ users        # 使用者系統
-├─ couples      # 情侶關係系統
-├─ places       # 地點管理
-├─ memories     # 回憶紀錄
-├─ api          # API 相關
-│
-├─ templates
-├─ static
-├─ media
-│
-└─ manage.py
-```
+### 1️⃣ 地點管理
+- 新增 / 編輯 / 刪除地點
+- 分類（Category）與標籤（Tag）
+- 設定公開地點
 
----
+### 2️⃣ 回憶系統
+- 建立回憶
+- 上傳多張照片
+- 評分與花費紀錄
 
-## 環境安裝
+### 3️⃣ 情侶功能
+- 情侶邀請 / 綁定
+- 回憶共享
+- 情侶首頁
 
-### 1 建立虛擬環境
+### 4️⃣ 收藏與探索
+- 收藏公開地點
+- 管理收藏清單
 
-```bash
-python -m venv venv
-```
-
-啟動虛擬環境
-
-```bash
-.\venv\Scripts\activate
-```
+### 5️⃣ 隨機抽選
+- 從個人地點中隨機抽選
+- 紀錄抽選歷史
 
 ---
 
-### 2 安裝套件
+## 📸 系統畫面（可選）
 
-```bash
-pip install django
-pip install djangorestframework
-pip install pymysql
-pip install pillow
-```
+（之後可以放截圖）
 
 ---
 
-### 3 Migration
+## 🔮 未來擴充
 
-```bash
-python manage.py migrate
-```
+- 回憶時間軸（Timeline）
+- 地點探索功能
+- 情侶共同抽選
+- 推薦系統
+- 統計分析功能
+- UI 優化（Bootstrap）
 
 ---
 
-### 4 啟動伺服器
+## 👥 開發成員
 
-```bash
-python manage.py runserver
-```
+- 👩 林昕玫
+- 👨 劉明宗
 
-打開瀏覽器：
+---
 
-```
-http://127.0.0.1:8000
-```
-## 開發團隊
+## 📌 專案性質
 
-- 林昕玫
-- 劉明宗
+大學系統開發專題  
+System Analysis & Design + Django Implementation
 
+---
+
+## 💡 總結
+
+WhereNow 不只是地點記錄工具，  
+更是一個結合「回憶」、「分享」與「情侶互動」的生活平台。
+
+透過系統設計與模組化開發，  
+本專案展示完整的 Web 系統開發流程與實作能力。
