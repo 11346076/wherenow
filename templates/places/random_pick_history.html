@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>隨機抽選歷史</h2>
+
+<p>
+    <a href="{% url 'random_pick' %}">回到隨機抽選</a>
+</p>
+
+<hr>
+
+{% if histories %}
+    <ul>
+        {% for history in histories %}
+            <li>
+                {{ history.picked_at|date:"Y-m-d H:i" }}：
+                {{ history.place.name }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>目前還沒有抽選紀錄。</p>
+{% endif %}
+{% endblock %}

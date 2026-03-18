@@ -1,8 +1,9 @@
+import random
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 
-from .models import Place, FavoritePlace
+from .models import Place, FavoritePlace, RandomPickHistory
 from .forms import PlaceForm
 
 
@@ -88,3 +89,34 @@ def remove_favorite(request, place_id):
 def favorite_list(request):
     favorites = FavoritePlace.objects.filter(user=request.user).select_related('place')
     return render(request, 'places/favorite_list.html', {'favorites': favorites})
+
+
+@login_required
+def random_pick(request):
+    picked_place = None
+    error = None
+
+    if request.method == 'POST':
+        places = Place.objects.filter(user=request.user)
+
+        if not places.exists():
+            error = '目前沒有可供抽選的地點，請先新增地點。'
+        else:
+            picked_place = random.choice(list(places))
+
+            RandomPickHistory.objects.create(
+                user=request.user,
+                place=picked_place
+            )
+
+    return render(request, 'places/random_pick.html', {
+        'picked_place': picked_place,
+        'error': error
+    })
+
+@login_required
+def random_pick_history(request):
+    histories = RandomPickHistory.objects.filter(user=request.user).select_related('place').order_by('-picked_at')
+    return render(request, 'places/random_pick_history.html', {
+        'histories': histories
+    })

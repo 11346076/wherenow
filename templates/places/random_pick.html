@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>隨機抽地點</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">🎲 抽一個地點</button>
+</form>
+
+<p>
+    <a href="{% url 'random_pick_history' %}">查看抽選歷史</a>
+</p>
+
+<hr>
+
+{% if error %}
+    <p>{{ error }}</p>
+{% endif %}
+
+{% if picked_place %}
+    <h3>你抽到的是：</h3>
+    <p><strong>地點名稱：</strong>{{ picked_place.name }}</p>
+    <p><strong>地區：</strong>{{ picked_place.area }}</p>
+    <p><strong>預算：</strong>{{ picked_place.budget }}</p>
+    <p><strong>備註：</strong>{{ picked_place.note }}</p>
+{% else %}
+    <p>👉 點擊上方按鈕開始抽選</p>
+{% endif %}
+{% endblock %}

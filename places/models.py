@@ -54,3 +54,11 @@ class FavoritePlace(models.Model):
 
     def __str__(self):
         return f"{self.user.username} 收藏了 {self.place.name}"
+    
+class RandomPickHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='random_pick_histories')
+    place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='random_pick_histories')
+    picked_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} 抽到了 {self.place.name}"
