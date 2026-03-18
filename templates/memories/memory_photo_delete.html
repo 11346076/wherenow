@@ -1,0 +1,14 @@
+<h1>刪除照片</h1>
+
+<p>你確定要刪除這張照片嗎？</p>
+
+<img src="{{ photo.image.url }}" alt="photo" width="250">
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">確認刪除</button>
+</form>
+
+<p>
+  <a href="{% url 'memory_edit' photo.memory.id %}">取消</a>
+</p>

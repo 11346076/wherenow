@@ -1,0 +1,48 @@
+<h1>新增回憶</h1>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <p>
+    <label>地點：</label><br>
+    <select name="place" required>
+      {% for p in places %}
+        <option value="{{ p.id }}">{{ p.name }}</option>
+      {% endfor %}
+    </select>
+  </p>
+
+  <p>
+    <label>日期：</label><br>
+    <input type="date" name="visit_date" required>
+  </p>
+
+  <p>
+    <label>心得：</label><br>
+    <textarea name="comment" rows="4"></textarea>
+  </p>
+
+  <p>
+    <label>評分（0-5）：</label><br>
+    <input type="number" name="rating" min="0" max="5">
+  </p>
+
+  <p>
+    <label>花費：</label><br>
+    <input type="number" name="cost" min="0">
+  </p>
+
+  <p>
+    <label>
+      <input type="checkbox" name="recommended">
+      推薦
+    </label>
+  </p>
+
+  <p>
+    <label>上傳照片：</label><br>
+    <input type="file" name="images" multiple>
+  </p>
+
+  <button type="submit">送出</button>
+</form>

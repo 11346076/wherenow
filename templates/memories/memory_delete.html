@@ -1,0 +1,16 @@
+<h1>刪除回憶</h1>
+
+<p>你確定要刪除這筆回憶嗎？</p>
+
+<p>地點：{{ memory.place.name }}</p>
+<p>日期：{{ memory.visit_date }}</p>
+<p>內容：{{ memory.comment }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">確認刪除</button>
+</form>
+
+<p>
+  <a href="{% url 'memory_detail' memory.id %}">取消</a>
+</p>

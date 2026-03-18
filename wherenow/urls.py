@@ -26,6 +26,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('couples/', include('couples.urls')),
     path('places/', include('places.urls')),
+    path('memories/', include('memories.urls')),
 ]
 
 if settings.DEBUG:
