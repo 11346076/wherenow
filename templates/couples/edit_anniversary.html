@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>設定紀念日</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
+    <div style="max-width: 600px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h1 style="color: #d63384;">設定紀念日</h1>
+
+        <p>目前情侶：{{ partner.username }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <p>
+                <label>在一起紀念日：</label>
+                <input
+                    type="date"
+                    name="anniversary_date"
+                    value="{% if relationship.anniversary_date %}{{ relationship.anniversary_date|date:'Y-m-d' }}{% endif %}"
+                >
+            </p>
+
+            <button type="submit">儲存</button>
+        </form>
+
+        <p><a href="{% url 'couple_home' %}">回情侶首頁</a></p>
+    </div>
+</body>
+</html>

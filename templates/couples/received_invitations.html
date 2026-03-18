@@ -1,36 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8">
     <title>收到的邀請</title>
-  </head>
-  <body>
-    <h1>收到的情侶邀請</h1>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
+    <div style="max-width: 700px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h1 style="color: #d63384;">收到的情侶邀請</h1>
 
-    {% if invitations %}
+        {% if invitations %}
+            <ul style="line-height: 2;">
+                {% for invitation in invitations %}
+                    <li>
+                        <strong>{{ invitation.sender.username }}</strong> 邀請你成為情侶
+                        <a href="{% url 'accept_invitation' invitation.id %}" style="margin-left: 10px; color: green;">接受</a>
+                        <a href="{% url 'reject_invitation' invitation.id %}" style="margin-left: 10px; color: red;">拒絕</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>目前沒有邀請</p>
+        {% endif %}
 
-    <ul>
-      {% for invitation in invitations %}
+        <hr style="margin: 20px 0;">
 
-      <li>
-        {{ invitation.sender.username }} 邀請你成為情侶
-
-        <a href="{% url 'accept_invitation' invitation.id %}">接受</a>
-        <a href="{% url 'reject_invitation' invitation.id %}">拒絕</a>
-
-      </li>
-
-      {% endfor %}
-    </ul>
-
-    {% else %}
-
-    <p>目前沒有邀請</p>
-
-    {% endif %}
-
-    <p>
-      <a href="{% url 'home' %}">回首頁</a>
-    </p>
-  </body>
+        <p><a href="{% url 'send_invitation' %}">送出情侶邀請</a></p>
+        <p><a href="{% url 'couple_status' %}">查看情侶狀態</a></p>
+        <p><a href="{% url 'home' %}">回首頁</a></p>
+    </div>
+</body>
 </html>

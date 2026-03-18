@@ -27,6 +27,7 @@ class Place(models.Model):
     budget = models.IntegerField(default=0)
     is_public = models.BooleanField(default=False)
     is_visited = models.BooleanField(default=False)
+    shared_with_couple = models.BooleanField(default=False)
 
     tags = models.ManyToManyField(Tag, through='PlaceTag', blank=True)
 
@@ -54,7 +55,8 @@ class FavoritePlace(models.Model):
 
     def __str__(self):
         return f"{self.user.username} 收藏了 {self.place.name}"
-    
+
+
 class RandomPickHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='random_pick_histories')
     place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='random_pick_histories')

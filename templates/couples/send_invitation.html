@@ -4,19 +4,29 @@
     <meta charset="UTF-8">
     <title>送出情侶邀請</title>
 </head>
-<body>
-    <h1>送出情侶邀請</h1>
+<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
+    <div style="max-width: 600px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h1 style="color: #d63384;">送出情侶邀請</h1>
 
-    {% if message %}
-        <p>{{ message }}</p>
-    {% endif %}
+        {% if message %}
+            <p style="color: #333; background-color: #ffeef5; padding: 10px; border-radius: 8px;">
+                {{ message }}
+            </p>
+        {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">送出邀請</button>
-    </form>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" style="padding: 10px 20px; background-color: #d63384; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                送出邀請
+            </button>
+        </form>
 
-    <p><a href="{% url 'home' %}">回首頁</a></p>
+        <hr style="margin: 20px 0;">
+
+        <p><a href="{% url 'received_invitations' %}">查看收到的邀請</a></p>
+        <p><a href="{% url 'couple_status' %}">查看情侶狀態</a></p>
+        <p><a href="{% url 'home' %}">回首頁</a></p>
+    </div>
 </body>
 </html>

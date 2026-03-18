@@ -18,6 +18,7 @@ class Memory(models.Model):
     cost = models.IntegerField(default=0)
 
     recommended = models.BooleanField(default=False)
+    shared_with_couple = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

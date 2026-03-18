@@ -1,16 +1,25 @@
-<h1>刪除回憶</h1>
+<h1>{{ memory.place.name }}</h1>
 
-<p>你確定要刪除這筆回憶嗎？</p>
-
-<p>地點：{{ memory.place.name }}</p>
 <p>日期：{{ memory.visit_date }}</p>
-<p>內容：{{ memory.comment }}</p>
+<p>評分：{{ memory.rating }}</p>
+<p>花費：{{ memory.cost }}</p>
+<p>推薦：{{ memory.recommended }}</p>
+<p>{{ memory.comment }}</p>
 
-<form method="post">
-  {% csrf_token %}
-  <button type="submit">確認刪除</button>
-</form>
+<h2>照片</h2>
+
+{% if photos %}
+  {% for photo in photos %}
+    <img src="{{ photo.image.url }}" alt="memory photo" width="250">
+  {% endfor %}
+{% else %}
+  <p>目前沒有照片</p>
+{% endif %}
 
 <p>
-  <a href="{% url 'memory_detail' memory.id %}">取消</a>
+  <a href="{% url 'memory_list' %}">回列表</a>
+  |
+  <a href="{% url 'memory_edit' memory.id %}">編輯這筆回憶</a>
+  |
+  <a href="{% url 'memory_delete' memory.id %}">刪除這筆回憶</a>
 </p>

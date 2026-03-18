@@ -2,15 +2,49 @@ import random
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
+from django.db.models import Q
 
+from couples.models import CoupleRelationship
 from .models import Place, FavoritePlace, RandomPickHistory
 from .forms import PlaceForm
 
 
+def get_partner(user):
+    relationship = CoupleRelationship.objects.filter(
+        user_1=user,
+        is_active=True
+    ).first()
+
+    if relationship:
+        return relationship.user_2
+
+    relationship = CoupleRelationship.objects.filter(
+        user_2=user,
+        is_active=True
+    ).first()
+
+    if relationship:
+        return relationship.user_1
+
+    return None
+
+
 @login_required
 def place_list(request):
-    places = Place.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'places/place_list.html', {'places': places})
+    partner = get_partner(request.user)
+
+    if partner:
+        places = Place.objects.filter(
+            Q(user=request.user) |
+            Q(user=partner, shared_with_couple=True)
+        ).order_by('-created_at')
+    else:
+        places = Place.objects.filter(user=request.user).order_by('-created_at')
+
+    return render(request, 'places/place_list.html', {
+        'places': places,
+        'partner': partner
+    })
 
 
 @login_required
@@ -32,8 +66,18 @@ def place_create(request):
 @login_required
 def place_detail(request, pk):
     place = get_object_or_404(Place, pk=pk)
+    partner = get_partner(request.user)
 
-    if place.user != request.user and not place.is_public:
+    can_view = False
+
+    if place.user == request.user:
+        can_view = True
+    elif place.is_public:
+        can_view = True
+    elif partner and place.user == partner and place.shared_with_couple:
+        can_view = True
+
+    if not can_view:
         raise Http404("你沒有權限查看這個地點")
 
     return render(request, 'places/place_detail.html', {'place': place})
@@ -97,7 +141,15 @@ def random_pick(request):
     error = None
 
     if request.method == 'POST':
-        places = Place.objects.filter(user=request.user)
+        partner = get_partner(request.user)
+
+        if partner:
+            places = Place.objects.filter(
+                Q(user=request.user) |
+                Q(user=partner, shared_with_couple=True)
+            )
+        else:
+            places = Place.objects.filter(user=request.user)
 
         if not places.exists():
             error = '目前沒有可供抽選的地點，請先新增地點。'
@@ -113,6 +165,7 @@ def random_pick(request):
         'picked_place': picked_place,
         'error': error
     })
+
 
 @login_required
 def random_pick_history(request):

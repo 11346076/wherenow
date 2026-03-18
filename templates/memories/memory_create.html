@@ -1,48 +1,68 @@
-<h1>新增回憶</h1>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>新增回憶</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
+    <div style="max-width: 700px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h1>新增回憶</h1>
 
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
 
-  <p>
-    <label>地點：</label><br>
-    <select name="place" required>
-      {% for p in places %}
-        <option value="{{ p.id }}">{{ p.name }}</option>
-      {% endfor %}
-    </select>
-  </p>
+            <p>
+                <label>地點：</label>
+                <select name="place" required>
+                    {% for place in places %}
+                        <option value="{{ place.id }}">{{ place.name }}</option>
+                    {% endfor %}
+                </select>
+            </p>
 
-  <p>
-    <label>日期：</label><br>
-    <input type="date" name="visit_date" required>
-  </p>
+            <p>
+                <label>造訪日期：</label>
+                <input type="date" name="visit_date" required>
+            </p>
 
-  <p>
-    <label>心得：</label><br>
-    <textarea name="comment" rows="4"></textarea>
-  </p>
+            <p>
+                <label>心得：</label><br>
+                <textarea name="comment" rows="4" cols="50"></textarea>
+            </p>
 
-  <p>
-    <label>評分（0-5）：</label><br>
-    <input type="number" name="rating" min="0" max="5">
-  </p>
+            <p>
+                <label>評分：</label>
+                <input type="number" name="rating" min="0" max="5" value="0">
+            </p>
 
-  <p>
-    <label>花費：</label><br>
-    <input type="number" name="cost" min="0">
-  </p>
+            <p>
+                <label>花費：</label>
+                <input type="number" name="cost" value="0">
+            </p>
 
-  <p>
-    <label>
-      <input type="checkbox" name="recommended">
-      推薦
-    </label>
-  </p>
+            <p>
+                <label>
+                    <input type="checkbox" name="recommended">
+                    是否推薦
+                </label>
+            </p>
 
-  <p>
-    <label>上傳照片：</label><br>
-    <input type="file" name="images" multiple>
-  </p>
+            <p>
+                <label>
+                    <input type="checkbox" name="shared_with_couple">
+                    是否與情侶共享
+                </label>
+            </p>
 
-  <button type="submit">送出</button>
-</form>
+            <p>
+                <label>上傳照片：</label>
+                <input type="file" name="images" multiple>
+            </p>
+
+            <button type="submit">儲存回憶</button>
+        </form>
+
+        <p><a href="{% url 'memory_list' %}">回回憶列表</a></p>
+    </div>
+</body>
+</html>

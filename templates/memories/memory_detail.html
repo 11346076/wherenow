@@ -1,25 +1,35 @@
-<h1>{{ memory.place.name }}</h1>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>回憶詳細頁</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
+    <div style="max-width: 800px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h1>{{ memory.place.name }} - {{ memory.visit_date }}</h1>
 
-<p>日期：{{ memory.visit_date }}</p>
-<p>評分：{{ memory.rating }}</p>
-<p>花費：{{ memory.cost }}</p>
-<p>推薦：{{ memory.recommended }}</p>
-<p>{{ memory.comment }}</p>
+        <p>建立者：{{ memory.user.username }}</p>
+        <p>心得：{{ memory.comment }}</p>
+        <p>評分：{{ memory.rating }}</p>
+        <p>花費：{{ memory.cost }}</p>
+        <p>是否推薦：{% if memory.recommended %}是{% else %}否{% endif %}</p>
+        <p>是否與情侶共享：{% if memory.shared_with_couple %}是{% else %}否{% endif %}</p>
 
-<h2>照片</h2>
+        <h3>照片</h3>
+        {% if photos %}
+            {% for photo in photos %}
+                <img src="{{ photo.image.url }}" width="200" style="margin-right: 10px; margin-bottom: 10px;">
+            {% endfor %}
+        {% else %}
+            <p>目前沒有照片</p>
+        {% endif %}
 
-{% if photos %}
-  {% for photo in photos %}
-    <img src="{{ photo.image.url }}" alt="memory photo" width="250">
-  {% endfor %}
-{% else %}
-  <p>目前沒有照片</p>
-{% endif %}
+        {% if memory.user == request.user %}
+            <p><a href="{% url 'memory_edit' memory.id %}">編輯回憶</a></p>
+            <p><a href="{% url 'memory_delete' memory.id %}">刪除回憶</a></p>
+        {% endif %}
 
-<p>
-  <a href="{% url 'memory_list' %}">回列表</a>
-  |
-  <a href="{% url 'memory_edit' memory.id %}">編輯這筆回憶</a>
-  |
-  <a href="{% url 'memory_delete' memory.id %}">刪除這筆回憶</a>
-</p>
+        <p><a href="{% url 'memory_list' %}">回回憶列表</a></p>
+    </div>
+</body>
+</html>
