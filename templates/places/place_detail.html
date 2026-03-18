@@ -21,14 +21,16 @@
     <p><strong>建立時間：</strong>{{ place.created_at }}</p>
     <hr />
 
-    <a href="{% url 'place_update' place.pk %}">編輯地點</a>
+    <a href="{% url 'place_update' place.id %}">編輯地點</a>
 
-    <form method="post" action="{% url 'place_delete' place.pk %}">
-      {% csrf_token %}
-      <button type="submit">刪除地點</button>
-    </form>
+    {% if user.is_authenticated %} 
+        {% if place.user != user and place.is_public%}
+            <a href="{% url 'add_favorite' place.id %}">收藏這個地點</a>
+        {% endif %} 
+    {% endif %}
 
-    <br />
+    <a href="{% url 'place_delete' place.id %}">刪除地點</a>
+    <br /><br />
     <a href="{% url 'place_list' %}">返回列表</a>
   </body>
 </html>

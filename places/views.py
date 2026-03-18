@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Place
+from django.http import Http404
+
+from .models import Place, FavoritePlace
 from .forms import PlaceForm
 
 
@@ -18,6 +20,7 @@ def place_create(request):
             place = form.save(commit=False)
             place.user = request.user
             place.save()
+            form.save_m2m()
             return redirect('place_list')
     else:
         form = PlaceForm()
@@ -27,8 +30,13 @@ def place_create(request):
 
 @login_required
 def place_detail(request, pk):
-    place = get_object_or_404(Place, pk=pk, user=request.user)
+    place = get_object_or_404(Place, pk=pk)
+
+    if place.user != request.user and not place.is_public:
+        raise Http404("你沒有權限查看這個地點")
+
     return render(request, 'places/place_detail.html', {'place': place})
+
 
 @login_required
 def place_update(request, pk):
@@ -44,6 +52,7 @@ def place_update(request, pk):
 
     return render(request, 'places/place_form.html', {'form': form})
 
+
 @login_required
 def place_delete(request, pk):
     place = get_object_or_404(Place, pk=pk, user=request.user)
@@ -53,3 +62,29 @@ def place_delete(request, pk):
         return redirect('place_list')
 
     return render(request, 'places/place_confirm_delete.html', {'place': place})
+
+
+@login_required
+def add_favorite(request, place_id):
+    place = get_object_or_404(Place, id=place_id, is_public=True)
+
+    if place.user != request.user:
+        FavoritePlace.objects.get_or_create(user=request.user, place=place)
+
+    return redirect('place_detail', pk=place.id)
+
+
+@login_required
+def remove_favorite(request, place_id):
+    place = get_object_or_404(Place, id=place_id)
+
+    favorite = FavoritePlace.objects.filter(user=request.user, place=place)
+    favorite.delete()
+
+    return redirect('favorite_list')
+
+
+@login_required
+def favorite_list(request):
+    favorites = FavoritePlace.objects.filter(user=request.user).select_related('place')
+    return render(request, 'places/favorite_list.html', {'favorites': favorites})

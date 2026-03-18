@@ -8,7 +8,7 @@ class PlaceForm(forms.ModelForm):
         fields = [
             'category',
             'name',
-            'region',
+            'area',
             'google_map_link',
             'note',
             'budget',

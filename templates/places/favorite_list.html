@@ -1,0 +1,19 @@
+<h2>我的收藏地點</h2>
+
+{% if favorites %}
+    <ul>
+        {% for favorite in favorites %}
+            <li>
+                <strong>{{ favorite.place.name }}</strong><br>
+                地區：{{ favorite.place.area }}<br>
+                分類：{{ favorite.place.category.name }}<br>
+                <a href="{% url 'place_detail' favorite.place.id %}">查看地點</a>
+                |
+                <a href="{% url 'remove_favorite' favorite.place.id %}">取消收藏</a>
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>你目前還沒有收藏任何地點。</p>
+{% endif %}
