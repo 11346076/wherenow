@@ -2,13 +2,12 @@
 
 本系統設計一組資料庫結構，用來支援 **WhereNow－地點清單與情侶回憶管理系統** 的核心功能。
 
-系統主要包含以下模組：
+系統目前主要包含以下模組：
 
 - 使用者帳號系統
 - 情侶關係系統
 - 地點清單管理系統
 - 回憶紀錄系統
-- 擴充功能（收藏與抽選紀錄）
 
 ---
 
@@ -20,7 +19,7 @@
 
 # 系統資料表分類
 
-本系統共設計 **12 個主要資料表**。
+本系統目前設計 **10 個主要資料表**。
 
 ## 一、使用者帳號系統
 
@@ -56,7 +55,7 @@
 
 ### COUPLE_INVITATION（情侶邀請）
 
-記錄使用者之間的情侶邀請。
+記錄使用者之間的情侶邀請資料。
 
 | 欄位名稱 | 型態 | 說明 |
 |---|---|---|
@@ -70,14 +69,14 @@
 
 ### COUPLE_RELATIONSHIP（情侶關係）
 
-當邀請被接受後，建立正式情侶關係。
+當邀請被接受後，建立正式的情侶關係。
 
 | 欄位名稱 | 型態 | 說明 |
 |---|---|---|
 | id | int (PK) | 關係編號 |
-| user1_id | int (FK) | 使用者1 |
-| user2_id | int (FK) | 使用者2 |
-| is_active | boolean | 是否有效 |
+| user1_id | int (FK) | 使用者 1 |
+| user2_id | int (FK) | 使用者 2 |
+| is_active | boolean | 是否仍有效 |
 | created_at | datetime | 建立時間 |
 
 ---
@@ -97,7 +96,7 @@
 
 ### TAG（標籤）
 
-儲存地點標籤。
+儲存地點標籤資料。
 
 | 欄位名稱 | 型態 | 說明 |
 |---|---|---|
@@ -121,20 +120,19 @@
 | note | string | 備註 |
 | budget | string | 預算 |
 | is_public | boolean | 是否公開 |
-| visited | boolean | 是否已去過 |
 | created_at | datetime | 建立時間 |
 
 ---
 
 ### PLACE_TAG（地點標籤關聯）
 
-此表為 **PLACE 與 TAG 的多對多關聯表**。
+此表為 **PLACE 與 TAG 的多對多關聯表**，用來記錄某個地點有哪些標籤。
 
 | 欄位名稱 | 型態 | 說明 |
 |---|---|---|
 | id | int (PK) | 資料編號 |
-| place_id | int (FK) | 地點 |
-| tag_id | int (FK) | 標籤 |
+| place_id | int (FK) | 對應地點 |
+| tag_id | int (FK) | 對應標籤 |
 
 ---
 
@@ -142,15 +140,15 @@
 
 ### MEMORY（回憶紀錄）
 
-儲存使用者去過某個地點後的回憶紀錄。
+儲存使用者在某個地點所建立的回憶紀錄。
 
 | 欄位名稱 | 型態 | 說明 |
 |---|---|---|
 | id | int (PK) | 回憶編號 |
-| user_id | int (FK) | 使用者 |
-| place_id | int (FK) | 地點 |
+| user_id | int (FK) | 建立回憶的使用者 |
+| place_id | int (FK) | 對應地點 |
 | visit_date | date | 造訪日期 |
-| comment | text | 心得 |
+| comment | text | 回憶內容 / 心得 |
 | rating | int | 評分 |
 | cost | int | 花費 |
 | recommended | boolean | 是否推薦 |
@@ -160,43 +158,14 @@
 
 ### MEMORY_PHOTO（回憶照片）
 
-儲存回憶紀錄中的照片。
+儲存回憶紀錄中的照片資料。
 
 | 欄位名稱 | 型態 | 說明 |
 |---|---|---|
 | id | int (PK) | 照片編號 |
-| memory_id | int (FK) | 回憶紀錄 |
-| image | string | 照片檔案 |
+| memory_id | int (FK) | 對應回憶紀錄 |
+| image | string | 照片檔案路徑 |
 | uploaded_at | datetime | 上傳時間 |
-
----
-
-## 五、系統擴充功能
-
-### FAVORITE_PLACE（收藏地點）
-
-使用者可以收藏其他人的公開地點。
-
-| 欄位名稱 | 型態 | 說明 |
-|---|---|---|
-| id | int (PK) | 收藏編號 |
-| user_id | int (FK) | 使用者 |
-| place_id | int (FK) | 地點 |
-| created_at | datetime | 收藏時間 |
-
----
-
-### RANDOM_PICK_HISTORY（抽選紀錄）
-
-記錄每次隨機抽選地點的結果。
-
-| 欄位名稱 | 型態 | 說明 |
-|---|---|---|
-| id | int (PK) | 紀錄編號 |
-| user_id | int (FK) | 使用者 |
-| place_id | int (FK) | 抽到的地點 |
-| mode | string | 抽選模式 |
-| created_at | datetime | 抽選時間 |
 
 ---
 
@@ -206,9 +175,23 @@
 
 - USER 與 PROFILE 為 **一對一關係**
 - USER 與 PLACE 為 **一對多關係**
-- PLACE 與 CATEGORY 為 **多對一關係**
+- USER 與 MEMORY 為 **一對多關係**
+- USER 與 COUPLE_INVITATION 為 **一對多關係**
+- USER 與 COUPLE_RELATIONSHIP 為 **一對多關係**
+- CATEGORY 與 PLACE 為 **一對多關係**
 - PLACE 與 TAG 為 **多對多關係（透過 PLACE_TAG）**
 - PLACE 與 MEMORY 為 **一對多關係**
 - MEMORY 與 MEMORY_PHOTO 為 **一對多關係**
-- USER 與 COUPLE_INVITATION 為 **一對多關係**
-- USER 與 COUPLE_RELATIONSHIP 為 **一對多關係**
+
+---
+
+# 補充說明
+
+目前本系統的 ERD 以已完成或目前正在實作中的核心功能為主，包含：
+
+- 使用者帳號與個人資料
+- 情侶邀請與情侶關係
+- 地點建立、分類與標籤
+- 回憶建立與照片上傳
+
+至於 **收藏地點（Favorite Place）** 與 **隨機抽選紀錄（Random Pick History）**，屬於後續可擴充功能，未放入目前版本的 ERD 中。
