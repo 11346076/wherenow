@@ -3,7 +3,7 @@
 系統名稱：WhereNow－地點清單與情侶回憶管理系統
 
 ---
-![WhereNow ERD](./images/wherenow%20Use%20Case.png)
+![WhereNow Use Case](./images/wherenow%20Use%20Case.jpg)
 
 # 系統角色（Actors）
 
