@@ -1,49 +1,94 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>回憶列表</title>
-</head>
-<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
-    <div style="max-width: 900px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <h1>Memory List</h1>
+{% extends 'base.html' %}
 
-        {% if partner %}
-            <p>你目前正在查看與 <strong>{{ partner.username }}</strong> 的共享回憶清單。</p>
-        {% else %}
-            <p>你目前沒有情侶關係，這是你的個人回憶清單。</p>
-        {% endif %}
+{% block content %}
+<section class="page-section">
+  <div class="wrap-lg">
 
-        <p><a href="{% url 'memory_create' %}">新增回憶</a></p>
-        <hr>
+    <!-- Header -->
+    <div class="page-header">
+      <div>
+        <div class="page-label">Memories</div>
+        <h1 class="page-title">我的回憶列表</h1>
+        <p class="page-desc">
+          把每一次約會、旅行、日常片段與重要時刻收藏起來，
+          讓回憶不只是被記住，而是能被重新打開與回看。
+        </p>
+      </div>
 
-        <ul>
-          {% for m in memories %}
-            <li style="margin-bottom: 15px;">
-              <a href="{% url 'memory_detail' m.id %}">
-                {{ m.place.name }} - {{ m.visit_date }}
-              </a>
-              <br>
-              建立者：
-              {% if m.user == request.user %}
-                我
-              {% else %}
-                {{ m.user.username }}
-              {% endif %}
-              <br>
-              是否與情侶共享：
-              {% if m.shared_with_couple %}
-                是
-              {% else %}
-                否
-              {% endif %}
-            </li>
-          {% empty %}
-            <li>目前還沒有回憶資料</li>
-          {% endfor %}
-        </ul>
-
-        <p><a href="{% url 'home' %}">回首頁</a></p>
+      <div class="action-row">
+        <a href="{% url 'memory_create' %}" class="btn-main">新增回憶</a>
+        <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
+      </div>
     </div>
-</body>
-</html>
+
+    <!-- 狀態提示 -->
+    <div class="card card-hero" style="margin-bottom: 34px;">
+      {% if partner %}
+        <p>你目前正在查看與 <strong>{{ partner.username }}</strong> 的共享回憶清單。</p>
+      {% else %}
+        <p>你目前沒有情侶關係，這是你的個人回憶清單。</p>
+      {% endif %}
+    </div>
+
+    {% if memories %}
+      <div class="memory-grid">
+        {% for m in memories %}
+          <article class="card memory-card">
+
+            <h3 class="card-title">
+              <a href="{% url 'memory_detail' m.id %}">
+                {{ m.place.name }}
+              </a>
+            </h3>
+
+            <div class="memory-date">{{ m.visit_date }}</div>
+
+            <div class="meta-list">
+              <div class="meta-label">建立者</div>
+              <div class="meta-value">
+                {% if m.user == request.user %}
+                  我
+                {% else %}
+                  {{ m.user.username }}
+                {% endif %}
+              </div>
+
+              <div class="meta-label">地點</div>
+              <div class="meta-value">
+                {{ m.place.name }}
+              </div>
+            </div>
+
+            <div class="tag-row">
+              <span class="tag">
+                與情侶共享：
+                {% if m.shared_with_couple %}
+                  是
+                {% else %}
+                  否
+                {% endif %}
+              </span>
+            </div>
+
+            <a href="{% url 'memory_detail' m.id %}" class="card-link">
+              查看回憶內容 →
+            </a>
+
+          </article>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div class="card card-empty">
+        <div class="empty-icon">🕊️</div>
+        <div class="empty-title">目前還沒有任何回憶</div>
+        <div class="empty-desc">
+          先新增第一筆回憶，替你們的重要時刻留下紀錄。
+        </div>
+        <a href="{% url 'memory_create' %}" class="btn-main">新增第一筆回憶</a>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

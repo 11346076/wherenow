@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .extra-links {
+    text-align: center;
+    margin-top: 20px;
+    color: #5c686e;
+    font-size: 14px;
+  }
+
+  .extra-links a {
+    color: #a97457;
+    text-decoration: none;
+    margin-left: 6px;
+  }
+
+  .extra-links a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<section class="page-section">
+  <div class="form-wrap">
+    <div class="page-label" style="text-align:center;">Login</div>
+    <h1 class="page-title" style="text-align:center;">登入帳號</h1>
+    <p class="page-desc" style="text-align:center;">
+      登入 WhereNow，繼續你的地點與回憶紀錄。
+    </p>
+
+    <div class="form-card">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="action-row">
+          <button type="submit" class="btn-main">登入</button>
+        </div>
+      </form>
+
+      <div class="extra-links">
+        還沒有帳號？
+        <a href="{% url 'register' %}">前往註冊</a>
+        <br><br>
+        <a href="{% url 'home' %}">回首頁</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

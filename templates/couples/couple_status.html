@@ -1,28 +1,39 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>情侶狀態</title>
-</head>
-<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
-    <div style="max-width: 600px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <h1 style="color: #d63384;">目前情侶狀態</h1>
+{% extends 'base.html' %}
 
-        {% if relationship %}
-            <p style="font-size: 18px;">你的情侶是：<strong>{{ partner.username }}</strong></p>
-            <p><a href="{% url 'couple_home' %}">前往情侶首頁</a></p>
-            <p>
-                <a href="{% url 'break_up' %}" style="color: red;">解除情侶關係</a>
-            </p>
-        {% else %}
-            <p>你目前沒有情侶關係。</p>
-        {% endif %}
+{% block content %}
+<section class="page-section">
+  <div class="wrap-sm">
+    <div class="page-label text-center">Couple</div>
+    <h1 class="page-title text-center">情侶狀態</h1>
 
-        <hr style="margin: 20px 0;">
+    <div class="card card-empty" style="margin-bottom: 24px;">
+      {% if relationship %}
+        <div class="status-icon">💞</div>
+        <div class="status-text">
+          你目前的情侶是：
+          <span class="partner-name">{{ partner.username }}</span>
+        </div>
 
-        <p><a href="{% url 'send_invitation' %}">送出情侶邀請</a></p>
-        <p><a href="{% url 'received_invitations' %}">查看收到的邀請</a></p>
-        <p><a href="{% url 'home' %}">回首頁</a></p>
+        <div class="action-row action-center">
+          <a href="{% url 'couple_home' %}" class="btn-main">前往情侶首頁</a>
+          <a href="{% url 'break_up' %}" class="btn-danger">解除關係</a>
+        </div>
+      {% else %}
+        <div class="status-icon">🫧</div>
+        <div class="status-text">
+          你目前還沒有情侶關係
+        </div>
+
+        <div class="action-row action-center">
+          <a href="{% url 'send_invitation' %}" class="btn-main">送出邀請</a>
+          <a href="{% url 'received_invitations' %}" class="btn-sub">查看邀請</a>
+        </div>
+      {% endif %}
     </div>
-</body>
-</html>
+
+    <div class="action-row action-center">
+      <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

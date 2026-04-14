@@ -1,32 +1,45 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>收到的邀請</title>
-</head>
-<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
-    <div style="max-width: 700px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <h1 style="color: #d63384;">收到的情侶邀請</h1>
+{% extends 'base.html' %}
 
-        {% if invitations %}
-            <ul style="line-height: 2;">
-                {% for invitation in invitations %}
-                    <li>
-                        <strong>{{ invitation.sender.username }}</strong> 邀請你成為情侶
-                        <a href="{% url 'accept_invitation' invitation.id %}" style="margin-left: 10px; color: green;">接受</a>
-                        <a href="{% url 'reject_invitation' invitation.id %}" style="margin-left: 10px; color: red;">拒絕</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>目前沒有邀請</p>
-        {% endif %}
+{% block content %}
+<section class="page-section">
+  <div class="wrap-md">
+    <div class="page-label text-center">Invitations</div>
+    <h1 class="page-title text-center">收到的情侶邀請</h1>
+    <p class="page-desc text-center">
+      在這裡查看別人傳給你的情侶邀請，並選擇接受或拒絕。
+    </p>
 
-        <hr style="margin: 20px 0;">
+    {% if invitations %}
+      <div class="invite-list" style="margin-bottom: 28px;">
+        {% for invitation in invitations %}
+          <div class="card-soft invite-card">
+            <div class="invite-info">
+              <strong>{{ invitation.sender.username }}</strong>
+              邀請你成為情侶
+            </div>
 
-        <p><a href="{% url 'send_invitation' %}">送出情侶邀請</a></p>
-        <p><a href="{% url 'couple_status' %}">查看情侶狀態</a></p>
-        <p><a href="{% url 'home' %}">回首頁</a></p>
+            <div class="invite-actions">
+              <a href="{% url 'accept_invitation' invitation.id %}" class="btn-accept">接受</a>
+              <a href="{% url 'reject_invitation' invitation.id %}" class="btn-danger">拒絕</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="card card-empty" style="margin-bottom: 28px;">
+        <div class="empty-icon">💌</div>
+        <div class="empty-title">目前沒有邀請</div>
+        <div class="empty-desc">
+          當有人邀請你成為情侶時，這裡會顯示通知。
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="action-row action-center">
+      <a href="{% url 'send_invitation' %}" class="btn-main">送出情侶邀請</a>
+      <a href="{% url 'couple_status' %}" class="btn-sub">查看情侶狀態</a>
+      <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
     </div>
-</body>
-</html>
+  </div>
+</section>
+{% endblock %}

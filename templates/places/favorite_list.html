@@ -1,19 +1,61 @@
-<h2>我的收藏地點</h2>
+{% extends 'base.html' %}
 
-{% if favorites %}
-    <ul>
+{% block content %}
+<style>
+  .favorite-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+  }
+</style>
+
+<section class="page-section">
+  <div class="favorite-wrap">
+    <div class="page-label">Favorites</div>
+    <h1 class="page-title">我的收藏地點</h1>
+    <p class="page-desc">
+      這裡是你收藏的地點清單，方便你之後快速查看與再次規劃行程。
+    </p>
+
+    {% if favorites %}
+      <div class="card-grid">
         {% for favorite in favorites %}
-            <li>
-                <strong>{{ favorite.place.name }}</strong><br>
-                地區：{{ favorite.place.area }}<br>
-                分類：{{ favorite.place.category.name }}<br>
-                <a href="{% url 'place_detail' favorite.place.id %}">查看地點</a>
-                |
-                <a href="{% url 'remove_favorite' favorite.place.id %}">取消收藏</a>
-            </li>
-            <hr>
+          <div class="card">
+            <div class="card-title">
+              {{ favorite.place.name }}
+            </div>
+
+            <div class="card-meta">
+              地區：{{ favorite.place.area }}<br>
+              分類：
+              {% if favorite.place.category %}
+                {{ favorite.place.category.name }}
+              {% else %}
+                無
+              {% endif %}
+            </div>
+
+            <div class="card-actions">
+              <a href="{% url 'place_detail' favorite.place.id %}" class="btn-main">
+                查看地點
+              </a>
+
+              <a href="{% url 'remove_favorite' favorite.place.id %}" class="btn-danger">
+                取消收藏
+              </a>
+            </div>
+          </div>
         {% endfor %}
-    </ul>
-{% else %}
-    <p>你目前還沒有收藏任何地點。</p>
-{% endif %}
+      </div>
+
+    {% else %}
+      <div class="empty-box">
+        <div class="empty-icon">⭐</div>
+        <div class="empty-title">還沒有收藏</div>
+        <div class="empty-desc">
+          當你收藏地點後，這裡會顯示清單。
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

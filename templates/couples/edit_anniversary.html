@@ -1,30 +1,41 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>設定紀念日</title>
-</head>
-<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
-    <div style="max-width: 600px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <h1 style="color: #d63384;">設定紀念日</h1>
+{% extends 'base.html' %}
 
-        <p>目前情侶：{{ partner.username }}</p>
+{% block content %}
+<section class="page-section">
+  <div class="wrap-sm">
+    <div class="page-label text-center">Couple</div>
+    <h1 class="page-title text-center">設定紀念日</h1>
+    <p class="page-desc text-center">
+      記錄你們的重要日期，讓系統替你保存這段關係的重要時刻。
+    </p>
 
-        <form method="post">
-            {% csrf_token %}
-            <p>
-                <label>在一起紀念日：</label>
-                <input
-                    type="date"
-                    name="anniversary_date"
-                    value="{% if relationship.anniversary_date %}{{ relationship.anniversary_date|date:'Y-m-d' }}{% endif %}"
-                >
-            </p>
+    <div class="card">
+      <div class="card-hero partner-box" style="margin-bottom: 24px;">
+        目前情侶：<strong>{{ partner.username }}</strong>
+      </div>
 
-            <button type="submit">儲存</button>
-        </form>
+      <form method="post">
+        {% csrf_token %}
 
-        <p><a href="{% url 'couple_home' %}">回情侶首頁</a></p>
+        <div class="form-group">
+          <label for="anniversary_date">在一起紀念日</label>
+          <input
+            type="date"
+            id="anniversary_date"
+            name="anniversary_date"
+            value="{% if relationship.anniversary_date %}{{ relationship.anniversary_date|date:'Y-m-d' }}{% endif %}"
+          >
+          <div class="help-text">
+            可設定你們開始交往或想紀念的重要日期。
+          </div>
+        </div>
+
+        <div class="action-row action-center">
+          <button type="submit" class="btn-main">儲存日期</button>
+          <a href="{% url 'couple_home' %}" class="btn-sub">回情侶首頁</a>
+        </div>
+      </form>
     </div>
-</body>
-</html>
+  </div>
+</section>
+{% endblock %}

@@ -1,23 +1,25 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>編輯個人資料</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>編輯個人資料</h1>
+{% block content %}
+<section class="page-section">
+  <div class="wrap-sm">
+    <div class="page-label text-center">Edit Profile</div>
+    <h1 class="page-title text-center">編輯個人資料</h1>
+    <p class="page-desc text-center">
+      更新你的暱稱、頭像與自我介紹，讓你的個人頁更完整。
+    </p>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
+    <div class="card">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
 
-    <button type="submit">儲存</button>
-</form>
-
-<p>
-<a href="{% url 'profile' %}">返回個人資料</a>
-</p>
-
-</body>
-</html>
+        <div class="action-row action-center">
+          <button type="submit" class="btn-main">儲存變更</button>
+          <a href="{% url 'profile' %}" class="btn-sub">返回個人資料</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

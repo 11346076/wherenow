@@ -1,32 +1,38 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>送出情侶邀請</title>
-</head>
-<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
-    <div style="max-width: 600px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <h1 style="color: #d63384;">送出情侶邀請</h1>
+{% extends 'base.html' %}
 
-        {% if message %}
-            <p style="color: #333; background-color: #ffeef5; padding: 10px; border-radius: 8px;">
-                {{ message }}
-            </p>
-        {% endif %}
+{% block content %}
+<section class="page-section">
+  <div class="wrap-sm">
+    <div class="page-label text-center">Couple</div>
+    <h1 class="page-title text-center">送出情侶邀請</h1>
+    <p class="page-desc text-center">
+      輸入對方的帳號名稱，邀請他與你建立共享回憶的關係。
+    </p>
 
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" style="padding: 10px 20px; background-color: #d63384; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                送出邀請
-            </button>
-        </form>
+    <div class="card" style="margin-bottom: 24px;">
 
-        <hr style="margin: 20px 0;">
+      {% if message %}
+        <div class="message-box">
+          {{ message }}
+        </div>
+      {% endif %}
 
-        <p><a href="{% url 'received_invitations' %}">查看收到的邀請</a></p>
-        <p><a href="{% url 'couple_status' %}">查看情侶狀態</a></p>
-        <p><a href="{% url 'home' %}">回首頁</a></p>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="action-row action-center">
+          <button type="submit" class="btn-main">送出邀請</button>
+        </div>
+      </form>
+
     </div>
-</body>
-</html>
+
+    <div class="action-row action-center">
+      <a href="{% url 'received_invitations' %}" class="btn-sub">查看邀請</a>
+      <a href="{% url 'couple_status' %}" class="btn-sub">情侶狀態</a>
+      <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

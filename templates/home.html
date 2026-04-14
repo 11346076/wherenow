@@ -1,26 +1,21 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>WhereNow 首頁</title>
-</head>
-<body>
-    <h1>歡迎來到 WhereNow</h1>
+{% extends 'base.html' %}
 
-    {% if user.is_authenticated %}
-        <p>你好，{{ user.username }}！你已經登入。</p>
-        <p><a href="{% url 'profile' %}">查看個人資料</a></p>
-        <p><a href="{% url 'send_invitation' %}">送出情侶邀請</a></p>
-        <p><a href="{% url 'received_invitations' %}">查看收到的邀請</a></p>
+{% block content %}
 
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">登出</button>
-        </form>
-    {% else %}
-        <p>你目前還沒登入。</p>
-        <a href="{% url 'login' %}">登入</a>
-        <a href="{% url 'register' %}">註冊</a>
-    {% endif %}
-</body>
-</html>
+<section class="hero">
+  <div class="hero-label">WhereNow</div>
+
+  <h1>Keep places. Keep memories.</h1>
+
+  <p>
+    WhereNow 是一個用來記錄地點、建立回憶、整理收藏，
+    並支援情侶共享生活紀錄的 Web 系統。
+  </p>
+
+  <div class="hero-actions">
+    <a href="/places/" class="btn-primary">開始探索</a>
+    <a href="/users/profile/" class="btn-secondary">查看個人資料</a>
+  </div>
+</section>
+
+{% endblock %}

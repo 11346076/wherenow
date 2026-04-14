@@ -1,4 +1,5 @@
 from datetime import date
+import logging
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -9,6 +10,8 @@ from .forms import CoupleInvitationForm
 from .models import CoupleInvitation, CoupleRelationship
 from places.models import Place
 from memories.models import Memory
+
+logger = logging.getLogger('wherenow')
 
 
 def get_relationship_and_partner(user):
@@ -41,6 +44,7 @@ def send_invitation(request):
             receiver_username = form.cleaned_data['receiver_username']
 
             if receiver_username == request.user.username:
+                logger.warning(f'使用者 {request.user.username} 嘗試邀請自己')
                 message = '不能邀請自己。'
             else:
                 try:
@@ -63,9 +67,15 @@ def send_invitation(request):
                     ).exists()
 
                     if my_relationship_exists:
+                        logger.warning(f'使用者 {request.user.username} 邀請失敗：自己已有情侶關係')
                         message = '你目前已經有情侶關係，不能再次邀請。'
+
                     elif receiver_relationship_exists:
+                        logger.warning(
+                            f'使用者 {request.user.username} 邀請失敗：對方 {receiver.username} 已有情侶關係'
+                        )
                         message = '對方目前已經有情侶關係。'
+
                     else:
                         invitation_exists = CoupleInvitation.objects.filter(
                             sender=request.user,
@@ -74,6 +84,9 @@ def send_invitation(request):
                         ).exists()
 
                         if invitation_exists:
+                            logger.warning(
+                                f'使用者 {request.user.username} 重複邀請 {receiver.username}'
+                            )
                             message = '邀請已經送出，請勿重複邀請。'
                         else:
                             CoupleInvitation.objects.create(
@@ -81,10 +94,23 @@ def send_invitation(request):
                                 receiver=receiver,
                                 status='pending'
                             )
+
+                            logger.info(
+                                f'使用者 {request.user.username} 成功傳送情侶邀請給 {receiver.username}'
+                            )
                             message = '邀請已送出。'
 
                 except User.DoesNotExist:
+                    logger.warning(
+                        f'使用者 {request.user.username} 邀請失敗：找不到帳號 {receiver_username}'
+                    )
                     message = '找不到這個帳號。'
+
+                except Exception as e:
+                    logger.exception(
+                        f'使用者 {request.user.username} 傳送情侶邀請時發生系統錯誤：{str(e)}'
+                    )
+                    message = '系統發生錯誤，請稍後再試。'
     else:
         form = CoupleInvitationForm()
 
@@ -100,6 +126,8 @@ def received_invitations(request):
         receiver=request.user,
         status='pending'
     ).order_by('-created_at')
+
+    logger.info(f'使用者 {request.user.username} 查看收到的情侶邀請列表')
 
     return render(request, 'couples/received_invitations.html', {
         'invitations': invitations
@@ -132,10 +160,17 @@ def accept_invitation(request, invitation_id):
     ).exists()
 
     if sender_has_relationship or receiver_has_relationship:
+        logger.warning(
+            f'使用者 {request.user.username} 接受邀請失敗：雙方其中一人已有情侶關係'
+        )
         return redirect('received_invitations')
 
     invitation.status = 'accepted'
     invitation.save()
+
+    logger.info(
+        f'使用者 {request.user.username} 接受來自 {invitation.sender.username} 的情侶邀請'
+    )
 
     relationship_exists = CoupleRelationship.objects.filter(
         user_1=invitation.sender,
@@ -154,6 +189,10 @@ def accept_invitation(request, invitation_id):
             is_active=True
         )
 
+        logger.info(
+            f'使用者 {request.user.username} 與 {invitation.sender.username} 建立情侶關係成功'
+        )
+
     return redirect('couple_status')
 
 
@@ -169,12 +208,18 @@ def reject_invitation(request, invitation_id):
     invitation.status = 'rejected'
     invitation.save()
 
+    logger.info(
+        f'使用者 {request.user.username} 拒絕來自 {invitation.sender.username} 的情侶邀請'
+    )
+
     return redirect('received_invitations')
 
 
 @login_required
 def couple_status(request):
     relationship, partner = get_relationship_and_partner(request.user)
+
+    logger.info(f'使用者 {request.user.username} 查看情侶狀態頁面')
 
     return render(request, 'couples/couple_status.html', {
         'relationship': relationship,
@@ -189,6 +234,13 @@ def break_up(request):
     if relationship:
         relationship.is_active = False
         relationship.save()
+
+        if partner:
+            logger.info(
+                f'使用者 {request.user.username} 與 {partner.username} 結束情侶關係'
+            )
+        else:
+            logger.info(f'使用者 {request.user.username} 結束情侶關係')
 
     return redirect('couple_status')
 
@@ -221,6 +273,8 @@ def couple_home(request):
             Q(user=partner, shared_with_couple=True)
         ).order_by('-created_at')[:5]
 
+    logger.info(f'使用者 {request.user.username} 查看情侶首頁')
+
     return render(request, 'couples/couple_home.html', {
         'relationship': relationship,
         'partner': partner,
@@ -236,13 +290,21 @@ def edit_anniversary(request):
     relationship, partner = get_relationship_and_partner(request.user)
 
     if not relationship:
+        logger.warning(f'使用者 {request.user.username} 嘗試編輯紀念日，但目前沒有情侶關係')
         return redirect('couple_status')
 
     if request.method == 'POST':
         anniversary_date = request.POST.get('anniversary_date')
         relationship.anniversary_date = anniversary_date or None
         relationship.save()
+
+        logger.info(
+            f'使用者 {request.user.username} 更新紀念日為 {relationship.anniversary_date}'
+        )
+
         return redirect('couple_home')
+
+    logger.info(f'使用者 {request.user.username} 進入編輯紀念日頁面')
 
     return render(request, 'couples/edit_anniversary.html', {
         'relationship': relationship,

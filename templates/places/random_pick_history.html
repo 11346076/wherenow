@@ -1,24 +1,49 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>隨機抽選歷史</h2>
+<style>
+  .history-wrap {
+    max-width: 880px;
+    margin: 0 auto;
+  }
 
-<p>
-    <a href="{% url 'random_pick' %}">回到隨機抽選</a>
-</p>
+  .top-action {
+    margin-bottom: 24px;
+  }
+</style>
 
-<hr>
+<section class="page-section">
+  <div class="history-wrap">
+    <div class="page-label">Random Pick</div>
+    <h1 class="page-title">隨機抽選歷史</h1>
+    <p class="page-desc">
+      這裡記錄你每次隨機抽到的地點，幫助你回顧當時的選擇。
+    </p>
 
-{% if histories %}
-    <ul>
+    <div class="top-action">
+      <a href="{% url 'random_pick' %}" class="btn-main">回到隨機抽選</a>
+    </div>
+
+    {% if histories %}
+      <div class="history-list">
         {% for history in histories %}
-            <li>
-                {{ history.picked_at|date:"Y-m-d H:i" }}：
-                {{ history.place.name }}
-            </li>
+          <div class="history-card">
+            <div class="history-place">{{ history.place.name }}</div>
+            <div class="history-time">
+              {{ history.picked_at|date:"Y-m-d H:i" }}
+            </div>
+          </div>
         {% endfor %}
-    </ul>
-{% else %}
-    <p>目前還沒有抽選紀錄。</p>
-{% endif %}
+      </div>
+    {% else %}
+      <div class="empty-box">
+        <div class="empty-icon">🎲</div>
+        <div class="empty-title">還沒有抽選紀錄</div>
+        <div class="empty-desc">
+          當你開始使用隨機抽選功能，這裡會顯示紀錄。
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
 {% endblock %}

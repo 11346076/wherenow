@@ -1,18 +1,51 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<h1>註冊帳號</h1>
+{% block content %}
+<style>
+  .form-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+  }
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+  .form-card form p {
+    margin-bottom: 20px;
+  }
 
-    <button type="submit">註冊</button>
-</form>
+  .form-card input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ddd2c6;
+    border-radius: 16px;
+    background: #fffdfb;
+    font-size: 15px;
+    box-sizing: border-box;
+  }
 
-</body>
-</html>
+  .form-card input:focus {
+    outline: none;
+    border-color: #a97457;
+    box-shadow: 0 0 0 4px rgba(169, 116, 87, 0.1);
+  }
+</style>
+
+<section class="page-section">
+  <div class="form-wrap">
+    <div class="page-label">Register</div>
+    <h1 class="page-title">註冊帳號</h1>
+    <p class="page-desc">
+      建立你的 WhereNow 帳號，開始記錄你的地點與回憶。
+    </p>
+
+    <div class="form-card">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="action-row">
+          <button type="submit" class="btn-main">註冊</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

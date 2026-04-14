@@ -1,18 +1,26 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>新增地點</title>
-</head>
-<body>
-    <h1>新增地點</h1>
+{% extends 'base.html' %}
 
-    <form method="post">
+{% block content %}
+<section class="page-section">
+  <div class="form-wrap" style="max-width: 860px;">
+    <div class="page-label">Place Form</div>
+    <h1 class="page-title">新增地點</h1>
+    <p class="page-desc">
+      把想去的地方、去過的地方，或想和另一半共享的地點記錄下來，
+      讓每個日常與回憶都有地方可以保存。
+    </p>
+
+    <div class="form-card">
+      <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">儲存</button>
-    </form>
 
-    <a href="{% url 'place_list' %}">返回列表</a>
-</body>
-</html>
+        <div class="action-row">
+          <button type="submit" class="btn-main">儲存地點</button>
+          <a href="{% url 'place_list' %}" class="btn-sub">返回列表</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,35 +1,169 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>回憶詳細頁</title>
-</head>
-<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
-    <div style="max-width: 800px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <h1>{{ memory.place.name }} - {{ memory.visit_date }}</h1>
+{% extends 'base.html' %}
 
-        <p>建立者：{{ memory.user.username }}</p>
-        <p>心得：{{ memory.comment }}</p>
-        <p>評分：{{ memory.rating }}</p>
-        <p>花費：{{ memory.cost }}</p>
-        <p>是否推薦：{% if memory.recommended %}是{% else %}否{% endif %}</p>
-        <p>是否與情侶共享：{% if memory.shared_with_couple %}是{% else %}否{% endif %}</p>
+{% block content %}
+<section class="page-section">
+  <div class="detail-wrap">
+    <div class="detail-card">
+      <h1 class="place-title">{{ memory.place.name }} - {{ memory.visit_date }}</h1>
 
-        <h3>照片</h3>
-        {% if photos %}
-            {% for photo in photos %}
-                <img src="{{ photo.image.url }}" width="200" style="margin-right: 10px; margin-bottom: 10px;">
-            {% endfor %}
-        {% else %}
-            <p>目前沒有照片</p>
-        {% endif %}
+      <div class="meta-list">
+        <div><strong>👤 建立者：</strong>{{ memory.user.username }}</div>
+        <div><strong>📍 地點：</strong>{{ memory.place.name }}</div>
+        <div><strong>📅 日期：</strong>{{ memory.visit_date }}</div>
+        <div><strong>⭐ 評分：</strong>{{ memory.rating }}</div>
+        <div>
+          <strong>💰 花費：</strong>
+          {% if memory.cost %}
+            {{ memory.cost }}
+          {% else %}
+            未填寫
+          {% endif %}
+        </div>
+        <div>
+          <strong>👍 是否推薦：</strong>{{ memory.recommended|yesno:"是,否" }}
+        </div>
+        <div>
+          <strong>💕 與情侶共享：</strong>{{ memory.shared_with_couple|yesno:"是,否" }}
+        </div>
+      </div>
 
+      <div class="note-box">
+        {{ memory.comment|default:"尚未填寫心得。" }}
+      </div>
+
+      <div class="action-row">
         {% if memory.user == request.user %}
-            <p><a href="{% url 'memory_edit' memory.id %}">編輯回憶</a></p>
-            <p><a href="{% url 'memory_delete' memory.id %}">刪除回憶</a></p>
+          <a href="{% url 'memory_edit' memory.id %}" class="btn-main">編輯回憶</a>
+          <a href="{% url 'memory_delete' memory.id %}" class="btn-danger">刪除回憶</a>
         {% endif %}
-
-        <p><a href="{% url 'memory_list' %}">回回憶列表</a></p>
+        <a href="{% url 'memory_list' %}" class="btn-sub">返回列表</a>
+      </div>
     </div>
-</body>
-</html>
+
+    <div class="detail-card photo-card">
+      <h2 class="photo-title">📷 回憶照片</h2>
+
+      {% if photos %}
+        <div class="photo-grid">
+          {% for photo in photos %}
+            <div class="photo-item">
+              <img src="{{ photo.image.url }}" alt="Memory Photo">
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-photo">
+          目前沒有照片。
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .page-section {
+    padding: 60px 0;
+  }
+
+  .detail-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .detail-card {
+    background: #fffdf9;
+    border-radius: 28px;
+    padding: 40px;
+    border: 1px solid #eee2d6;
+    box-shadow: 0 18px 40px rgba(93, 63, 41, 0.08);
+    margin-bottom: 24px;
+  }
+
+  .place-title {
+    font-size: 36px;
+    margin-bottom: 24px;
+    color: #2f2a26;
+  }
+
+  .meta-list div {
+    margin-bottom: 10px;
+    color: #5d6870;
+    line-height: 1.7;
+  }
+
+  .note-box {
+    margin-top: 20px;
+    padding: 16px;
+    background: #f8f2eb;
+    border-radius: 16px;
+    line-height: 1.7;
+    color: #4e4036;
+  }
+
+  .action-row {
+    margin-top: 30px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-main {
+    background: #a97457;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 999px;
+  }
+
+  .btn-sub {
+    border: 1px solid #dec8b8;
+    padding: 10px 18px;
+    border-radius: 999px;
+    color: #6a5140;
+    background: #fff;
+  }
+
+  .btn-danger {
+    background: #e57373;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 999px;
+  }
+
+  .photo-card {
+    margin-top: 0;
+  }
+
+  .photo-title {
+    margin-bottom: 18px;
+    font-size: 24px;
+    color: #2f2a26;
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .photo-item {
+    background: #f8f2eb;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #eee2d6;
+  }
+
+  .photo-item img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .empty-photo {
+    padding: 18px;
+    background: #f8f2eb;
+    border-radius: 16px;
+    color: #7a6a5e;
+  }
+</style>
+{% endblock %}

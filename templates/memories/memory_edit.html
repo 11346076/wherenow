@@ -1,85 +1,123 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <title>編輯回憶</title>
-</head>
-<body style="font-family: Arial, sans-serif; margin: 40px; background-color: #f9f9f9;">
-    <div style="max-width: 700px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-        <h1>編輯回憶</h1>
+{% extends 'base.html' %}
 
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+{% block content %}
+<section class="page-section">
+  <div class="wrap-lg">
+    <div class="page-label">Memory Edit</div>
+    <h1 class="page-title">編輯回憶</h1>
+    <p class="page-desc">
+      修改這次回憶的內容、評分、花費與照片，讓記錄保持完整。
+    </p>
 
-            <p>
-                <label>地點：</label>
-                <select name="place" required>
-                    {% for place in places %}
-                        <option value="{{ place.id }}" {% if place.id == memory.place.id %}selected{% endif %}>
-                            {{ place.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </p>
+    <!-- 表單 -->
+    <div class="card" style="margin-bottom: 24px;">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
 
-            <p>
-                <label>造訪日期：</label>
-                <input type="date" name="visit_date" value="{{ memory.visit_date|date:'Y-m-d' }}" required>
-            </p>
+        <div class="form-grid">
 
-            <p>
-                <label>心得：</label><br>
-                <textarea name="comment" rows="4" cols="50">{{ memory.comment }}</textarea>
-            </p>
+          <div class="form-group">
+            <label for="place">地點</label>
+            <select name="place" id="place" required>
+              {% for place in places %}
+                <option value="{{ place.id }}" {% if place.id == memory.place.id %}selected{% endif %}>
+                  {{ place.name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
 
-            <p>
-                <label>評分：</label>
-                <input type="number" name="rating" min="0" max="5" value="{{ memory.rating }}">
-            </p>
+          <div class="double-grid">
+            <div class="form-group">
+              <label for="visit_date">造訪日期</label>
+              <input type="date" name="visit_date" id="visit_date"
+                     value="{{ memory.visit_date|date:'Y-m-d' }}" required>
+            </div>
 
-            <p>
-                <label>花費：</label>
-                <input type="number" name="cost" value="{{ memory.cost }}">
-            </p>
+            <div class="form-group">
+              <label for="rating">評分</label>
+              <input type="number" name="rating" id="rating" min="0" max="5"
+                     value="{{ memory.rating }}">
+            </div>
+          </div>
 
-            <p>
-                <label>
-                    <input type="checkbox" name="recommended" {% if memory.recommended %}checked{% endif %}>
-                    是否推薦
-                </label>
-            </p>
+          <div class="double-grid">
+            <div class="form-group">
+              <label for="cost">花費</label>
+              <input type="number" name="cost" id="cost" value="{{ memory.cost }}">
+            </div>
 
-            <p>
-                <label>
-                    <input type="checkbox" name="shared_with_couple" {% if memory.shared_with_couple %}checked{% endif %}>
-                    是否與情侶共享
-                </label>
-            </p>
+            <div class="file-group">
+              <label for="images">新增照片</label>
+              <input type="file" name="images" id="images" multiple>
+              <div class="file-help">
+                可再上傳多張照片，補充這次回憶的更多片段。
+              </div>
+            </div>
+          </div>
 
-            <p>
-                <label>新增照片：</label>
-                <input type="file" name="images" multiple>
-            </p>
+          <div class="form-group">
+            <label for="comment">心得</label>
+            <textarea name="comment" id="comment" rows="5">{{ memory.comment }}</textarea>
+          </div>
 
-            {% if photos %}
-                <h3>目前照片</h3>
-                <ul>
-                    {% for photo in photos %}
-                        <li>
-                            <img src="{{ photo.image.url }}" width="150">
-                            <form method="post" action="{% url 'memory_photo_delete' photo.id %}">
-                                {% csrf_token %}
-                                <button type="submit">刪除照片</button>
-                            </form>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+          <div class="checkbox-group">
+            <label>回憶設定</label>
 
-            <button type="submit">儲存修改</button>
-        </form>
+            <div class="checkbox-wrap">
+              <label class="checkbox-item">
+                <input type="checkbox" name="recommended"
+                       {% if memory.recommended %}checked{% endif %}>
+                是否推薦
+              </label>
 
-        <p><a href="{% url 'memory_detail' memory.id %}">回回憶詳細頁</a></p>
+              <label class="checkbox-item">
+                <input type="checkbox" name="shared_with_couple"
+                       {% if memory.shared_with_couple %}checked{% endif %}>
+                是否與情侶共享
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="action-row">
+          <button type="submit" class="btn-main">儲存修改</button>
+          <a href="{% url 'memory_detail' memory.id %}" class="btn-sub">回回憶詳細頁</a>
+        </div>
+      </form>
     </div>
-</body>
-</html>
+
+    <!-- 照片區 -->
+    <div class="card">
+      <h2 class="section-title">目前照片</h2>
+      <p class="section-desc">
+        你可以在這裡查看目前已上傳的照片，並移除不需要的內容。
+      </p>
+
+      {% if photos %}
+        <div class="photo-grid">
+          {% for photo in photos %}
+            <div class="photo-item">
+              <img src="{{ photo.image.url }}" alt="memory photo">
+
+              <div class="photo-item-body">
+                <form method="post"
+                      action="{% url 'memory_photo_delete' photo.id %}"
+                      class="photo-delete-form">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-danger">刪除照片</button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-box">
+          目前還沒有照片。
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

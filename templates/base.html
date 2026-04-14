@@ -1,16 +1,126 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% load static %}
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WhereNow</title>
-</head>
-<body>
 
-<h1>WhereNow</h1>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-<hr>
+    <style>
+      * { box-sizing: border-box; }
 
-{% block content %}
-{% endblock %}
+      body {
+        margin: 0;
+        font-family: "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+        background: #f7f4ef;
+        color: #1f2a30;
+      }
 
-</body>
+      a { text-decoration: none; }
+
+      .navbar {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.92);
+        border-bottom: 1px solid #e9e2d8;
+        padding: 18px 48px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(8px);
+      }
+
+      .logo a {
+        color: #182126;
+        font-size: 32px;
+        font-weight: 700;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .nav-links a {
+        color: #4e5c62;
+        font-size: 15px;
+        transition: 0.2s;
+      }
+
+      .nav-links a:hover {
+        color: #a97457;
+      }
+
+      .logout-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        color: #4e5c62;
+        font-size: 15px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .logout-btn:hover {
+        color: #a97457;
+      }
+
+      .container {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 28px;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 34px 20px 40px;
+        color: #7b7b7b;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="logo">
+        <a href="{% url 'home' %}">WhereNow</a>
+      </div>
+
+      <div class="nav-links">
+        <a href="{% url 'home' %}">首頁</a>
+        <a href="{% url 'place_list' %}">地點</a>
+        <a href="{% url 'favorite_list' %}">收藏</a>
+        <a href="{% url 'random_pick' %}">抽選</a>
+        <a href="{% url 'random_pick_history' %}">抽選紀錄</a>
+        <a href="/memories/">回憶</a>
+        <a href="/couples/status/">情侶</a>
+        <a href="/users/profile/">個人資料</a>
+
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">登出</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 主內容 -->
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      WhereNow © 2026
+    </div>
+
+  </body>
 </html>
