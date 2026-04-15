@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import Http404
 
 from .models import Memory, MemoryPhoto
-from places.models import Place
+from places.models import Place, Category
 from couples.models import CoupleRelationship
 
 logger = logging.getLogger('wherenow')
@@ -104,6 +104,7 @@ def memory_create(request):
                 cost=request.POST.get('cost') or 0,
                 recommended=bool(request.POST.get('recommended')),
                 shared_with_couple=bool(request.POST.get('shared_with_couple')),
+                is_public=bool(request.POST.get('is_public')),
             )
 
             image_count = 0
@@ -154,6 +155,7 @@ def memory_edit(request, pk):
             memory.cost = request.POST.get('cost') or 0
             memory.recommended = bool(request.POST.get('recommended'))
             memory.shared_with_couple = bool(request.POST.get('shared_with_couple'))
+            memory.is_public = bool(request.POST.get('is_public'))
             memory.save()
 
             image_count = 0
@@ -242,4 +244,57 @@ def memory_photo_delete(request, pk):
 
     return render(request, 'memories/memory_photo_delete.html', {
         'photo': photo
+    })
+
+@login_required
+def public_memory_search(request):
+    query = request.GET.get('q', '').strip()
+    category = request.GET.get('category', '').strip()
+    area = request.GET.get('area', '').strip()
+    budget_min = request.GET.get('budget_min', '').strip()
+    budget_max = request.GET.get('budget_max', '').strip()
+
+    memories = Memory.objects.filter(is_public=True).select_related(
+        'user', 'place', 'place__category'
+    ).prefetch_related('photos')
+
+    if query:
+        memories = memories.filter(
+        Q(place__name__icontains=query) |
+        Q(place__area__icontains=query) |
+        Q(place__note__icontains=query) |
+        Q(comment__icontains=query) |
+        Q(user__username__icontains=query)
+    )
+
+    if category:
+        memories = memories.filter(place__category__id=category)
+
+    if area:
+        memories = memories.filter(place__area__icontains=area)
+
+    if budget_min:
+        try:
+            memories = memories.filter(place__budget__gte=int(budget_min))
+        except ValueError:
+            pass
+
+    if budget_max:
+        try:
+            memories = memories.filter(place__budget__lte=int(budget_max))
+        except ValueError:
+            pass
+
+    memories = memories.order_by('-created_at')
+
+    categories = Category.objects.all().order_by('name')
+
+    return render(request, 'memories/public_search.html', {
+        'memories': memories,
+        'query': query,
+        'categories': categories,
+        'selected_category': category,
+        'area': area,
+        'budget_min': budget_min,
+        'budget_max': budget_max,
     })

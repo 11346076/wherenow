@@ -1,73 +1,61 @@
-import logging
-
 from django.shortcuts import render, redirect
-from .forms import RegisterForm, ProfileForm
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Profile
 
-logger = logging.getLogger('wherenow')
-
-
-def register_view(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-
-            logger.info(f'新使用者註冊成功：{user.username}')
-
-            return redirect('login')
-        else:
-            logger.warning('使用者註冊失敗：表單驗證未通過')
-    else:
-        form = RegisterForm()
-
-    return render(request, 'users/register.html', {'form': form})
+from .forms import ProfileForm
+from places.models import Place, FavoritePlace
+from memories.models import Memory
+from couples.models import CoupleRelationship
 
 
-def home(request):
-    return render(request, 'home.html')
+def get_partner(user):
+    relationship = CoupleRelationship.objects.filter(
+        user_1=user,
+        is_active=True
+    ).first()
+
+    if relationship:
+        return relationship.user_2
+
+    relationship = CoupleRelationship.objects.filter(
+        user_2=user,
+        is_active=True
+    ).first()
+
+    if relationship:
+        return relationship.user_1
+
+    return None
 
 
 @login_required
-def profile_view(request):
-    profile = request.user.profile
+def profile(request):
+    user = request.user
+    partner = get_partner(user)
 
-    logger.info(f'使用者 {request.user.username} 查看個人資料')
+    place_count = Place.objects.filter(user=user).count()
+    memory_count = Memory.objects.filter(user=user).count()
+    favorite_count = FavoritePlace.objects.filter(user=user).count()
 
-    return render(request, 'users/profile.html', {'profile': profile})
+    return render(request, 'users/profile.html', {
+        'place_count': place_count,
+        'memory_count': memory_count,
+        'favorite_count': favorite_count,
+        'partner': partner,
+    })
 
 
 @login_required
 def edit_profile(request):
-    profile, created = Profile.objects.get_or_create(
-        user=request.user,
-        defaults={'nickname': request.user.username}
-    )
-
-    if created:
-        logger.info(f'系統自動建立使用者 {request.user.username} 的 Profile')
+    profile = request.user.profile
 
     if request.method == 'POST':
-        form = ProfileForm(
-            request.POST,
-            request.FILES,
-            instance=profile
-        )
-
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-
-            logger.info(f'使用者 {request.user.username} 更新個人資料成功')
-
             return redirect('profile')
-        else:
-            logger.warning(f'使用者 {request.user.username} 更新個人資料失敗：表單驗證未通過')
-
     else:
         form = ProfileForm(instance=profile)
 
-        logger.info(f'使用者 {request.user.username} 進入編輯個人資料頁面')
-
-    return render(request, 'users/edit_profile.html', {'form': form})
+    return render(request, 'users/edit_profile.html', {
+        'form': form
+    })

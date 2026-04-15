@@ -19,6 +19,7 @@ class Memory(models.Model):
 
     recommended = models.BooleanField(default=False)
     shared_with_couple = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

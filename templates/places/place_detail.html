@@ -1,17 +1,16 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% block content %}
 <section class="page-section">
   <div class="detail-wrap">
     <div class="detail-card">
       <h1 class="place-title">{{ place.name }}</h1>
 
       <div class="meta-list">
-        <div><strong>📍 地區：</strong>{{ place.region }}</div>
+        <div><strong>📍 地區：</strong>{{ place.area }}</div>
         <div><strong>🏷️ 分類：</strong>{{ place.category }}</div>
         <div><strong>💰 預算：</strong>{{ place.budget }}</div>
         <div><strong>🕒 建立時間：</strong>{{ place.created_at }}</div>
-        <div>
-          <strong>🌍 是否公開：</strong>{{ place.is_public|yesno:"是,否" }}
-        </div>
+        <div><strong>🌍 是否公開：</strong>{{ place.is_public|yesno:"是,否" }}</div>
       </div>
 
       {% if place.note %}
@@ -20,12 +19,8 @@
 
       <div class="action-row">
         {% if can_edit %}
-        <a href="{% url 'place_update' place.pk %}" class="btn-main"
-          >編輯地點</a
-        >
-        <a href="{% url 'place_delete' place.pk %}" class="btn-danger"
-          >刪除地點</a
-        >
+        <a href="{% url 'place_update' place.pk %}" class="btn-main">編輯地點</a>
+        <a href="{% url 'place_delete' place.pk %}" class="btn-danger">刪除地點</a>
         {% endif %}
 
         <a href="{% url 'add_favorite' place.id %}" class="btn-sub">收藏</a>

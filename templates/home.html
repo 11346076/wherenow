@@ -2,6 +2,231 @@
 
 {% block content %}
 
+<style>
+  .hero {
+    margin-top: 40px;
+    padding: 64px 56px;
+    border-radius: 32px;
+    background: rgba(255, 255, 255, 0.76);
+    border: 1px solid #e5ddd2;
+    box-shadow: 0 20px 60px rgba(31, 42, 48, 0.08);
+  }
+
+  .hero-label {
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #9b7b63;
+    margin-bottom: 18px;
+  }
+
+  .hero h1 {
+    margin: 0;
+    font-size: clamp(42px, 7vw, 78px);
+    line-height: 1.03;
+    color: #142029;
+  }
+
+  .hero p {
+    margin-top: 24px;
+    max-width: 760px;
+    font-size: 22px;
+    line-height: 1.8;
+    color: #5d6c75;
+  }
+
+  .hero-actions {
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-size: 15px;
+    transition: 0.2s;
+  }
+
+  .btn-primary {
+    background: #1f2a30;
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: #11191d;
+  }
+
+  .btn-secondary {
+    border: 1px solid #d8cdc1;
+    background: #fff;
+    color: #1f2a30;
+  }
+
+  .btn-secondary:hover {
+    border-color: #a97457;
+    color: #a97457;
+  }
+
+  .search-section {
+    margin-top: 30px;
+    padding: 28px 30px;
+    border-radius: 24px;
+    background: #f9f6f2;
+    border: 1px solid #ece3d8;
+  }
+
+  .search-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2a30;
+    margin-bottom: 10px;
+  }
+
+  .search-desc {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #687780;
+    margin-bottom: 18px;
+  }
+
+  .search-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    align-items: end;
+  }
+
+  .search-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #5d6c75;
+    font-weight: 600;
+  }
+
+  .search-input,
+  .search-select {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 16px;
+    border: 1px solid #d8cdc1;
+    background: #fff;
+    font-size: 15px;
+    outline: none;
+  }
+
+  .search-input:focus,
+  .search-select:focus {
+    border-color: #a97457;
+  }
+
+  .search-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .search-btn,
+  .clear-btn {
+    padding: 14px 22px;
+    border: none;
+    border-radius: 999px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .search-btn {
+    background: #1f2a30;
+    color: #fff;
+  }
+
+  .search-btn:hover {
+    background: #11191d;
+  }
+
+  .clear-btn {
+    background: #fff;
+    color: #1f2a30;
+    border: 1px solid #d8cdc1;
+  }
+
+  .clear-btn:hover {
+    border-color: #a97457;
+    color: #a97457;
+  }
+
+  .welcome-card {
+    margin-top: 26px;
+    padding: 22px 24px;
+    border-radius: 22px;
+    background: #fcfaf7;
+    border: 1px solid #ece3d8;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .welcome-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e2d8cc;
+  }
+
+  .welcome-avatar-default {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #d8cec3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b5b4f;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .welcome-text h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #142029;
+  }
+
+  .welcome-text p {
+    margin: 8px 0 0;
+    font-size: 15px;
+    color: #6c7a83;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 40px 24px;
+      border-radius: 24px;
+    }
+
+    .hero p {
+      font-size: 18px;
+    }
+
+    .search-section {
+      padding: 22px 18px;
+    }
+
+    .welcome-card {
+      align-items: flex-start;
+    }
+  }
+</style>
+
 <section class="hero">
   <div class="hero-label">WhereNow</div>
 
@@ -15,6 +240,99 @@
   <div class="hero-actions">
     <a href="/places/" class="btn-primary">開始探索</a>
     <a href="/users/profile/" class="btn-secondary">查看個人資料</a>
+  </div>
+
+  {% if user.is_authenticated %}
+    {% with user.socialaccount_set.all.0 as social %}
+      <div class="welcome-card">
+        {% if social.extra_data.picture %}
+          <img src="{{ social.extra_data.picture }}" alt="avatar" class="welcome-avatar">
+        {% else %}
+          <div class="welcome-avatar-default">
+            {{ user.username|slice:":1"|upper }}
+          </div>
+        {% endif %}
+
+        <div class="welcome-text">
+          <h2>Welcome, {{ user.username }}</h2>
+          <p>
+            你可以繼續整理自己的地點與回憶，
+            也可以從這裡搜尋其他人公開分享的貼文。
+          </p>
+        </div>
+      </div>
+    {% endwith %}
+  {% endif %}
+
+  <div class="search-section">
+    <div class="search-title">搜尋公開貼文</div>
+    <div class="search-desc">
+      你可以依照關鍵字、分類、地區、與預算，搜尋別人公開分享的回憶。
+    </div>
+
+    <form method="get" action="{% url 'public_memory_search' %}" class="search-form">
+      <div class="search-group">
+        <label for="q">關鍵字</label>
+        <input
+          type="text"
+          id="q"
+          name="q"
+          class="search-input"
+          placeholder="例如：淡水、咖啡廳、約會、台北"
+        >
+      </div>
+
+      <div class="search-group">
+        <label for="category">分類</label>
+        <select id="category" name="category" class="search-select">
+          <option value="">不限</option>
+          {% for c in categories %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="search-group">
+        <label for="area">地區</label>
+        <input
+          type="text"
+          id="area"
+          name="area"
+          class="search-input"
+          placeholder="例如：台北、淡水"
+        >
+      </div>
+
+
+      <div class="search-group">
+        <label for="budget_min">最低預算</label>
+        <input
+          type="number"
+          id="budget_min"
+          name="budget_min"
+          class="search-input"
+          placeholder="0"
+        >
+      </div>
+
+      <div class="search-group">
+        <label for="budget_max">最高預算</label>
+        <input
+          type="number"
+          id="budget_max"
+          name="budget_max"
+          class="search-input"
+          placeholder="3000"
+        >
+      </div>
+
+    
+
+      <div class="search-actions">
+        <button type="submit" class="search-btn">搜尋</button>
+        <a href="{% url 'home' %}" class="clear-btn">清除</a>
+      </div>
+    </form>
   </div>
 </section>
 

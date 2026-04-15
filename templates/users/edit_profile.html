@@ -1,25 +1,107 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<section class="page-section">
-  <div class="wrap-sm">
-    <div class="page-label text-center">Edit Profile</div>
-    <h1 class="page-title text-center">編輯個人資料</h1>
-    <p class="page-desc text-center">
-      更新你的暱稱、頭像與自我介紹，讓你的個人頁更完整。
-    </p>
 
-    <div class="card">
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
+<style>
+  .edit-wrap {
+    max-width: 720px;
+    margin: 50px auto;
+  }
 
-        <div class="action-row action-center">
-          <button type="submit" class="btn-main">儲存變更</button>
-          <a href="{% url 'profile' %}" class="btn-sub">返回個人資料</a>
-        </div>
-      </form>
-    </div>
+  .edit-card {
+    background: #fffdf9;
+    border-radius: 28px;
+    padding: 40px;
+    border: 1px solid #eee2d6;
+    box-shadow: 0 18px 40px rgba(93, 63, 41, 0.08);
+  }
+
+  .edit-title {
+    font-size: 32px;
+    margin-bottom: 24px;
+    color: #1f2a30;
+    font-weight: 700;
+  }
+
+  .edit-card p {
+    margin-bottom: 18px;
+  }
+
+  .edit-card label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #5d6870;
+  }
+
+  .edit-card input[type="text"],
+  .edit-card input[type="file"],
+  .edit-card textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid #decfc2;
+    background: #fff;
+    font-size: 15px;
+    font-family: inherit;
+  }
+
+  .edit-card textarea {
+    resize: vertical;
+  }
+
+  .action-row {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-main,
+  .btn-sub {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s;
+  }
+
+  .btn-main {
+    background: #a97457;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-main:hover {
+    background: #8f6248;
+  }
+
+  .btn-sub {
+    border: 1px solid #dec8b8;
+    color: #1f2a30;
+    background: white;
+  }
+
+  .btn-sub:hover {
+    background: #f8f2eb;
+  }
+</style>
+
+<div class="edit-wrap">
+  <div class="edit-card">
+    <div class="edit-title">編輯個人資料</div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <div class="action-row">
+        <button type="submit" class="btn-main">儲存</button>
+        <a href="{% url 'profile' %}" class="btn-sub">返回</a>
+      </div>
+    </form>
   </div>
-</section>
+</div>
+
 {% endblock %}
