@@ -1,94 +1,471 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <section class="page-section">
   <div class="wrap-lg">
-
-    <!-- Header -->
     <div class="page-header">
-      <div>
+      <div class="page-header-text">
         <div class="page-label">Memories</div>
+        {% if is_shared_view %}
+        <h1 class="page-title">共享回憶列表</h1>
+        <p class="page-desc">
+          查看你和 {{ partner.username }} 彼此共享的回憶內容。
+        </p>
+        {% else %}
         <h1 class="page-title">我的回憶列表</h1>
+        <p class="page-desc">
+          把每一次約會、旅行、日常片段與重要時刻收藏起來，讓回憶不只是被記住，而是能被重新打開與回看。
+        </p>
+        {% endif %}
         <p class="page-desc">
           把每一次約會、旅行、日常片段與重要時刻收藏起來，
           讓回憶不只是被記住，而是能被重新打開與回看。
         </p>
       </div>
 
-      <div class="action-row">
+      <div class="action-row top-action-row">
         <a href="{% url 'memory_create' %}" class="btn-main">新增回憶</a>
         <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
       </div>
     </div>
 
-    <!-- 狀態提示 -->
-    <div class="card card-hero" style="margin-bottom: 34px;">
-      {% if partner %}
-        <p>你目前正在查看與 <strong>{{ partner.username }}</strong> 的共享回憶清單。</p>
-      {% else %}
-        <p>你目前沒有情侶關係，這是你的個人回憶清單。</p>
-      {% endif %}
+    <div class="status-banner">
+      {% if partner %} 你目前正在查看與
+      <strong>{{ partner.username }}</strong> 的共享回憶清單。 {% else %}
+      你目前沒有情侶關係，這裡是你的個人回憶清單。 {% endif %}
     </div>
 
     {% if memories %}
-      <div class="memory-grid">
-        {% for m in memories %}
-          <article class="card memory-card">
+    <div class="memory-grid">
+      {% for m in memories %}
+      <article class="memory-card">
+        {% if m.photos.first %}
+        <a href="{% url 'memory_detail' m.id %}" class="memory-image-link">
+          <div class="memory-image-wrap">
+            <img
+              src="{{ m.photos.first.image.url }}"
+              alt="{{ m.place.name }}"
+            />
+          </div>
+        </a>
+        {% else %}
+        <a href="{% url 'memory_detail' m.id %}" class="memory-image-link">
+          <div class="memory-image-wrap memory-image-empty">
+            <span>沒有照片</span>
+          </div>
+        </a>
+        {% endif %}
 
-            <h3 class="card-title">
-              <a href="{% url 'memory_detail' m.id %}">
-                {{ m.place.name }}
-              </a>
-            </h3>
-
-            <div class="memory-date">{{ m.visit_date }}</div>
-
-            <div class="meta-list">
-              <div class="meta-label">建立者</div>
-              <div class="meta-value">
-                {% if m.user == request.user %}
-                  我
-                {% else %}
-                  {{ m.user.username }}
-                {% endif %}
-              </div>
-
-              <div class="meta-label">地點</div>
-              <div class="meta-value">
-                {{ m.place.name }}
-              </div>
+        <div class="memory-body">
+          <div class="memory-top">
+            <div>
+              <h3 class="memory-title">
+                <a href="{% url 'memory_detail' m.id %}">
+                  {{ m.place.name }}
+                </a>
+              </h3>
+              <div class="memory-date">{{ m.visit_date }}</div>
             </div>
 
-            <div class="tag-row">
-              <span class="tag">
-                與情侶共享：
-                {% if m.shared_with_couple %}
-                  是
-                {% else %}
-                  否
-                {% endif %}
+            {% if m.rating %}
+            <div class="rating-chip">⭐ {{ m.rating }}</div>
+            {% endif %}
+          </div>
+
+          <div class="memory-meta">
+            <div class="meta-item">
+              <span class="meta-label">建立者</span>
+              <span class="meta-value">
+                {% if m.user == request.user %} 我 {% else %} {{ m.user.username
+                }} {% endif %}
               </span>
             </div>
 
-            <a href="{% url 'memory_detail' m.id %}" class="card-link">
-              查看回憶內容 →
-            </a>
+            <div class="meta-item">
+              <span class="meta-label">地點</span>
+              <span class="meta-value">{{ m.place.name }}</span>
+            </div>
 
-          </article>
-        {% endfor %}
-      </div>
+            <div class="meta-item">
+              <span class="meta-label">花費</span>
+              <span class="meta-value">
+                {% if m.cost %} {{ m.cost }} {% else %} 未填寫 {% endif %}
+              </span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">是否公開</span>
+              <span class="meta-value">{{ m.is_public|yesno:"是,否" }}</span>
+            </div>
+          </div>
+
+          {% if m.comment %}
+          <div class="memory-comment">{{ m.comment|truncatechars:70 }}</div>
+          {% else %}
+          <div class="memory-comment memory-comment-empty">
+            這筆回憶尚未填寫心得。
+          </div>
+          {% endif %}
+
+          <div class="tag-row">
+            <span class="tag-chip">
+              與情侶共享：{{ m.shared_with_couple|yesno:"是,否" }}
+            </span>
+
+            {% if m.recommended %}
+            <span class="tag-chip tag-chip-highlight">推薦</span>
+            {% endif %}
+          </div>
+
+          <a href="{% url 'memory_detail' m.id %}" class="memory-link">
+            查看回憶內容 →
+          </a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
 
     {% else %}
-      <div class="card card-empty">
-        <div class="empty-icon">🕊️</div>
-        <div class="empty-title">目前還沒有任何回憶</div>
-        <div class="empty-desc">
-          先新增第一筆回憶，替你們的重要時刻留下紀錄。
-        </div>
-        <a href="{% url 'memory_create' %}" class="btn-main">新增第一筆回憶</a>
-      </div>
+    <div class="empty-card">
+      <div class="empty-icon">🕊️</div>
+      <div class="empty-title">目前還沒有任何回憶</div>
+      <div class="empty-desc">先新增第一筆回憶，替你們的重要時刻留下紀錄。</div>
+      <a href="{% url 'memory_create' %}" class="btn-main">新增第一筆回憶</a>
+    </div>
     {% endif %}
-
   </div>
 </section>
+
+<style>
+  .page-section {
+    padding: 56px 0 72px;
+  }
+
+  .wrap-lg {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 26px;
+    flex-wrap: wrap;
+  }
+
+  .page-header-text {
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .page-label {
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #efe4da;
+    color: #9a6d50;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .page-title {
+    margin: 0 0 12px;
+    font-size: 48px;
+    line-height: 1.15;
+    color: #1d262c;
+  }
+
+  .page-desc {
+    margin: 0;
+    max-width: 760px;
+    color: #66757c;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .top-action-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .status-banner {
+    margin-bottom: 28px;
+    padding: 18px 22px;
+    border-radius: 24px;
+    background: #fffaf3;
+    border: 1px solid #ece0d1;
+    color: #765d49;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .memory-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .memory-card {
+    background: #fffdf9;
+    border: 1px solid #eee2d6;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 14px 34px rgba(93, 63, 41, 0.06);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .memory-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(93, 63, 41, 0.1);
+  }
+
+  .memory-image-link {
+    display: block;
+    text-decoration: none;
+  }
+
+  .memory-image-wrap {
+    width: 100%;
+    height: 220px;
+    background: #f5eee7;
+    overflow: hidden;
+  }
+
+  .memory-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .memory-image-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9a8a7c;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .memory-body {
+    padding: 22px;
+  }
+
+  .memory-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .memory-title {
+    margin: 0 0 8px;
+    font-size: 30px;
+    line-height: 1.25;
+  }
+
+  .memory-title a {
+    color: #1d262c;
+    text-decoration: none;
+  }
+
+  .memory-title a:hover {
+    color: #a97457;
+  }
+
+  .memory-date {
+    color: #a27a5e;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .rating-chip {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #f8f1e4;
+    color: #8d6a18;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .memory-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 18px;
+    margin-bottom: 16px;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    background: #fbf7f2;
+    border: 1px solid #f1e8de;
+  }
+
+  .meta-label {
+    color: #927c6a;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .meta-value {
+    color: #334047;
+    font-size: 15px;
+    font-weight: 700;
+    word-break: break-word;
+  }
+
+  .memory-comment {
+    margin-bottom: 16px;
+    color: #4d5961;
+    font-size: 15px;
+    line-height: 1.8;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #f9f4ed;
+  }
+
+  .memory-comment-empty {
+    color: #8a8a8a;
+  }
+
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .tag-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #f3e7db;
+    color: #8a654c;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .tag-chip-highlight {
+    background: #f8edd8;
+    color: #9b6b12;
+  }
+
+  .memory-link {
+    color: #a97457;
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+  }
+
+  .memory-link:hover {
+    color: #8c5f46;
+  }
+
+  .empty-card {
+    text-align: center;
+    padding: 64px 24px;
+    border-radius: 28px;
+    background: #fffdf9;
+    border: 1px solid #eee2d6;
+    box-shadow: 0 14px 34px rgba(93, 63, 41, 0.06);
+  }
+
+  .empty-icon {
+    font-size: 42px;
+    margin-bottom: 12px;
+  }
+
+  .empty-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1d262c;
+    margin-bottom: 10px;
+  }
+
+  .empty-desc {
+    color: #66757c;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .btn-main,
+  .btn-sub {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 126px;
+    height: 46px;
+    padding: 0 18px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.22s ease;
+  }
+
+  .btn-main {
+    background: #1f2d36;
+    color: #fff;
+  }
+
+  .btn-main:hover {
+    background: #18242c;
+    transform: translateY(-2px);
+  }
+
+  .btn-sub {
+    background: transparent;
+    border: 1px solid #d9cab9;
+    color: #7a5d48;
+  }
+
+  .btn-sub:hover {
+    background: #f8f1ea;
+  }
+
+  @media (max-width: 900px) {
+    .memory-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .page-title {
+      font-size: 38px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .page-section {
+      padding: 40px 0 56px;
+    }
+
+    .memory-image-wrap {
+      height: 190px;
+    }
+
+    .memory-title {
+      font-size: 24px;
+    }
+
+    .memory-meta {
+      grid-template-columns: 1fr;
+    }
+
+    .memory-top {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
 {% endblock %}

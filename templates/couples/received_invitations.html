@@ -12,13 +12,39 @@
     {% if invitations %}
       <div class="invite-list" style="margin-bottom: 28px;">
         {% for invitation in invitations %}
-          <div class="card-soft invite-card">
-            <div class="invite-info">
-              <strong>{{ invitation.sender.username }}</strong>
-              邀請你成為情侶
+          <div
+            class="card-soft invite-card"
+            style="display:flex; justify-content:space-between; align-items:center; gap:18px; padding:18px 20px; margin-bottom:14px;"
+          >
+            <div style="display:flex; align-items:center; gap:14px; min-width:0;">
+              {% if invitation.sender.profile.avatar %}
+                <img
+                  src="{{ invitation.sender.profile.avatar.url }}"
+                  alt="sender avatar"
+                  style="width:56px; height:56px; border-radius:50%; object-fit:cover; flex-shrink:0;"
+                >
+              {% else %}
+                <div
+                  style="width:56px; height:56px; border-radius:50%; background:#d8cfc3; color:#1f2a30; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; flex-shrink:0;"
+                >
+                  {{ invitation.sender.profile.nickname|default:invitation.sender.first_name|default:invitation.sender.username|slice:":1" }}
+                </div>
+              {% endif %}
+
+              <div style="min-width:0;">
+                <div style="font-size:18px; font-weight:700; color:#1f2a30; margin-bottom:4px;">
+                  {{ invitation.sender.profile.nickname|default:invitation.sender.first_name|default:invitation.sender.username }}
+                </div>
+                <div style="font-size:14px; color:#7d7d7d; margin-bottom:6px;">
+                  {{ invitation.sender.email|default:"未提供 Email" }}
+                </div>
+                <div style="font-size:15px; color:#5c6770;">
+                  邀請你成為情侶
+                </div>
+              </div>
             </div>
 
-            <div class="invite-actions">
+            <div class="invite-actions" style="display:flex; gap:10px; flex-shrink:0;">
               <a href="{% url 'accept_invitation' invitation.id %}" class="btn-accept">接受</a>
               <a href="{% url 'reject_invitation' invitation.id %}" class="btn-danger">拒絕</a>
             </div>

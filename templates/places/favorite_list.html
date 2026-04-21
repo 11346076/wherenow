@@ -1,13 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<style>
-  .favorite-wrap {
-    max-width: 980px;
-    margin: 0 auto;
-  }
-</style>
-
 <section class="page-section">
   <div class="favorite-wrap">
     <div class="page-label">Favorites</div>
@@ -17,15 +10,30 @@
     </p>
 
     {% if favorites %}
-      <div class="card-grid">
+      <div class="card-grid" id="favorite-grid">
         {% for favorite in favorites %}
-          <div class="card">
+          <div class="card" id="favorite-card-{{ favorite.place.id }}">
+            {% if favorite.place.image %}
+              <div class="place-image">
+                <img src="{{ favorite.place.image.url }}" alt="{{ favorite.place.name }}">
+              </div>
+            {% endif %}
+
             <div class="card-title">
               {{ favorite.place.name }}
             </div>
 
             <div class="card-meta">
-              地區：{{ favorite.place.area }}<br>
+              地區：{{ favorite.place.area|default:"未填寫" }}<br>
+
+              地址：
+              {% if favorite.place.address %}
+                {{ favorite.place.address|linebreaksbr }}
+              {% else %}
+                未填寫
+              {% endif %}
+              <br>
+
               分類：
               {% if favorite.place.category %}
                 {{ favorite.place.category.name }}
@@ -39,16 +47,28 @@
                 查看地點
               </a>
 
-              <a href="{% url 'remove_favorite' favorite.place.id %}" class="btn-danger">
+              <button
+                type="button"
+                class="btn-danger remove-btn"
+                data-place-id="{{ favorite.place.id }}"
+              >
                 取消收藏
-              </a>
+              </button>
             </div>
           </div>
         {% endfor %}
       </div>
 
+      <div class="empty-box" id="empty-box" style="display: none;">
+        <div class="empty-icon">⭐</div>
+        <div class="empty-title">還沒有收藏</div>
+        <div class="empty-desc">
+          當你收藏地點後，這裡會顯示清單。
+        </div>
+      </div>
+
     {% else %}
-      <div class="empty-box">
+      <div class="empty-box" id="empty-box">
         <div class="empty-icon">⭐</div>
         <div class="empty-title">還沒有收藏</div>
         <div class="empty-desc">
@@ -58,4 +78,216 @@
     {% endif %}
   </div>
 </section>
+
+<style>
+  .page-section {
+    padding: 56px 0 72px;
+  }
+
+  .favorite-wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  .page-label {
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #efe4da;
+    color: #9a6d50;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .page-title {
+    margin: 0 0 12px;
+    font-size: 48px;
+    line-height: 1.15;
+    color: #1d262c;
+  }
+
+  .page-desc {
+    margin: 0 0 28px;
+    color: #66757c;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .card {
+    background: #fffdf9;
+    border: 1px solid #eee2d6;
+    border-radius: 26px;
+    padding: 22px;
+    box-shadow: 0 16px 36px rgba(93, 63, 41, 0.07);
+  }
+
+  .place-image {
+    width: 100%;
+    height: 180px;
+    margin-bottom: 14px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f6efe7;
+  }
+
+  .place-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1d262c;
+    margin-bottom: 12px;
+  }
+
+  .card-meta {
+    color: #5d6870;
+    line-height: 1.8;
+    margin-bottom: 18px;
+    word-break: break-word;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-main,
+  .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px;
+    height: 44px;
+    padding: 0 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  .btn-main {
+    background: #1f2d36;
+    color: #fff;
+  }
+
+  .btn-main:hover {
+    transform: translateY(-2px);
+    background: #18242c;
+  }
+
+  .btn-danger {
+    background: #e57373;
+    color: white;
+  }
+
+  .btn-danger:hover {
+    transform: translateY(-2px);
+    background: #d95f5f;
+  }
+
+  .empty-box {
+    text-align: center;
+    padding: 60px 24px;
+    background: #fffdf9;
+    border: 1px solid #eee2d6;
+    border-radius: 26px;
+    box-shadow: 0 16px 36px rgba(93, 63, 41, 0.07);
+  }
+
+  .empty-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+  }
+
+  .empty-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1d262c;
+    margin-bottom: 10px;
+  }
+
+  .empty-desc {
+    color: #66757c;
+    line-height: 1.8;
+  }
+
+  @media (max-width: 900px) {
+    .card-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .page-title {
+      font-size: 36px;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll(".remove-btn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const placeId = this.dataset.placeId;
+      const card = document.getElementById(`favorite-card-${placeId}`);
+
+      fetch(`/places/favorite/remove/${placeId}/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCookie("csrftoken"),
+          "Content-Type": "application/json"
+        }
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "removed") {
+          card.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+          card.style.opacity = "0";
+          card.style.transform = "scale(0.96)";
+
+          setTimeout(() => {
+            card.remove();
+
+            const remainingCards = document.querySelectorAll(".card");
+            if (remainingCards.length === 0) {
+              document.getElementById("empty-box").style.display = "block";
+            }
+          }, 300);
+        }
+      })
+      .catch((error) => {
+        console.error("取消收藏失敗：", error);
+      });
+    });
+  });
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + "=")) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
 {% endblock %}

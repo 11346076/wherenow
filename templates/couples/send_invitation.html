@@ -6,25 +6,76 @@
     <div class="page-label text-center">Couple</div>
     <h1 class="page-title text-center">送出情侶邀請</h1>
     <p class="page-desc text-center">
-      輸入對方的帳號名稱，邀請他與你建立共享回憶的關係。
+      搜尋對方的 Email 或帳號，邀請他與你建立共享回憶的關係。
     </p>
 
-    <div class="card" style="margin-bottom: 24px;">
+    <div class="card invite-card">
 
       {% if message %}
-        <div class="message-box">
+        <div class="message-box" style="margin-bottom: 20px;">
           {{ message }}
         </div>
       {% endif %}
 
-      <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-
-        <div class="action-row action-center">
-          <button type="submit" class="btn-main">送出邀請</button>
+      <form method="get" class="invite-search-form">
+        <label for="q" class="invite-label">搜尋對象</label>
+        <div class="invite-search-row">
+          <input
+            type="text"
+            id="q"
+            name="q"
+            class="invite-input"
+            placeholder="輸入 Email 或帳號"
+            value="{{ keyword|default:'' }}"
+          >
+          <button type="submit" class="btn-main">搜尋</button>
         </div>
       </form>
+
+      {% if keyword %}
+        <div class="invite-result-wrap">
+          <h3 class="invite-result-title">搜尋結果</h3>
+
+          {% if users %}
+            <div class="invite-user-list">
+              {% for u in users %}
+                <div class="invite-user-item">
+                  <div class="invite-user-left">
+                    {% if u.profile.avatar %}
+                      <img src="{{ u.profile.avatar.url }}" alt="avatar" class="invite-avatar">
+                    {% else %}
+                      <div class="invite-avatar invite-avatar-default">
+                        {{ u.profile.nickname|default:u.first_name|default:u.username|slice:":1" }}
+                      </div>
+                    {% endif %}
+
+                    <div class="invite-user-info">
+                      <div class="invite-user-name">
+                        {{ u.profile.nickname|default:u.first_name|default:u.username }}
+                      </div>
+                      <div class="invite-user-email">
+                        {{ u.email|default:"未提供 Email" }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <form method="post" class="invite-action-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="receiver_id" value="{{ u.id }}">
+                    <button type="submit" class="btn-sub invite-btn">
+                      送出邀請
+                    </button>
+                  </form>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="empty-box">
+              找不到符合的使用者。
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
 
     </div>
 
@@ -35,4 +86,153 @@
     </div>
   </div>
 </section>
+
+<style>
+  .invite-card {
+    padding: 32px;
+  }
+
+  .invite-search-form {
+    margin-bottom: 28px;
+  }
+
+  .invite-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #1f2a30;
+  }
+
+  .invite-search-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .invite-input {
+    flex: 1;
+    height: 54px;
+    padding: 0 18px;
+    border: 1.5px solid #dccfbe;
+    border-radius: 18px;
+    background: #fff;
+    font-size: 16px;
+    color: #1f2a30;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .invite-input:focus {
+    border-color: #1f2a30;
+    box-shadow: 0 0 0 3px rgba(31, 42, 48, 0.08);
+  }
+
+  .invite-result-wrap {
+    margin-top: 8px;
+  }
+
+  .invite-result-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #1f2a30;
+  }
+
+  .invite-user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .invite-user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+    border: 1px solid #e7ddd0;
+    border-radius: 20px;
+    background: #fffdf9;
+  }
+
+  .invite-user-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .invite-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .invite-avatar-default {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #d9d0c3;
+    color: #1f2a30;
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .invite-user-info {
+    min-width: 0;
+  }
+
+  .invite-user-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1f2a30;
+    margin-bottom: 4px;
+  }
+
+  .invite-user-email {
+    font-size: 14px;
+    color: #7d7d7d;
+    word-break: break-all;
+  }
+
+  .invite-action-form {
+    flex-shrink: 0;
+  }
+
+  .invite-btn {
+    min-width: 120px;
+    text-align: center;
+  }
+
+  .empty-box {
+    padding: 18px;
+    border: 1px dashed #d8cbbb;
+    border-radius: 18px;
+    text-align: center;
+    color: #7b746b;
+    background: #fffdfa;
+  }
+
+  @media (max-width: 768px) {
+    .invite-search-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .invite-user-item {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .invite-action-form {
+      width: 100%;
+    }
+
+    .invite-btn {
+      width: 100%;
+    }
+  }
+</style>
 {% endblock %}

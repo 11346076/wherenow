@@ -37,86 +37,67 @@ def get_relationship_and_partner(user):
 @login_required
 def send_invitation(request):
     message = ''
+    users = []
 
+    keyword = request.GET.get('q')
+
+    # 🔍 搜尋使用者
+    if keyword:
+        users = User.objects.filter(
+            Q(username__icontains=keyword) |
+            Q(email__icontains=keyword)
+        ).exclude(id=request.user.id)
+
+    # 📩 發送邀請
     if request.method == 'POST':
-        form = CoupleInvitationForm(request.POST)
-        if form.is_valid():
-            receiver_username = form.cleaned_data['receiver_username']
+        receiver_id = request.POST.get('receiver_id')
 
-            if receiver_username == request.user.username:
-                logger.warning(f'使用者 {request.user.username} 嘗試邀請自己')
+        try:
+            receiver = User.objects.get(id=receiver_id)
+
+            if receiver == request.user:
                 message = '不能邀請自己。'
+
             else:
-                try:
-                    receiver = User.objects.get(username=receiver_username)
+                my_relationship_exists = CoupleRelationship.objects.filter(
+                    Q(user_1=request.user) | Q(user_2=request.user),
+                    is_active=True
+                ).exists()
 
-                    my_relationship_exists = CoupleRelationship.objects.filter(
-                        is_active=True,
-                        user_1=request.user
-                    ).exists() or CoupleRelationship.objects.filter(
-                        is_active=True,
-                        user_2=request.user
+                receiver_relationship_exists = CoupleRelationship.objects.filter(
+                    Q(user_1=receiver) | Q(user_2=receiver),
+                    is_active=True
+                ).exists()
+
+                if my_relationship_exists:
+                    message = '你目前已經有情侶關係。'
+
+                elif receiver_relationship_exists:
+                    message = '對方目前已有情侶關係。'
+
+                else:
+                    invitation_exists = CoupleInvitation.objects.filter(
+                        sender=request.user,
+                        receiver=receiver,
+                        status='pending'
                     ).exists()
 
-                    receiver_relationship_exists = CoupleRelationship.objects.filter(
-                        is_active=True,
-                        user_1=receiver
-                    ).exists() or CoupleRelationship.objects.filter(
-                        is_active=True,
-                        user_2=receiver
-                    ).exists()
-
-                    if my_relationship_exists:
-                        logger.warning(f'使用者 {request.user.username} 邀請失敗：自己已有情侶關係')
-                        message = '你目前已經有情侶關係，不能再次邀請。'
-
-                    elif receiver_relationship_exists:
-                        logger.warning(
-                            f'使用者 {request.user.username} 邀請失敗：對方 {receiver.username} 已有情侶關係'
-                        )
-                        message = '對方目前已經有情侶關係。'
-
+                    if invitation_exists:
+                        message = '邀請已經送出。'
                     else:
-                        invitation_exists = CoupleInvitation.objects.filter(
+                        CoupleInvitation.objects.create(
                             sender=request.user,
-                            receiver=receiver,
-                            status='pending'
-                        ).exists()
+                            receiver=receiver
+                        )
+                        message = '邀請已送出！'
 
-                        if invitation_exists:
-                            logger.warning(
-                                f'使用者 {request.user.username} 重複邀請 {receiver.username}'
-                            )
-                            message = '邀請已經送出，請勿重複邀請。'
-                        else:
-                            CoupleInvitation.objects.create(
-                                sender=request.user,
-                                receiver=receiver,
-                                status='pending'
-                            )
-
-                            logger.info(
-                                f'使用者 {request.user.username} 成功傳送情侶邀請給 {receiver.username}'
-                            )
-                            message = '邀請已送出。'
-
-                except User.DoesNotExist:
-                    logger.warning(
-                        f'使用者 {request.user.username} 邀請失敗：找不到帳號 {receiver_username}'
-                    )
-                    message = '找不到這個帳號。'
-
-                except Exception as e:
-                    logger.exception(
-                        f'使用者 {request.user.username} 傳送情侶邀請時發生系統錯誤：{str(e)}'
-                    )
-                    message = '系統發生錯誤，請稍後再試。'
-    else:
-        form = CoupleInvitationForm()
+        except User.DoesNotExist:
+            message = '找不到使用者。'
 
     return render(request, 'couples/send_invitation.html', {
-        'form': form,
-        'message': message
+        'users': users,
+        'message': message,
+        'keyword': keyword
     })
 
 

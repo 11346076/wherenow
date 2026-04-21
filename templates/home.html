@@ -51,6 +51,7 @@
     border-radius: 999px;
     font-size: 15px;
     transition: 0.2s;
+    text-decoration: none;
   }
 
   .btn-primary {
@@ -140,6 +141,7 @@
     font-size: 15px;
     cursor: pointer;
     transition: 0.2s;
+    text-decoration: none;
   }
 
   .search-btn {
@@ -162,51 +164,6 @@
     color: #a97457;
   }
 
-  .welcome-card {
-    margin-top: 26px;
-    padding: 22px 24px;
-    border-radius: 22px;
-    background: #fcfaf7;
-    border: 1px solid #ece3d8;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .welcome-avatar {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid #e2d8cc;
-  }
-
-  .welcome-avatar-default {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: #d8cec3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6b5b4f;
-    font-size: 20px;
-    font-weight: 700;
-  }
-
-  .welcome-text h2 {
-    margin: 0;
-    font-size: 24px;
-    color: #142029;
-  }
-
-  .welcome-text p {
-    margin: 8px 0 0;
-    font-size: 15px;
-    color: #6c7a83;
-    line-height: 1.7;
-  }
-
   @media (max-width: 768px) {
     .hero {
       padding: 40px 24px;
@@ -219,10 +176,6 @@
 
     .search-section {
       padding: 22px 18px;
-    }
-
-    .welcome-card {
-      align-items: flex-start;
     }
   }
 </style>
@@ -238,39 +191,17 @@
   </p>
 
   <div class="hero-actions">
-    <a href="/places/" class="btn-primary">開始探索</a>
+    <a href="{% url 'explore_page' %}" class="btn-primary">開始探索</a>
     <a href="/users/profile/" class="btn-secondary">查看個人資料</a>
   </div>
 
-  {% if user.is_authenticated %}
-    {% with user.socialaccount_set.all.0 as social %}
-      <div class="welcome-card">
-        {% if social.extra_data.picture %}
-          <img src="{{ social.extra_data.picture }}" alt="avatar" class="welcome-avatar">
-        {% else %}
-          <div class="welcome-avatar-default">
-            {{ user.username|slice:":1"|upper }}
-          </div>
-        {% endif %}
-
-        <div class="welcome-text">
-          <h2>Welcome, {{ user.username }}</h2>
-          <p>
-            你可以繼續整理自己的地點與回憶，
-            也可以從這裡搜尋其他人公開分享的貼文。
-          </p>
-        </div>
-      </div>
-    {% endwith %}
-  {% endif %}
-
   <div class="search-section">
-    <div class="search-title">搜尋公開貼文</div>
+    <div class="search-title">探索公開內容</div>
     <div class="search-desc">
-      你可以依照關鍵字、分類、地區、與預算，搜尋別人公開分享的回憶。
+      你可以依照關鍵字、分類、地區與預算，探索別人公開分享的地點與回憶。
     </div>
 
-    <form method="get" action="{% url 'public_memory_search' %}" class="search-form">
+    <form method="get" action="{% url 'explore_page' %}" class="search-form">
       <div class="search-group">
         <label for="q">關鍵字</label>
         <input
@@ -303,7 +234,6 @@
         >
       </div>
 
-
       <div class="search-group">
         <label for="budget_min">最低預算</label>
         <input
@@ -311,7 +241,7 @@
           id="budget_min"
           name="budget_min"
           class="search-input"
-          placeholder="0"
+          placeholder="ex:0"
         >
       </div>
 
@@ -322,11 +252,9 @@
           id="budget_max"
           name="budget_max"
           class="search-input"
-          placeholder="3000"
+          placeholder="ex:3000"
         >
       </div>
-
-    
 
       <div class="search-actions">
         <button type="submit" class="search-btn">搜尋</button>

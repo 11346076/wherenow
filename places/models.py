@@ -57,6 +57,9 @@ class Place(models.Model):
 
     budget = models.IntegerField(default=0)
 
+    # 地點照片
+    image = models.ImageField(upload_to='places/', blank=True, null=True)
+
     is_public = models.BooleanField(default=False)
     is_visited = models.BooleanField(default=False)
     shared_with_couple = models.BooleanField(default=False)
@@ -70,7 +73,7 @@ class Place(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-created_at']  # 最新的在最上面
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"{self.name} ({self.user.username})"
@@ -84,7 +87,7 @@ class PlaceTag(models.Model):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('place', 'tag')  # 防止重複標籤
+        unique_together = ('place', 'tag')
 
     def __str__(self):
         return f"{self.place.name} - {self.tag.name}"
@@ -109,7 +112,7 @@ class FavoritePlace(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'place')  # 防止重複收藏
+        unique_together = ('user', 'place')
         ordering = ['-created_at']
 
     def __str__(self):

@@ -41,28 +41,45 @@ def can_view_memory(user, memory):
     if partner and memory.user == partner and memory.shared_with_couple:
         return True
 
+    if memory.is_public:
+        return True
+
     return False
 
 
 @login_required
 def memory_list(request):
-    partner = get_partner(request.user)
+    memories = Memory.objects.filter(
+        user=request.user
+    ).order_by('-created_at')
 
-    if partner:
-        memories = Memory.objects.filter(
-            Q(user=request.user) |
-            Q(user=partner, shared_with_couple=True)
-        ).order_by('-created_at')
-    else:
-        memories = Memory.objects.filter(
-            user=request.user
-        ).order_by('-created_at')
-
-    logger.info(f'使用者 {request.user.username} 查看回憶列表')
+    logger.info(f'使用者 {request.user.username} 查看自己的回憶列表')
 
     return render(request, 'memories/memory_list.html', {
         'memories': memories,
-        'partner': partner
+        'partner': get_partner(request.user),
+        'is_shared_view': False,
+    })
+
+@login_required
+def shared_memory_list(request):
+    partner = get_partner(request.user)
+
+    if not partner:
+        logger.warning(f'使用者 {request.user.username} 嘗試查看共享回憶，但目前沒有情侶對象')
+        return redirect('memory_list')
+
+    memories = Memory.objects.filter(
+        Q(user=request.user, shared_with_couple=True) |
+        Q(user=partner, shared_with_couple=True)
+    ).order_by('-created_at')
+
+    logger.info(f'使用者 {request.user.username} 查看與 {partner.username} 的共享回憶列表')
+
+    return render(request, 'memories/memory_list.html', {
+        'memories': memories,
+        'partner': partner,
+        'is_shared_view': True,
     })
 
 
@@ -246,6 +263,7 @@ def memory_photo_delete(request, pk):
         'photo': photo
     })
 
+
 @login_required
 def public_memory_search(request):
     query = request.GET.get('q', '').strip()
@@ -260,12 +278,11 @@ def public_memory_search(request):
 
     if query:
         memories = memories.filter(
-        Q(place__name__icontains=query) |
-        Q(place__area__icontains=query) |
-        Q(place__note__icontains=query) |
-        Q(comment__icontains=query) |
-        Q(user__username__icontains=query)
-    )
+            Q(place__name__icontains=query) |
+            Q(place__area__icontains=query) |
+            Q(comment__icontains=query) |
+            Q(user__username__icontains=query)
+        )
 
     if category:
         memories = memories.filter(place__category__id=category)
@@ -286,7 +303,6 @@ def public_memory_search(request):
             pass
 
     memories = memories.order_by('-created_at')
-
     categories = Category.objects.all().order_by('name')
 
     return render(request, 'memories/public_search.html', {

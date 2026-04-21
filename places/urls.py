@@ -3,6 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.place_list, name='place_list'),
+    path('shared/', views.shared_place_list, name='shared_place_list'),
+
     path('create/', views.place_create, name='place_create'),
     path('<int:pk>/', views.place_detail, name='place_detail'),
     path('<int:pk>/edit/', views.place_update, name='place_update'),

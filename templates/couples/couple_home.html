@@ -1,6 +1,4 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <section class="page-section">
   <div class="container-lg">
     <div class="page-label">Couple Home</div>
@@ -9,93 +7,143 @@
       在這裡查看你們的共享地點、共同回憶與重要日期，讓這段關係的日常與紀錄都被好好保存。
     </p>
 
-    {% if relationship %}
-      <div class="card card-hero" style="margin-bottom: 24px;">
-        <div class="hero-top">
-          <div>
-            <h2 class="hero-name">我的情侶：{{ partner.username }}</h2>
+    {% if relationship and partner %}
+    <div class="card card-hero" style="margin-bottom: 24px">
+      <div
+        class="hero-top"
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 20px;
+        "
+      >
+        <div>
+          <h2 class="hero-name">
+            我的情侶：{{partner.profile.nickname|default:partner.first_name|default:partner.username}}
+          </h2>
 
-            <div class="hero-meta">
-              <div class="meta-label">在一起紀念日</div>
-              <div class="meta-value">
-                {% if relationship.anniversary_date %}
-                  {{ relationship.anniversary_date }}
-                {% else %}
-                  尚未設定
-                {% endif %}
-              </div>
+          <div class="hero-meta">
+            <div class="meta-label">在一起紀念日</div>
+            <div class="meta-value">
+              {% if relationship.anniversary_date %} {{relationship.anniversary_date }} {% else %} 尚未設定 {% endif %}
+            </div>
 
-              <div class="meta-label">已經在一起</div>
-              <div class="meta-value">
-                {% if days_together != None %}
-                  {{ days_together }} 天
-                {% else %}
-                  尚未設定紀念日
-                {% endif %}
-              </div>
+            <div class="meta-label">已經在一起</div>
+            <div class="meta-value">
+              {% if days_together != None %} {{ days_together }} 天 {% else %}
+              尚未設定紀念日 {% endif %}
             </div>
           </div>
-
-          <div class="hero-icon">💞</div>
-        </div>
-      </div>
-
-      <div class="stats-grid" style="margin-bottom: 24px;">
-        <div class="card card-stat">
-          <div class="stat-label">共同地點數</div>
-          <div class="stat-value">{{ shared_place_count }}</div>
         </div>
 
-        <div class="card card-stat">
-          <div class="stat-label">共同回憶數</div>
-          <div class="stat-value">{{ shared_memory_count }}</div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-bottom: 24px;">
-        <h3 class="section-title">最近共享回憶</h3>
-
-        {% if recent_memories %}
-          <div class="memory-list">
-            {% for memory in recent_memories %}
-              <div class="card-soft memory-item">
-                <div class="memory-main">
-                  <a href="{% url 'memory_detail' memory.id %}">
-                    {{ memory.place.name }} - {{ memory.visit_date }}
-                  </a>
-                  <div class="memory-sub">建立者：{{ memory.user.username }}</div>
-                </div>
-              </div>
-            {% endfor %}
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+          "
+        >
+          {% if partner.profile.avatar %}
+          <img
+            src="{{ partner.profile.avatar.url }}"
+            alt="partner avatar"
+            style="
+              width: 72px;
+              height: 72px;
+              border-radius: 50%;
+              object-fit: cover;
+              border: 3px solid #f1e7db;
+            "
+          />
+          {% else %}
+          <div
+            style="
+              width: 72px;
+              height: 72px;
+              border-radius: 50%;
+              background: #d8cfc3;
+              color: #1f2a30;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 28px;
+              font-weight: 700;
+            "
+          >
+            {{
+            partner.profile.nickname|default:partner.first_name|default:partner.username|slice:":1"
+            }}
           </div>
-        {% else %}
-          <div class="empty-box">
-            目前沒有共享回憶。
+          {% endif %}
+          <div style="font-size: 14px; color: #7b746b">
+            {{ partner.email|default:"" }}
           </div>
-        {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid" style="margin-bottom: 24px">
+      <div class="card card-stat">
+        <div class="stat-label">共同地點數</div>
+        <div class="stat-value">{{ shared_place_count }}</div>
       </div>
 
-      <div class="action-row">
-        <a href="{% url 'edit_anniversary' %}" class="btn-main">設定 / 修改紀念日</a>
-        <a href="{% url 'place_list' %}" class="btn-sub">查看共享地點</a>
-        <a href="{% url 'memory_list' %}" class="btn-sub">查看共享回憶</a>
-        <a href="{% url 'couple_status' %}" class="btn-sub">查看情侶狀態</a>
-        <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
+      <div class="card card-stat">
+        <div class="stat-label">共同回憶數</div>
+        <div class="stat-value">{{ shared_memory_count }}</div>
       </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 24px">
+      <h3 class="section-title">最近共享回憶</h3>
+
+      {% if recent_memories %}
+      <div class="memory-list">
+        {% for memory in recent_memories %}
+        <div class="card-soft memory-item">
+          <div class="memory-main">
+            <a href="{% url 'memory_detail' memory.id %}">
+              {{ memory.place.name }} - {{ memory.visit_date }}
+            </a>
+            <div class="memory-sub">
+              建立者：{{ memory.user.profile.nickname|default:memory.user.first_name|default:memory.user.username}}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-box">目前沒有共享回憶。</div>
+      {% endif %}
+    </div>
+
+    <div class="action-row">
+      <a href="{% url 'edit_anniversary' %}" class="btn-main"
+        >設定 / 修改紀念日</a
+      >
+      <a href="{% url 'shared_place_list' %}" class="btn-sub">查看共享地點</a>
+      <a href="{% url 'memory_list' %}" class="btn-sub">查看共享回憶</a>
+      <a href="{% url 'couple_status' %}" class="btn-sub">查看情侶狀態</a>
+      <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
+    </div>
 
     {% else %}
-      <div class="card card-empty">
-        <div class="empty-state-icon">🫧</div>
-        <div class="empty-state-title">你目前沒有情侶關係</div>
-        <div class="empty-state-desc">
-          建立情侶關係後，就可以開始共享地點與回憶，並在這裡查看你們的共同紀錄。
-        </div>
-
-        <div class="action-row" style="justify-content: center;">
-          <a href="{% url 'send_invitation' %}" class="btn-main">先去發送情侶邀請</a>
-          <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
-        </div>
+    <div class="card card-empty">
+      <div class="empty-state-icon">🫧</div>
+      <div class="empty-state-title">你目前沒有情侶關係</div>
+      <div class="empty-state-desc">
+        建立情侶關係後，就可以開始共享地點與回憶，並在這裡查看你們的共同紀錄。
       </div>
+
+      <div class="action-row" style="justify-content: center">
+        <a href="{% url 'send_invitation' %}" class="btn-main"
+          >先去發送情侶邀請</a
+        >
+        <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
+      </div>
+    </div>
     {% endif %}
   </div>
 </section>

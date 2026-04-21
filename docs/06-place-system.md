@@ -1,6 +1,7 @@
 # Place System（地點管理系統）
 
 ## 開發時間
+
 2026/03/15
 
 ---
@@ -15,7 +16,7 @@
 - 地區
 - 地點分類
 - Google Map 連結
-- 預算
+-
 - 備註
 - 是否公開
 
@@ -48,8 +49,8 @@ class Category(models.Model):
 
 ## 欄位說明
 
-| 欄位 | 用途 |
-|-----|------|
+| 欄位 | 用途         |
+| ---- | ------------ |
 | name | 地點分類名稱 |
 
 ### 範例資料
@@ -75,8 +76,8 @@ class Tag(models.Model):
 
 ## 欄位說明
 
-| 欄位 | 用途 |
-|-----|------|
+| 欄位 | 用途     |
+| ---- | -------- |
 | name | 標籤名稱 |
 
 ### 範例資料
@@ -113,17 +114,17 @@ class Place(models.Model):
 
 ## 欄位說明
 
-| 欄位 | 用途 |
-|-----|------|
-| user | 建立地點的使用者 |
-| category | 地點分類 |
-| name | 地點名稱 |
-| region | 地區 |
-| google_map_link | Google Map 連結 |
-| note | 備註 |
-| budget | 預算 |
-| is_public | 是否公開 |
-| created_at | 建立時間 |
+| 欄位            | 用途             |
+| --------------- | ---------------- |
+| user            | 建立地點的使用者 |
+| category        | 地點分類         |
+| name            | 地點名稱         |
+| region          | 地區             |
+| google_map_link | Google Map 連結  |
+| note            | 備註             |
+| budget          |                  |
+| is_public       | 是否公開         |
+| created_at      | 建立時間         |
 
 ---
 
@@ -144,10 +145,10 @@ class PlaceTag(models.Model):
 
 ## 欄位說明
 
-| 欄位 | 用途 |
-|-----|------|
+| 欄位  | 用途 |
+| ----- | ---- |
 | place | 地點 |
-| tag | 標籤 |
+| tag   | 標籤 |
 
 ---
 
@@ -205,7 +206,7 @@ class PlaceForm(forms.ModelForm):
 林昕玫
 分類：景觀餐廳
 地區：TW
-預算：500
+：500
 公開：True
 建立時間：2026/03/15
 ```
@@ -229,7 +230,7 @@ class PlaceForm(forms.ModelForm):
 - 地區
 - Google Map 連結
 - 備註
-- 預算
+-
 - 是否公開
 - 建立時間
 
@@ -340,7 +341,7 @@ Place
 林昕玫
 分類：景觀餐廳
 地區：TW
-預算：500
+：500
 公開：True
 ```
 

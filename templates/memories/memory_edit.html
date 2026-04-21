@@ -9,7 +9,6 @@
       修改這次回憶的內容、評分、花費與照片，讓記錄保持完整。
     </p>
 
-    <!-- 表單 -->
     <div class="card" style="margin-bottom: 24px;">
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -76,6 +75,12 @@
                        {% if memory.shared_with_couple %}checked{% endif %}>
                 是否與情侶共享
               </label>
+
+              <label class="checkbox-item">
+                <input type="checkbox" name="is_public"
+                       {% if memory.is_public %}checked{% endif %}>
+                是否公開
+              </label>
             </div>
           </div>
 
@@ -88,7 +93,6 @@
       </form>
     </div>
 
-    <!-- 照片區 -->
     <div class="card">
       <h2 class="section-title">目前照片</h2>
       <p class="section-desc">

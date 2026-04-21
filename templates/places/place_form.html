@@ -4,16 +4,77 @@
 <section class="page-section">
   <div class="form-wrap" style="max-width: 860px;">
     <div class="page-label">Place Form</div>
-    <h1 class="page-title">新增地點</h1>
+    <h1 class="page-title">
+      {% if form.instance.pk %}編輯地點{% else %}新增地點{% endif %}
+    </h1>
     <p class="page-desc">
       把想去的地方、去過的地方，或想和另一半共享的地點記錄下來，
       讓每個日常與回憶都有地方可以保存。
     </p>
 
     <div class="form-card">
-      <form method="post">
+      <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="{{ form.category.id_for_label }}">{{ form.category.label }}</label>
+            {{ form.category }}
+          </div>
+
+          <div class="form-group full-width">
+            <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            {{ form.name }}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.area.id_for_label }}">{{ form.area.label }}</label>
+            {{ form.area }}
+          </div>
+
+          <div class="form-group">
+            <label for="{{ form.budget.id_for_label }}">{{ form.budget.label }}</label>
+            {{ form.budget }}
+          </div>
+
+          <div class="form-group full-width">
+            <label for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+            {{ form.address }}
+          </div>
+
+          <div class="form-group full-width">
+            <label for="{{ form.google_map_link.id_for_label }}">{{ form.google_map_link.label }}</label>
+            {{ form.google_map_link }}
+          </div>
+
+          <div class="form-group full-width">
+            <label for="{{ form.note.id_for_label }}">{{ form.note.label }}</label>
+            {{ form.note }}
+          </div>
+
+          <div class="form-group full-width">
+            <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+            {{ form.image }}
+            {% if form.instance.image %}
+              <div class="current-image-box">
+                <div class="current-image-label">目前照片</div>
+                <img src="{{ form.instance.image.url }}" alt="{{ form.instance.name }}" class="current-image-preview">
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="checkbox-group full-width">
+            <label class="checkbox-item">
+              {{ form.is_public }}
+              <span>{{ form.is_public.label }}</span>
+            </label>
+
+            <label class="checkbox-item">
+              {{ form.shared_with_couple }}
+              <span>{{ form.shared_with_couple.label }}</span>
+            </label>
+          </div>
+        </div>
 
         <div class="action-row">
           <button type="submit" class="btn-main">儲存地點</button>
@@ -23,4 +84,204 @@
     </div>
   </div>
 </section>
+
+<style>
+  .page-section {
+    padding: 56px 0 72px;
+  }
+
+  .form-wrap {
+    margin: 0 auto;
+  }
+
+  .page-label {
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #efe4da;
+    color: #9a6d50;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .page-title {
+    margin: 0 0 12px;
+    font-size: 46px;
+    line-height: 1.15;
+    color: #1d262c;
+  }
+
+  .page-desc {
+    margin: 0 0 28px;
+    color: #66757c;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .form-card {
+    background: #fffdf9;
+    border: 1px solid #eee2d6;
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: 0 16px 36px rgba(93, 63, 41, 0.07);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .form-group label {
+    color: #7e6858;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e6d9cd;
+    border-radius: 14px;
+    background: #fff;
+    font-size: 15px;
+    color: #334047;
+    box-sizing: border-box;
+  }
+
+  .form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .form-group input[type="file"] {
+    padding: 10px;
+    background: #faf7f2;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #b58262;
+    box-shadow: 0 0 0 3px rgba(181, 130, 98, 0.12);
+  }
+
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding-top: 6px;
+  }
+
+  .checkbox-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #5d6870;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .checkbox-item input {
+    width: auto;
+    transform: scale(1.1);
+  }
+
+  .current-image-box {
+    margin-top: 12px;
+    padding: 14px;
+    border-radius: 18px;
+    background: #faf5ef;
+    border: 1px solid #eee2d6;
+  }
+
+  .current-image-label {
+    margin-bottom: 10px;
+    color: #8a654c;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .current-image-preview {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 16px;
+    display: block;
+    object-fit: cover;
+  }
+
+  .action-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+
+  .btn-main,
+  .btn-sub {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 132px;
+    height: 48px;
+    padding: 0 22px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    transition: 0.22s ease;
+    text-decoration: none;
+  }
+
+  .btn-main {
+    background: #1f2d36;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-main:hover {
+    transform: translateY(-2px);
+    background: #18242c;
+  }
+
+  .btn-sub {
+    border: 1px solid #d8c8b8;
+    color: #7a5d48;
+    background: transparent;
+  }
+
+  .btn-sub:hover {
+    background: #f8f1ea;
+  }
+
+  @media (max-width: 700px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .page-title {
+      font-size: 34px;
+    }
+
+    .form-card {
+      padding: 22px;
+      border-radius: 22px;
+    }
+  }
+</style>
 {% endblock %}

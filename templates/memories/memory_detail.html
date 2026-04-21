@@ -11,6 +11,7 @@
         <div><strong>📍 地點：</strong>{{ memory.place.name }}</div>
         <div><strong>📅 日期：</strong>{{ memory.visit_date }}</div>
         <div><strong>⭐ 評分：</strong>{{ memory.rating }}</div>
+
         <div>
           <strong>💰 花費：</strong>
           {% if memory.cost %}
@@ -19,16 +20,26 @@
             未填寫
           {% endif %}
         </div>
+
         <div>
           <strong>👍 是否推薦：</strong>{{ memory.recommended|yesno:"是,否" }}
         </div>
+
         <div>
           <strong>💕 與情侶共享：</strong>{{ memory.shared_with_couple|yesno:"是,否" }}
+        </div>
+
+        <div>
+          <strong>🌍 是否公開：</strong>{{ memory.is_public|yesno:"是,否" }}
         </div>
       </div>
 
       <div class="note-box">
-        {{ memory.comment|default:"尚未填寫心得。" }}
+        {% if memory.comment %}
+          {{ memory.comment|linebreaksbr }}
+        {% else %}
+          尚未填寫心得。
+        {% endif %}
       </div>
 
       <div class="action-row">
@@ -112,6 +123,7 @@
     color: white;
     padding: 10px 18px;
     border-radius: 999px;
+    text-decoration: none;
   }
 
   .btn-sub {
@@ -120,6 +132,7 @@
     border-radius: 999px;
     color: #6a5140;
     background: #fff;
+    text-decoration: none;
   }
 
   .btn-danger {
@@ -127,6 +140,7 @@
     color: white;
     padding: 10px 18px;
     border-radius: 999px;
+    text-decoration: none;
   }
 
   .photo-card {

@@ -1,4 +1,5 @@
 {% load static %}
+{% load couple_tags %}
 <!doctype html>
 <html lang="zh-Hant">
   <head>
@@ -51,23 +52,105 @@
         align-items: center;
       }
 
-      .nav-links a {
+      .nav-links > a,
+      .nav-trigger {
         color: #4e5c62;
         font-size: 15px;
         transition: 0.2s;
       }
 
-      .nav-links a:hover {
+      .nav-links > a:hover,
+      .nav-trigger:hover {
         color: #a97457;
       }
 
-      .user-badge {
-        padding: 6px 12px;
-        border-radius: 999px;
-        background: #efe7dd;
-        font-size: 13px;
+      .nav-dropdown {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .nav-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+        font: inherit;
+      }
+
+      .nav-trigger::after {
+        content: "▾";
+        font-size: 11px;
+        color: #8c7a6c;
+        margin-top: 1px;
+      }
+
+      .nav-menu {
+        position: absolute;
+        top: calc(100% + 14px);
+        left: 50%;
+        transform: translateX(-50%) translateY(8px);
+        min-width: 200px;
+        background: rgba(255, 255, 255, 0.98);
+        border: 1px solid #eadfd3;
+        border-radius: 18px;
+        box-shadow: 0 18px 40px rgba(50, 35, 25, 0.12);
+        padding: 10px;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: 0.22s ease;
+        z-index: 1100;
+      }
+
+      .nav-dropdown:hover .nav-menu,
+      .nav-dropdown:focus-within .nav-menu {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .nav-menu a {
+        display: block;
+        padding: 10px 12px;
+        border-radius: 12px;
+        color: #45545b;
+        font-size: 14px;
+        line-height: 1.4;
+        transition: 0.18s ease;
+      }
+
+      .nav-menu a:hover {
+        background: #f8f1ea;
+        color: #a97457;
+      }
+
+      .nav-menu-label {
+        padding: 8px 12px 6px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #9a7d68;
+        letter-spacing: 0.05em;
+      }
+
+      .nav-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .default-avatar {
+        background: #d8cfc3;
         color: #1f2a30;
-        font-weight: 600;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .auth-btn {
@@ -78,12 +161,33 @@
         color: #1f2a30;
         background: none;
         cursor: pointer;
-        font-family: inherit;
+        transition: 0.2s;
       }
 
       .auth-btn:hover {
         background: #1f2a30;
         color: white;
+      }
+
+      .nav-couple-link {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .nav-notice-badge {
+        min-width: 18px;
+        height: 18px;
+        padding: 0 6px;
+        border-radius: 999px;
+        background: #d96c6c;
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .container {
@@ -92,11 +196,62 @@
         padding: 0 28px;
       }
 
+      .message {
+        padding: 12px 16px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      .message-success {
+        background: #e6f4ea;
+        color: #256029;
+      }
+
+      .message-error {
+        background: #fdecea;
+        color: #a4282a;
+      }
+
+      .message-warning {
+        background: #fff4e5;
+        color: #7a4f01;
+      }
+
+      .message-info {
+        background: #e8f4fd;
+        color: #1c4f82;
+      }
+
       .footer {
         text-align: center;
         padding: 34px 20px 40px;
         color: #7b7b7b;
         font-size: 14px;
+      }
+
+      @media (max-width: 980px) {
+        .navbar {
+          padding: 16px 20px;
+          align-items: flex-start;
+          gap: 16px;
+          flex-direction: column;
+        }
+
+        .nav-links {
+          width: 100%;
+          gap: 14px;
+        }
+
+        .nav-menu {
+          left: 0;
+          transform: translateX(0) translateY(8px);
+        }
+
+        .nav-dropdown:hover .nav-menu,
+        .nav-dropdown:focus-within .nav-menu {
+          transform: translateX(0) translateY(0);
+        }
       }
     </style>
   </head>
@@ -110,17 +265,66 @@
       <div class="nav-links">
         {% if user.is_authenticated %}
           <a href="{% url 'home' %}">首頁</a>
-          <a href="{% url 'place_list' %}">地點</a>
-          <a href="{% url 'favorite_list' %}">收藏</a>
-          <a href="{% url 'random_pick' %}">抽選</a>
-          <a href="{% url 'random_pick_history' %}">抽選紀錄</a>
-          <a href="/memories/">回憶</a>
-          <a href="/couples/status/">情侶</a>
+
+          <div class="nav-dropdown">
+            <button type="button" class="nav-trigger">地點</button>
+            <div class="nav-menu">
+              <div class="nav-menu-label">地點功能</div>
+              <a href="{% url 'place_list' %}">我的地點</a>
+              <a href="{% url 'shared_place_list' %}">共享地點</a>
+              <a href="{% url 'place_create' %}">新增地點</a>
+              <a href="{% url 'favorite_list' %}">收藏地點</a>
+              <a href="{% url 'random_pick' %}">隨機抽選</a>
+              <a href="{% url 'random_pick_history' %}">抽選紀錄</a>
+            </div>
+          </div>
+
+          <div class="nav-dropdown">
+            <button type="button" class="nav-trigger">回憶</button>
+            <div class="nav-menu">
+              <div class="nav-menu-label">回憶功能</div>
+              <a href="{% url 'memory_list' %}">我的回憶</a>
+              <a href="{% url 'memory_create' %}">新增回憶</a>
+            </div>
+          </div>
+
+          {% pending_invitation_count user as invite_count %}
+          <div class="nav-dropdown">
+            <button type="button" class="nav-trigger nav-couple-link">
+              情侶
+              {% if invite_count > 0 %}
+                <span class="nav-notice-badge">{{ invite_count }}</span>
+              {% endif %}
+            </button>
+            <div class="nav-menu">
+              <div class="nav-menu-label">情侶功能</div>
+              <a href="{% url 'couple_home' %}">情侶首頁</a>
+              <a href="{% url 'couple_status' %}">情侶狀態</a>
+              <a href="{% url 'shared_place_list' %}">共享地點</a>
+              <a href="{% url 'shared_memory_list' %}">共享回憶</a>
+              <a href="{% url 'send_invitation' %}">發送邀請</a>
+              <a href="{% url 'received_invitations' %}">
+                收到的邀請
+                {% if invite_count > 0 %}
+                  （{{ invite_count }}）
+                {% endif %}
+              </a>
+              <a href="{% url 'edit_anniversary' %}">設定紀念日</a>
+            </div>
+          </div>
+
+          <a href="{% url 'explore_page' %}">探索</a>
           <a href="{% url 'profile' %}">個人資料</a>
 
-          <span class="user-badge">{{ user.username }}</span>
+          {% if user.profile.avatar %}
+            <img src="{{ user.profile.avatar.url }}" class="nav-avatar" alt="avatar">
+          {% else %}
+            <div class="nav-avatar default-avatar">
+              {{ user.profile.nickname|default:user.username|slice:":1" }}
+            </div>
+          {% endif %}
 
-          <form action="{% url 'account_logout' %}" method="post" style="margin: 0;">
+          <form action="{% url 'account_logout' %}" method="post">
             {% csrf_token %}
             <button type="submit" class="auth-btn">登出</button>
           </form>
@@ -131,10 +335,21 @@
     </div>
 
     <div class="container">
-      {% block content %}
-      {% endblock %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="message message-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
     </div>
 
-    <div class="footer">WhereNow © 2026</div>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+
+    <div class="footer">
+      WhereNow © 2026
+    </div>
   </body>
 </html>

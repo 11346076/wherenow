@@ -1,29 +1,78 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <section class="page-section">
   <div class="detail-wrap">
     <div class="detail-card">
       <h1 class="place-title">{{ place.name }}</h1>
 
+      {% if place.image %}
+        <div class="detail-image">
+          <img src="{{ place.image.url }}" alt="{{ place.name }}">
+        </div>
+      {% endif %}
+
       <div class="meta-list">
-        <div><strong>📍 地區：</strong>{{ place.area }}</div>
-        <div><strong>🏷️ 分類：</strong>{{ place.category }}</div>
-        <div><strong>💰 預算：</strong>{{ place.budget }}</div>
-        <div><strong>🕒 建立時間：</strong>{{ place.created_at }}</div>
+        <div><strong>📍 地區：</strong>{{ place.area|default:"未填寫" }}</div>
+
+        <div>
+          <strong>🏠 地址：</strong><br>
+          <span class="address-text">
+            {% if place.address %}
+              {{ place.address|linebreaksbr }}
+            {% else %}
+              未填寫
+            {% endif %}
+          </span>
+        </div>
+
+        <div><strong>🏷️ 分類：</strong>{{ place.category|default:"未分類" }}</div>
+        <div><strong>💰 平均花費/人：</strong>{{ place.budget }}</div>
+
+        <div>
+          <strong>🗺️ Google 地圖：</strong>
+          {% if place.google_map_link %}
+            <a href="{{ place.google_map_link }}" target="_blank" class="map-link">查看地圖</a>
+          {% else %}
+            未填寫
+          {% endif %}
+        </div>
+
+        <div><strong>🕒 建立時間：</strong>{{ place.created_at|date:"Y/m/d H:i" }}</div>
         <div><strong>🌍 是否公開：</strong>{{ place.is_public|yesno:"是,否" }}</div>
+        <div><strong>💕 與伴侶共享：</strong>{{ place.shared_with_couple|yesno:"是,否" }}</div>
       </div>
 
-      {% if place.note %}
-      <div class="note-box">{{ place.note }}</div>
-      {% endif %}
+      <div class="note-box">
+        <div class="note-title">備註</div>
+        <div class="note-content">
+          {% if place.note %}
+            {{ place.note|linebreaksbr }}
+          {% else %}
+            尚未填寫備註
+          {% endif %}
+        </div>
+      </div>
 
       <div class="action-row">
         {% if can_edit %}
-        <a href="{% url 'place_update' place.pk %}" class="btn-main">編輯地點</a>
-        <a href="{% url 'place_delete' place.pk %}" class="btn-danger">刪除地點</a>
+          <a href="{% url 'place_update' place.pk %}" class="btn-main">編輯地點</a>
+          <a href="{% url 'place_delete' place.pk %}" class="btn-danger">刪除地點</a>
         {% endif %}
 
-        <a href="{% url 'add_favorite' place.id %}" class="btn-sub">收藏</a>
+        <button
+          id="favorite-btn"
+          data-place-id="{{ place.id }}"
+          class="btn-sub favorite-btn {% if is_favorited %}active{% endif %}"
+          type="button"
+        >
+          {% if is_favorited %}
+            ❤️ 已收藏
+          {% else %}
+            🤍 收藏
+          {% endif %}
+        </button>
+
         <a href="{% url 'place_list' %}" class="btn-sub">返回列表</a>
       </div>
     </div>
@@ -36,7 +85,7 @@
   }
 
   .detail-wrap {
-    max-width: 800px;
+    max-width: 860px;
     margin: 0 auto;
   }
 
@@ -49,21 +98,72 @@
   }
 
   .place-title {
-    font-size: 36px;
-    margin-bottom: 24px;
+    font-size: 38px;
+    margin: 0 0 24px;
+    color: #1d262c;
   }
 
-  .meta-list div {
-    margin-bottom: 10px;
+  .detail-image {
+    width: 100%;
+    margin-bottom: 24px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #f6efe7;
+  }
+
+  .detail-image img {
+    width: 100%;
+    max-height: 430px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .meta-list {
+    display: grid;
+    gap: 12px;
     color: #5d6870;
+    line-height: 1.8;
+  }
+
+  .meta-list strong {
+    color: #364148;
+  }
+
+  .address-text {
+    display: block;
+    margin-top: 4px;
+    color: #5d6870;
+    line-height: 1.7;
+    word-break: break-word;
+  }
+
+  .map-link {
+    color: #a97457;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .map-link:hover {
+    color: #8c5f46;
   }
 
   .note-box {
-    margin-top: 20px;
-    padding: 16px;
+    margin-top: 26px;
+    padding: 18px;
     background: #f8f2eb;
-    border-radius: 16px;
-    line-height: 1.6;
+    border-radius: 18px;
+    line-height: 1.8;
+  }
+
+  .note-title {
+    margin-bottom: 8px;
+    color: #7a5d48;
+    font-weight: 700;
+  }
+
+  .note-content {
+    color: #4c5860;
+    word-break: break-word;
   }
 
   .action-row {
@@ -73,25 +173,120 @@
     flex-wrap: wrap;
   }
 
+  .btn-main,
+  .btn-sub,
+  .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 118px;
+    height: 46px;
+    padding: 0 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
   .btn-main {
     background: #a97457;
     color: white;
-    padding: 10px 18px;
-    border-radius: 999px;
+  }
+
+  .btn-main:hover {
+    transform: translateY(-2px);
+    background: #936246;
   }
 
   .btn-sub {
     border: 1px solid #dec8b8;
-    padding: 10px 18px;
-    border-radius: 999px;
+    color: #7a5d48;
+    background: transparent;
+  }
+
+  .btn-sub:hover {
+    background: #f8f1ea;
   }
 
   .btn-danger {
     background: #e57373;
     color: white;
-    padding: 10px 18px;
-    border-radius: 999px;
+  }
+
+  .btn-danger:hover {
+    transform: translateY(-2px);
+    background: #d95f5f;
+  }
+
+  .favorite-btn.active {
+    background: #e57373;
+    color: white;
+    border: none;
+  }
+
+  @media (max-width: 640px) {
+    .detail-card {
+      padding: 24px;
+      border-radius: 22px;
+    }
+
+    .place-title {
+      font-size: 30px;
+    }
   }
 </style>
 
+<script>
+  const favoriteBtn = document.getElementById("favorite-btn");
+
+  if (favoriteBtn) {
+    favoriteBtn.addEventListener("click", function () {
+      const placeId = this.dataset.placeId;
+      const isFavorited = this.classList.contains("active");
+
+      const url = isFavorited
+        ? `/places/favorite/remove/${placeId}/`
+        : `/places/favorite/add/${placeId}/`;
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCookie("csrftoken"),
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "added") {
+          favoriteBtn.classList.add("active");
+          favoriteBtn.innerHTML = "❤️ 已收藏";
+        } else if (data.status === "removed") {
+          favoriteBtn.classList.remove("active");
+          favoriteBtn.innerHTML = "🤍 收藏";
+        }
+      })
+      .catch(error => {
+        console.error("收藏操作失敗：", error);
+      });
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + "=")) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
 {% endblock %}

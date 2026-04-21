@@ -7,14 +7,37 @@
     <h1 class="page-title text-center">情侶狀態</h1>
 
     <div class="card card-empty" style="margin-bottom: 24px;">
-      {% if relationship %}
-        <div class="status-icon">💞</div>
-        <div class="status-text">
-          你目前的情侶是：
-          <span class="partner-name">{{ partner.username }}</span>
+      {% if relationship and partner %}
+        <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+          {% if partner.profile.avatar %}
+            <img
+              src="{{ partner.profile.avatar.url }}"
+              alt="partner avatar"
+              style="width:84px; height:84px; border-radius:50%; object-fit:cover; border:3px solid #f1e7db;"
+            >
+          {% else %}
+            <div
+              style="width:84px; height:84px; border-radius:50%; background:#d8cfc3; color:#1f2a30; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700;"
+            >
+              {{ partner.profile.nickname|default:partner.first_name|default:partner.username|slice:":1" }}
+            </div>
+          {% endif %}
+
+          <div class="status-icon" style="margin:0;">💞</div>
+
+          <div class="status-text" style="text-align:center;">
+            你目前的情侶是：
+            <span class="partner-name">
+              {{ partner.profile.nickname|default:partner.first_name|default:partner.username }}
+            </span>
+          </div>
+
+          <div style="font-size:14px; color:#7b746b; text-align:center;">
+            {{ partner.email|default:"" }}
+          </div>
         </div>
 
-        <div class="action-row action-center">
+        <div class="action-row action-center" style="margin-top: 22px;">
           <a href="{% url 'couple_home' %}" class="btn-main">前往情侶首頁</a>
           <a href="{% url 'break_up' %}" class="btn-danger">解除關係</a>
         </div>
