@@ -24,6 +24,7 @@ INSTALLED_APPS = [
 
     # third-party
     'rest_framework',
+    'drf_yasg',
     'django_select2',
     'allauth',
     'allauth.account',

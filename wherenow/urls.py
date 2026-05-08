@@ -4,8 +4,31 @@ from django.conf import settings
 from django.conf.urls.static import static
 from .views import root_redirect, home, explore_page
 
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="WhereNow API",
+        default_version='v1',
+        description="WhereNow 地點清單與情侶回憶管理系統 API 文件",
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # Swagger / Redoc API 文件
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+
+    # API
+    path('api/', include('api.urls')),
 
     # select2
     path('select2/', include('django_select2.urls')),
