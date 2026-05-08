@@ -41,7 +41,12 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    # 🌍 多語系 Middleware
+    'django.middleware.locale.LocaleMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -61,6 +66,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
+                'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -103,12 +109,32 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+# =========================
 # Internationalization
+# =========================
+
+from django.utils.translation import gettext_lazy as _
+
 LANGUAGE_CODE = 'zh-hant'
+
 TIME_ZONE = 'Asia/Taipei'
+
 USE_I18N = True
+
 USE_TZ = True
+
+
+# 支援語言
+LANGUAGES = [
+    ('zh-hant', _('繁體中文')),
+    ('en', _('English')),
+]
+
+
+# locale 資料夾位置
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 
 # Static files

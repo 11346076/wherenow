@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="page-section">
   <div class="list-wrap">
-
     <div class="page-label">
       {% if is_shared_view %}
         SHARED
@@ -14,25 +14,27 @@
 
     <h1 class="page-title">
       {% if is_shared_view %}
-        共享地點列表
+        {% trans "共享地點列表" %}
       {% else %}
-        我的地點列表
+        {% trans "我的地點列表" %}
       {% endif %}
     </h1>
 
     <p class="page-desc">
       {% if is_shared_view and partner %}
-        你目前正在查看 <strong>{{ partner.username }}</strong> 與你共享的地點。
+        {% blocktrans with partner_name=partner.username %}
+          你目前正在查看 {{ partner_name }} 與你共享的地點。
+        {% endblocktrans %}
       {% else %}
-        這裡是你建立的地點清單，可以管理、查看與記錄你的生活足跡。
+        {% trans "這裡是你建立的地點清單，可以管理、查看與記錄你的生活足跡。" %}
       {% endif %}
     </p>
 
     <div class="top-actions">
       {% if not is_shared_view %}
-        <a href="{% url 'place_create' %}" class="btn-main">新增地點</a>
+        <a href="{% url 'place_create' %}" class="btn-main">{% trans "新增地點" %}</a>
       {% endif %}
-      <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
+      <a href="{% url 'home' %}" class="btn-sub">{% trans "回首頁" %}</a>
     </div>
 
     {% if places %}
@@ -49,49 +51,49 @@
 
             <div class="card-meta">
               <div class="meta-row">
-                <span class="meta-label">分類</span>
-                <span class="meta-value">{{ place.category|default:"未分類" }}</span>
+                <span class="meta-label">{% trans "分類" %}</span>
+                <span class="meta-value">{{ place.category|default:_("未分類") }}</span>
               </div>
 
               <div class="meta-row">
-                <span class="meta-label">地區</span>
-                <span class="meta-value">{{ place.area|default:"未填寫" }}</span>
+                <span class="meta-label">{% trans "地區" %}</span>
+                <span class="meta-value">{{ place.area|default:_("未填寫") }}</span>
               </div>
 
               <div class="meta-row">
-                <span class="meta-label">地址</span>
+                <span class="meta-label">{% trans "地址" %}</span>
                 <span class="meta-value address-text">
                   {% if place.address %}
                     {{ place.address|linebreaksbr }}
                   {% else %}
-                    未填寫
+                    {% trans "未填寫" %}
                   {% endif %}
                 </span>
               </div>
 
               <div class="meta-row">
-                <span class="meta-label">平均花費/人</span>
+                <span class="meta-label">{% trans "平均花費/人" %}</span>
                 <span class="meta-value">{{ place.budget }}</span>
               </div>
 
               <div class="meta-row">
-                <span class="meta-label">建立時間</span>
+                <span class="meta-label">{% trans "建立時間" %}</span>
                 <span class="meta-value">{{ place.created_at|date:"Y/m/d H:i" }}</span>
               </div>
 
               <div class="tag-row">
                 <span class="tag-chip">
-                  公開：{{ place.is_public|yesno:"是,否" }}
+                  {% trans "公開" %}：{{ place.is_public|yesno:_("是,否") }}
                 </span>
                 <span class="tag-chip">
-                  與伴侶共享：{{ place.shared_with_couple|yesno:"是,否" }}
+                  {% trans "與伴侶共享" %}：{{ place.shared_with_couple|yesno:_("是,否") }}
                 </span>
               </div>
             </div>
 
             <div class="card-actions">
               <a href="{% url 'place_detail' place.pk %}" class="detail-link">
-                查看詳細內容 →
+                {% trans "查看詳細內容" %} →
               </a>
             </div>
           </div>
@@ -102,16 +104,16 @@
         <div class="empty-icon">📭</div>
         <div class="empty-title">
           {% if is_shared_view %}
-            尚未有共享地點
+            {% trans "尚未有共享地點" %}
           {% else %}
-            還沒有地點
+            {% trans "還沒有地點" %}
           {% endif %}
         </div>
         <div class="empty-desc">
           {% if is_shared_view %}
-            當你或伴侶有勾選共享地點後，這裡會顯示。
+            {% trans "當你或伴侶有勾選共享地點後，這裡會顯示。" %}
           {% else %}
-            先新增一個地點開始吧！
+            {% trans "先新增一個地點開始吧！" %}
           {% endif %}
         </div>
       </div>
@@ -120,221 +122,37 @@
 </section>
 
 <style>
-  .page-section {
-    padding: 60px 0;
-  }
-
-  .list-wrap {
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .page-label {
-    display: inline-block;
-    margin-bottom: 12px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: #efe4da;
-    color: #9a6d50;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-  }
-
-  .page-title {
-    font-size: 44px;
-    margin: 0 0 12px;
-    color: #1d262c;
-  }
-
-  .page-desc {
-    color: #66757c;
-    margin-bottom: 20px;
-    line-height: 1.8;
-  }
-
-  .top-actions {
-    margin-bottom: 24px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .btn-main,
-  .btn-sub {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 120px;
-    height: 46px;
-    padding: 0 18px;
-    border-radius: 999px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: 0.2s ease;
-  }
-
-  .btn-main {
-    background: #1f2d36;
-    color: white;
-  }
-
-  .btn-main:hover {
-    transform: translateY(-2px);
-    background: #18242c;
-  }
-
-  .btn-sub {
-    border: 1px solid #dec8b8;
-    color: #7a5d48;
-    background: transparent;
-  }
-
-  .btn-sub:hover {
-    background: #f8f1ea;
-  }
-
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-  }
-
-  .card {
-    background: #fffdf9;
-    border-radius: 26px;
-    padding: 20px;
-    border: 1px solid #eee2d6;
-    box-shadow: 0 10px 24px rgba(93, 63, 41, 0.05);
-  }
-
-  .place-image {
-    width: 100%;
-    height: 180px;
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 12px;
-    background: #f6efe7;
-  }
-
-  .place-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .card-title {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #1d262c;
-  }
-
-  .card-meta {
-    color: #5d6870;
-  }
-
-  .meta-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #f0e7de;
-  }
-
-  .meta-label {
-    color: #8a7f74;
-  }
-
-  .meta-value {
-    color: #333;
-    text-align: right;
-  }
-
-  .address-text {
-    display: block;
-    text-align: right;
-    max-width: 60%;
-    word-break: break-word;
-    line-height: 1.7;
-  }
-
-  .tag-row {
-    margin-top: 12px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .tag-chip {
-    padding: 6px 10px;
-    background: #f2e7dc;
-    border-radius: 999px;
-    font-size: 12px;
-    color: #7a5d48;
-  }
-
-  .card-actions {
-    margin-top: 14px;
-  }
-
-  .detail-link {
-    color: #a97457;
-    font-weight: bold;
-    text-decoration: none;
-  }
-
-  .detail-link:hover {
-    color: #8c5f46;
-  }
-
-  .empty-box {
-    text-align: center;
-    padding: 60px 24px;
-    background: #fffdf9;
-    border: 1px solid #eee2d6;
-    border-radius: 26px;
-  }
-
-  .empty-icon {
-    font-size: 40px;
-  }
-
-  .empty-title {
-    font-size: 24px;
-    margin-top: 10px;
-    color: #1d262c;
-    font-weight: 700;
-  }
-
-  .empty-desc {
-    color: #777;
-    margin-top: 8px;
-    line-height: 1.8;
-  }
-
-  @media (max-width: 900px) {
-    .card-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .page-title {
-      font-size: 34px;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .meta-row {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .meta-value,
-    .address-text {
-      text-align: left;
-      max-width: 100%;
-    }
-  }
+  .page-section { padding:60px 0; }
+  .list-wrap { max-width:1100px; margin:0 auto; }
+  .page-label { display:inline-block; margin-bottom:12px; padding:6px 12px; border-radius:999px; background:#efe4da; color:#9a6d50; font-size:13px; font-weight:700; letter-spacing:.04em; }
+  .page-title { font-size:44px; margin:0 0 12px; color:#1d262c; }
+  .page-desc { color:#66757c; margin-bottom:20px; line-height:1.8; }
+  .top-actions { margin-bottom:24px; display:flex; gap:10px; flex-wrap:wrap; }
+  .btn-main,.btn-sub { display:inline-flex; align-items:center; justify-content:center; min-width:120px; height:46px; padding:0 18px; border-radius:999px; font-weight:700; text-decoration:none; transition:.2s ease; }
+  .btn-main { background:#1f2d36; color:white; }
+  .btn-main:hover { transform:translateY(-2px); background:#18242c; }
+  .btn-sub { border:1px solid #dec8b8; color:#7a5d48; background:transparent; }
+  .btn-sub:hover { background:#f8f1ea; }
+  .card-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+  .card { background:#fffdf9; border-radius:26px; padding:20px; border:1px solid #eee2d6; box-shadow:0 10px 24px rgba(93,63,41,.05); }
+  .place-image { width:100%; height:180px; border-radius:16px; overflow:hidden; margin-bottom:12px; background:#f6efe7; }
+  .place-image img { width:100%; height:100%; object-fit:cover; }
+  .card-title { font-size:22px; font-weight:bold; margin-bottom:10px; color:#1d262c; }
+  .card-meta { color:#5d6870; }
+  .meta-row { display:flex; justify-content:space-between; gap:16px; margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid #f0e7de; }
+  .meta-label { color:#8a7f74; }
+  .meta-value { color:#333; text-align:right; }
+  .address-text { display:block; text-align:right; max-width:60%; word-break:break-word; line-height:1.7; }
+  .tag-row { margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; }
+  .tag-chip { padding:6px 10px; background:#f2e7dc; border-radius:999px; font-size:12px; color:#7a5d48; }
+  .card-actions { margin-top:14px; }
+  .detail-link { color:#a97457; font-weight:bold; text-decoration:none; }
+  .detail-link:hover { color:#8c5f46; }
+  .empty-box { text-align:center; padding:60px 24px; background:#fffdf9; border:1px solid #eee2d6; border-radius:26px; }
+  .empty-icon { font-size:40px; }
+  .empty-title { font-size:24px; margin-top:10px; color:#1d262c; font-weight:700; }
+  .empty-desc { color:#777; margin-top:8px; line-height:1.8; }
+  @media (max-width:900px){ .card-grid{ grid-template-columns:1fr; } .page-title{ font-size:34px; } }
+  @media (max-width:640px){ .meta-row{ flex-direction:column; align-items:flex-start; } .meta-value,.address-text{ text-align:left; max-width:100%; } }
 </style>
 {% endblock %}

@@ -1,0 +1,344 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WhereNow\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-09 02:44+0800\n"
+"PO-Revision-Date: 2026-05-09 02:44+0800\n"
+"Last-Translator: WhereNow Team\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\templates\base.html:156
+msgid "首頁"
+msgstr "Home"
+
+#: .\templates\base.html:160
+msgid "地點"
+msgstr "Places"
+
+#: .\templates\base.html:164
+msgid "回憶"
+msgstr "Memories"
+
+#: .\templates\base.html:168
+msgid "探索"
+msgstr "Explore"
+
+#: .\templates\base.html:172
+msgid "個人資料"
+msgstr "Profile"
+
+#: .\templates\base.html:178
+msgid "登出"
+msgstr "Logout"
+
+#: .\templates\base.html:185
+msgid "登入"
+msgstr "Login"
+
+#: .\templates\home.html:218
+msgid "Keep places. Keep memories."
+msgstr "Keep places. Keep memories."
+
+#: .\templates\home.html:221
+msgid ""
+" WhereNow 是一個用來記錄地點、建立回憶、整理收藏，\n"
+"    並支援情侶共享生活紀錄的 Web 系統。 "
+msgstr ""
+"WhereNow is a web system for recording places, creating memories, organizing "
+"favorites, and supporting shared life records for couples."
+
+#: .\templates\home.html:227
+msgid "開始探索"
+msgstr "Start Exploring"
+
+#: .\templates\home.html:231
+msgid "查看個人資料"
+msgstr "View Profile"
+
+#: .\templates\home.html:236
+msgid "探索公開內容"
+msgstr "Explore Public Content"
+
+#: .\templates\home.html:239
+msgid ""
+" 你可以依照關鍵字、分類、地區與預算，\n"
+"      探索別人公開分享的地點與回憶。 "
+msgstr ""
+"You can explore public places and memories shared by others by keyword, "
+"category, area, and budget."
+
+#: .\templates\home.html:245
+msgid "關鍵字"
+msgstr "Keyword"
+
+#: .\templates\home.html:252
+msgid "例如：淡水、咖啡廳、約會、台北"
+msgstr "Example: Tamsui, cafe, date, Taipei"
+
+#: .\templates\home.html:257
+msgid "分類"
+msgstr "Category"
+
+#: .\templates\home.html:260
+msgid "不限"
+msgstr "Any"
+
+#: .\templates\home.html:269
+msgid "地區"
+msgstr "Area"
+
+#: .\templates\home.html:276
+msgid "例如：台北、淡水"
+msgstr "Example: Taipei, Tamsui"
+
+#: .\templates\home.html:281
+msgid "最低預算"
+msgstr "Minimum Budget"
+
+#: .\templates\home.html:293
+msgid "最高預算"
+msgstr "Maximum Budget"
+
+#: .\templates\home.html:305
+msgid "搜尋"
+msgstr "Search"
+
+#: .\templates\home.html:307
+msgid "清除"
+msgstr "Clear"
+
+#: .\templates\home.html:316
+msgid "搜尋分類"
+msgstr "Search category"
+
+#: .\templates\explore.html:10
+msgid "探索內容"
+msgstr "Explore Content"
+
+#: .\templates\explore.html:13
+msgid "這裡會同時顯示公開內容、你的私人內容，以及伴侶與你共享的內容。"
+msgstr ""
+"This page shows public content, your private content, and content shared "
+"with your partner."
+
+#: .\templates\explore.html:22
+msgid "地點名稱、心得、使用者"
+msgstr "Place name, review, user"
+
+#: .\templates\explore.html:40
+msgid "例如：台中、淡水"
+msgstr "Example: Taichung, Tamsui"
+
+#: .\templates\explore.html:56
+msgid "套用篩選"
+msgstr "Apply Filter"
+
+#: .\templates\explore.html:57
+msgid "清除條件"
+msgstr "Clear Filter"
+
+#: .\templates\explore.html:72
+msgid "沒有圖片"
+msgstr "No Image"
+
+#: .\templates\explore.html:92
+msgid "查看內容"
+msgstr "View Content"
+
+#: .\templates\explore.html:101
+msgid "沒有找到符合條件的內容"
+msgstr "No matching content found"
+
+#: .\templates\explore.html:103
+msgid "你可以試著調整關鍵字、地區或預算條件再搜尋一次。"
+msgstr ""
+"Try adjusting the keyword, area, or budget and search again."
+
+#: .\templates\memories\memory_list.html:12
+msgid "共享回憶列表"
+msgstr "Shared Memories"
+
+#: .\templates\memories\memory_list.html:14
+#, python-format
+msgid ""
+"\n"
+"              查看你和 %(partner_name)s 彼此共享的回憶內容。\n"
+"            "
+msgstr ""
+"\n"
+"              View memories shared between you and %(partner_name)s.\n"
+"            "
+
+#: .\templates\memories\memory_list.html:19
+msgid "我的回憶列表"
+msgstr "My Memories"
+
+#: .\templates\memories\memory_list.html:21
+msgid ""
+"把每一次約會、旅行、日常片段與重要時刻收藏起來，讓回憶不只是被記住，而是能被重新打開與回看。"
+msgstr ""
+"Save every date, trip, daily moment, and important memory so they can "
+"always be revisited."
+
+#: .\templates\memories\memory_list.html:27
+msgid "新增回憶"
+msgstr "Add Memory"
+
+#: .\templates\memories\memory_list.html:34
+#, python-format
+msgid ""
+"\n"
+"          你目前正在查看與 %(partner_name)s 的共享回憶清單。\n"
+"        "
+msgstr ""
+"\n"
+"          You are viewing shared memories with %(partner_name)s.\n"
+"        "
+
+#: .\templates\memories\memory_list.html:38
+msgid "你目前沒有情侶關係，這裡是你的個人回憶清單。"
+msgstr ""
+"You currently do not have a couple relationship. This is your personal "
+"memory list."
+
+#: .\templates\memories\memory_list.html:55
+msgid "沒有照片"
+msgstr "No Photo"
+
+#: .\templates\memories\memory_list.html:78
+msgid "建立者"
+msgstr "Created By"
+
+#: .\templates\memories\memory_list.html:81
+msgid "我"
+msgstr "Me"
+
+#: .\templates\memories\memory_list.html:94
+msgid "花費"
+msgstr "Cost"
+
+#: .\templates\memories\memory_list.html:99
+msgid "未填寫"
+msgstr "Not Provided"
+
+#: .\templates\memories\memory_list.html:105
+msgid "是否公開"
+msgstr "Public"
+
+#: .\templates\memories\memory_list.html:106
+msgid "是,否"
+msgstr "Yes,No"
+
+#: .\templates\memories\memory_list.html:114
+msgid "這筆回憶尚未填寫心得。"
+msgstr "No comment has been added for this memory yet."
+
+#: .\templates\memories\memory_list.html:120
+msgid "與情侶共享"
+msgstr "Shared with Partner"
+
+#: .\templates\memories\memory_list.html:124
+msgid "推薦"
+msgstr "Recommended"
+
+#: .\templates\memories\memory_list.html:129
+msgid "查看回憶內容"
+msgstr "View Memory"
+
+#: .\templates\memories\memory_list.html:138
+msgid "目前還沒有任何回憶"
+msgstr "No memories yet"
+
+#: .\templates\memories\memory_list.html:139
+msgid "先新增第一筆回憶，替你們的重要時刻留下紀錄。"
+msgstr "Add your first memory to save your important moments."
+
+#: .\templates\memories\memory_list.html:140
+msgid "新增第一筆回憶"
+msgstr "Add First Memory"
+
+#: .\templates\places\place_list.html:17
+msgid "共享地點列表"
+msgstr "Shared Places"
+
+#: .\templates\places\place_list.html:19
+msgid "我的地點列表"
+msgstr "My Places"
+
+#: .\templates\places\place_list.html:25
+#, python-format
+msgid ""
+"\n"
+"          你目前正在查看 %(partner_name)s 與你共享的地點。\n"
+"        "
+msgstr ""
+"\n"
+"          You are viewing places shared with you by %(partner_name)s.\n"
+"        "
+
+#: .\templates\places\place_list.html:29
+msgid "這裡是你建立的地點清單，可以管理、查看與記錄你的生活足跡。"
+msgstr ""
+"This is your place list where you can manage and record your life journey."
+
+#: .\templates\places\place_list.html:35
+msgid "新增地點"
+msgstr "Add Place"
+
+#: .\templates\places\place_list.html:55
+msgid "未分類"
+msgstr "Uncategorized"
+
+#: .\templates\places\place_list.html:64
+msgid "地址"
+msgstr "Address"
+
+#: .\templates\places\place_list.html:75
+msgid "平均花費/人"
+msgstr "Average Cost / Person"
+
+#: .\templates\places\place_list.html:80
+msgid "建立時間"
+msgstr "Created Time"
+
+#: .\templates\places\place_list.html:86
+msgid "公開"
+msgstr "Public"
+
+#: .\templates\places\place_list.html:89
+msgid "與伴侶共享"
+msgstr "Shared with Partner"
+
+#: .\templates\places\place_list.html:96
+msgid "查看詳細內容"
+msgstr "View Details"
+
+#: .\templates\places\place_list.html:107
+msgid "尚未有共享地點"
+msgstr "No shared places yet"
+
+#: .\templates\places\place_list.html:109
+msgid "還沒有地點"
+msgstr "No places yet"
+
+#: .\templates\places\place_list.html:114
+msgid "當你或伴侶有勾選共享地點後，這裡會顯示。"
+msgstr ""
+"Shared places will appear here after you or your partner enable sharing."
+
+#: .\templates\places\place_list.html:116
+msgid "先新增一個地點開始吧！"
+msgstr "Add your first place to get started."
+
+#: .\wherenow\settings.py:129
+msgid "繁體中文"
+msgstr "Traditional Chinese"
+
+#: .\wherenow\settings.py:130
+msgid "English"
+msgstr "English"
