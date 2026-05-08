@@ -7,6 +7,9 @@ from .views import root_redirect, home, explore_page
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # select2
+    path('select2/', include('django_select2.urls')),
+
     # allauth
     path('accounts/', include('allauth.urls')),
 

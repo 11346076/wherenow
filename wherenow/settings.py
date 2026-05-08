@@ -20,9 +20,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    
 
     # third-party
     'rest_framework',
+    'django_select2',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

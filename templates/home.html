@@ -127,6 +127,42 @@
     border-color: #a97457;
   }
 
+  /* Select2 */
+
+  .select2-container {
+    width: 100% !important;
+  }
+
+  .select2-container--default .select2-selection--single {
+    height: 48px;
+    border-radius: 16px;
+    border: 1px solid #d8cdc1;
+    background: #fff;
+  }
+
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__rendered {
+    line-height: 48px;
+    padding-left: 16px;
+    color: #334047;
+    font-size: 15px;
+  }
+
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
+    height: 48px;
+  }
+
+  .select2-search__field {
+    font-size: 15px !important;
+  }
+
+  .select2-results__options {
+    max-height: 260px !important;
+  }
+
   .search-actions {
     display: flex;
     gap: 12px;
@@ -165,6 +201,7 @@
   }
 
   @media (max-width: 768px) {
+
     .hero {
       padding: 40px 24px;
       border-radius: 24px;
@@ -177,13 +214,19 @@
     .search-section {
       padding: 22px 18px;
     }
+
   }
 </style>
 
 <section class="hero">
-  <div class="hero-label">WhereNow</div>
 
-  <h1>Keep places. Keep memories.</h1>
+  <div class="hero-label">
+    WhereNow
+  </div>
+
+  <h1>
+    Keep places. Keep memories.
+  </h1>
 
   <p>
     WhereNow 是一個用來記錄地點、建立回憶、整理收藏，
@@ -191,19 +234,40 @@
   </p>
 
   <div class="hero-actions">
-    <a href="{% url 'explore_page' %}" class="btn-primary">開始探索</a>
-    <a href="/users/profile/" class="btn-secondary">查看個人資料</a>
+
+    <a href="{% url 'explore_page' %}" class="btn-primary">
+      開始探索
+    </a>
+
+    <a href="/users/profile/" class="btn-secondary">
+      查看個人資料
+    </a>
+
   </div>
 
   <div class="search-section">
-    <div class="search-title">探索公開內容</div>
-    <div class="search-desc">
-      你可以依照關鍵字、分類、地區與預算，探索別人公開分享的地點與回憶。
+
+    <div class="search-title">
+      探索公開內容
     </div>
 
-    <form method="get" action="{% url 'explore_page' %}" class="search-form">
+    <div class="search-desc">
+      你可以依照關鍵字、分類、地區與預算，
+      探索別人公開分享的地點與回憶。
+    </div>
+
+    <form
+      method="get"
+      action="{% url 'explore_page' %}"
+      class="search-form"
+    >
+
       <div class="search-group">
-        <label for="q">關鍵字</label>
+
+        <label for="q">
+          關鍵字
+        </label>
+
         <input
           type="text"
           id="q"
@@ -211,20 +275,43 @@
           class="search-input"
           placeholder="例如：淡水、咖啡廳、約會、台北"
         >
+
       </div>
 
       <div class="search-group">
-        <label for="category">分類</label>
-        <select id="category" name="category" class="search-select">
-          <option value="">不限</option>
+
+        <label for="category">
+          分類
+        </label>
+
+        <select
+          id="category"
+          name="category"
+          class="search-select select2"
+        >
+
+          <option value="">
+            不限
+          </option>
+
           {% for c in categories %}
-            <option value="{{ c.id }}">{{ c.name }}</option>
+
+            <option value="{{ c.id }}">
+              {{ c.name }}
+            </option>
+
           {% endfor %}
+
         </select>
+
       </div>
 
       <div class="search-group">
-        <label for="area">地區</label>
+
+        <label for="area">
+          地區
+        </label>
+
         <input
           type="text"
           id="area"
@@ -232,10 +319,15 @@
           class="search-input"
           placeholder="例如：台北、淡水"
         >
+
       </div>
 
       <div class="search-group">
-        <label for="budget_min">最低預算</label>
+
+        <label for="budget_min">
+          最低預算
+        </label>
+
         <input
           type="number"
           id="budget_min"
@@ -243,10 +335,15 @@
           class="search-input"
           placeholder="ex:0"
         >
+
       </div>
 
       <div class="search-group">
-        <label for="budget_max">最高預算</label>
+
+        <label for="budget_max">
+          最高預算
+        </label>
+
         <input
           type="number"
           id="budget_max"
@@ -254,14 +351,61 @@
           class="search-input"
           placeholder="ex:3000"
         >
+
       </div>
 
       <div class="search-actions">
-        <button type="submit" class="search-btn">搜尋</button>
-        <a href="{% url 'home' %}" class="clear-btn">清除</a>
+
+        <button type="submit" class="search-btn">
+          搜尋
+        </button>
+
+        <a href="{% url 'home' %}" class="clear-btn">
+          清除
+        </a>
+
       </div>
+
     </form>
+
   </div>
+
 </section>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+
+  $(document).ready(function () {
+
+    $('.select2').select2({
+      placeholder: '搜尋分類',
+      allowClear: true,
+      width: '100%',
+      minimumResultsForSearch: 0
+    });
+
+    $('.select2').on('select2:open', function () {
+
+      setTimeout(function () {
+
+        const searchField =
+          document.querySelector('.select2-search__field');
+
+        if (searchField) {
+          searchField.focus();
+        }
+
+      }, 100);
+
+    });
+
+  });
+
+</script>
 
 {% endblock %}

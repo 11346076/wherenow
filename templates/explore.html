@@ -6,7 +6,11 @@
 
     <div class="explore-head">
       <div class="page-label">Explore</div>
-      <h1 class="page-title">探索內容</h1>
+
+      <h1 class="page-title">
+        探索內容
+      </h1>
+
       <p class="page-desc">
         這裡會同時顯示公開內容、你的私人內容，以及伴侶與你共享的內容。
       </p>
@@ -14,19 +18,37 @@
 
     <div class="filter-card">
       <form method="get" class="filter-form">
+
         <div class="filter-group">
           <label for="q">關鍵字</label>
-          <input type="text" id="q" name="q" class="filter-input"
-                 placeholder="地點名稱、心得、使用者"
-                 value="{{ query }}">
+
+          <input
+            type="text"
+            id="q"
+            name="q"
+            class="filter-input"
+            placeholder="地點名稱、心得、使用者"
+            value="{{ query }}"
+          >
         </div>
 
         <div class="filter-group">
           <label for="category">分類</label>
-          <select id="category" name="category" class="filter-select">
+
+          <select
+            id="category"
+            name="category"
+            class="filter-select select2"
+          >
             <option value="">不限</option>
+
             {% for c in categories %}
-              <option value="{{ c.id }}" {% if selected_category == c.id|stringformat:"s" %}selected{% endif %}>
+              <option
+                value="{{ c.id }}"
+                {% if selected_category == c.id|stringformat:"s" %}
+                  selected
+                {% endif %}
+              >
                 {{ c.name }}
               </option>
             {% endfor %}
@@ -35,49 +57,90 @@
 
         <div class="filter-group">
           <label for="area">地區</label>
-          <input type="text" id="area" name="area" class="filter-input"
-                 placeholder="例如：台中、淡水"
-                 value="{{ area }}">
+
+          <input
+            type="text"
+            id="area"
+            name="area"
+            class="filter-input"
+            placeholder="例如：台中、淡水"
+            value="{{ area }}"
+          >
         </div>
 
         <div class="filter-group">
           <label for="budget_min">最低預算</label>
-          <input type="number" id="budget_min" name="budget_min" class="filter-input"
-                 placeholder="0"
-                 value="{{ budget_min }}">
+
+          <input
+            type="number"
+            id="budget_min"
+            name="budget_min"
+            class="filter-input"
+            placeholder="0"
+            value="{{ budget_min }}"
+          >
         </div>
 
         <div class="filter-group">
           <label for="budget_max">最高預算</label>
-          <input type="number" id="budget_max" name="budget_max" class="filter-input"
-                 placeholder="3000"
-                 value="{{ budget_max }}">
+
+          <input
+            type="number"
+            id="budget_max"
+            name="budget_max"
+            class="filter-input"
+            placeholder="3000"
+            value="{{ budget_max }}"
+          >
         </div>
 
         <div class="filter-actions">
-          <button type="submit" class="btn-main">套用篩選</button>
-          <a href="{% url 'explore_page' %}" class="btn-sub">清除條件</a>
+          <button type="submit" class="btn-main">
+            套用篩選
+          </button>
+
+          <a href="{% url 'explore_page' %}" class="btn-sub">
+            清除條件
+          </a>
         </div>
+
       </form>
     </div>
 
     {% if items %}
+
       <div class="explore-grid">
+
         {% for item in items %}
+
           <a href="{{ item.detail_url }}" class="explore-card">
+
             {% if item.image_url %}
+
               <div class="card-image-wrap">
-                <img src="{{ item.image_url }}" alt="{{ item.title }}">
+                <img
+                  src="{{ item.image_url }}"
+                  alt="{{ item.title }}"
+                >
               </div>
+
             {% else %}
+
               <div class="card-image-wrap card-image-empty">
                 <span>沒有圖片</span>
               </div>
+
             {% endif %}
 
             <div class="card-body">
-              <div class="card-type">{{ item.tag_text }}</div>
-              <h3 class="card-title">{{ item.title }}</h3>
+
+              <div class="card-type">
+                {{ item.tag_text }}
+              </div>
+
+              <h3 class="card-title">
+                {{ item.title }}
+              </h3>
 
               <div class="card-meta">
                 👤 {{ item.username }}<br>
@@ -90,25 +153,42 @@
                 {{ item.summary|truncatechars:80 }}
               </div>
 
-              <div class="card-link">查看內容 →</div>
+              <div class="card-link">
+                查看內容 →
+              </div>
+
             </div>
           </a>
+
         {% endfor %}
+
       </div>
+
     {% else %}
+
       <div class="empty-box">
-        <div class="empty-icon">🔎</div>
-        <div class="empty-title">沒有找到符合條件的內容</div>
+
+        <div class="empty-icon">
+          🔎
+        </div>
+
+        <div class="empty-title">
+          沒有找到符合條件的內容
+        </div>
+
         <div class="empty-desc">
           你可以試著調整關鍵字、地區或預算條件再搜尋一次。
         </div>
+
       </div>
+
     {% endif %}
 
   </div>
 </section>
 
 <style>
+
   .explore-page {
     padding: 56px 0 72px;
   }
@@ -176,6 +256,42 @@
     background: #fff;
     font-size: 14px;
     outline: none;
+  }
+
+  /* Select2 */
+
+  .select2-container {
+    width: 100% !important;
+  }
+
+  .select2-container--default .select2-selection--single {
+    height: 48px;
+    border-radius: 14px;
+    border: 1px solid #d8cdc1;
+    background: #fff;
+  }
+
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__rendered {
+    line-height: 48px;
+    padding-left: 14px;
+    color: #334047;
+    font-size: 14px;
+  }
+
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
+    height: 48px;
+  }
+
+  .select2-search__field {
+    font-size: 14px !important;
+  }
+
+  .select2-results__options {
+    max-height: 260px !important;
   }
 
   .filter-actions {
@@ -321,12 +437,15 @@
   }
 
   @media (max-width: 1000px) {
+
     .explore-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
   }
 
   @media (max-width: 700px) {
+
     .explore-grid {
       grid-template-columns: 1fr;
     }
@@ -334,6 +453,45 @@
     .page-title {
       font-size: 38px;
     }
+
   }
+
 </style>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+
+  $(document).ready(function () {
+
+    $('.select2').select2({
+      placeholder: '搜尋分類',
+      allowClear: true,
+      width: '100%',
+      minimumResultsForSearch: 0
+    });
+
+    $('.select2').on('select2:open', function () {
+
+      setTimeout(function () {
+
+        const searchField =
+          document.querySelector('.select2-search__field');
+
+        if (searchField) {
+          searchField.focus();
+        }
+
+      }, 100);
+
+    });
+
+  });
+
+</script>
+
 {% endblock %}

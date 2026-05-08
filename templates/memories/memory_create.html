@@ -4,92 +4,290 @@
 <section class="page-section">
 
   <div class="form-wrap">
-    <div class="page-label">Memory Form</div>
 
-    <h1 class="page-title">新增回憶</h1>
+    <div class="page-label">
+      Memory Form
+    </div>
+
+    <h1 class="page-title">
+      新增回憶
+    </h1>
 
     <p class="page-desc">
-      記錄一次造訪的日期、感受、評分與照片，把重要的瞬間整理成可以反覆回看的回憶。
+      記錄一次造訪的日期、感受、評分與照片，
+      把重要的瞬間整理成可以反覆回看的回憶。
     </p>
 
     <div class="form-card">
+
       <form method="post" enctype="multipart/form-data">
+
         {% csrf_token %}
 
         <div class="form-grid">
 
+          <!-- 地點 -->
+
           <div class="form-group">
-            <label>地點</label>
-            <select name="place" required>
+
+            <label>
+              地點
+            </label>
+
+            <select
+              name="place"
+              class="select2"
+              required
+            >
+
+              <option value="">
+                請選擇地點
+              </option>
+
               {% for place in places %}
-                <option value="{{ place.id }}">{{ place.name }}</option>
+
+                <option value="{{ place.id }}">
+                  {{ place.name }}
+                </option>
+
               {% endfor %}
+
             </select>
+
           </div>
 
+          <!-- 日期 + 評分 -->
+
           <div class="double-grid">
+
             <div class="form-group">
-              <label>造訪日期</label>
-              <input type="date" name="visit_date" required>
+
+              <label>
+                造訪日期
+              </label>
+
+              <input
+                type="date"
+                name="visit_date"
+                required
+              >
+
             </div>
 
             <div class="form-group">
-              <label>評分</label>
-              <input type="number" name="rating" min="0" max="5" value="0">
+
+              <label>
+                評分
+              </label>
+
+              <input
+                type="number"
+                name="rating"
+                min="0"
+                max="5"
+                value="0"
+              >
+
             </div>
+
           </div>
 
+          <!-- 花費 + 圖片 -->
+
           <div class="double-grid">
+
             <div class="form-group">
-              <label>花費</label>
-              <input type="number" name="cost" value="0">
+
+              <label>
+                花費
+              </label>
+
+              <input
+                type="number"
+                name="cost"
+                value="0"
+              >
+
             </div>
 
             <div class="file-group">
-              <label>上傳照片</label>
-              <input type="file" name="images" multiple>
+
+              <label>
+                上傳照片
+              </label>
+
+              <input
+                type="file"
+                name="images"
+                multiple
+              >
+
               <div class="file-help">
-                可一次選擇多張照片，替這次回憶留下更多片段。
+                可一次選擇多張照片，
+                替這次回憶留下更多片段。
               </div>
+
             </div>
+
           </div>
+
+          <!-- 心得 -->
 
           <div class="form-group">
-            <label>心得</label>
+
+            <label>
+              心得
+            </label>
+
             <textarea name="comment"></textarea>
+
           </div>
 
+          <!-- checkbox -->
+
           <div class="checkbox-group">
-            <label>回憶設定</label>
+
+            <label>
+              回憶設定
+            </label>
 
             <div class="checkbox-wrap">
+
               <label class="checkbox-item">
-                <input type="checkbox" name="recommended">
+
+                <input
+                  type="checkbox"
+                  name="recommended"
+                >
+
                 是否推薦
+
               </label>
 
               <label class="checkbox-item">
-                <input type="checkbox" name="shared_with_couple">
+
+                <input
+                  type="checkbox"
+                  name="shared_with_couple"
+                >
+
                 是否與情侶共享
+
               </label>
 
               <label class="checkbox-item">
-                <input type="checkbox" name="is_public" checked>
+
+                <input
+                  type="checkbox"
+                  name="is_public"
+                  checked
+                >
+
                 是否公開
+
               </label>
+
             </div>
+
           </div>
 
         </div>
 
+        <!-- buttons -->
+
         <div class="action-row">
-          <button type="submit" class="btn-main">儲存回憶</button>
-          <a href="{% url 'memory_list' %}" class="btn-sub">回回憶列表</a>
+
+          <button type="submit" class="btn-main">
+            儲存回憶
+          </button>
+
+          <a href="{% url 'memory_list' %}" class="btn-sub">
+            回回憶列表
+          </a>
+
         </div>
 
       </form>
+
     </div>
+
   </div>
 
 </section>
+
+<style>
+
+  /* Select2 */
+
+  .select2-container {
+    width: 100% !important;
+  }
+
+  .select2-container--default .select2-selection--single {
+    height: 48px;
+    border: 1px solid #e6d9cd;
+    border-radius: 14px;
+    background: #fff;
+  }
+
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__rendered {
+    line-height: 48px;
+    color: #334047;
+    padding-left: 14px;
+  }
+
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
+    height: 48px;
+  }
+
+  .select2-search__field {
+    font-size: 15px !important;
+  }
+
+  .select2-results__options {
+    max-height: 260px !important;
+  }
+
+</style>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+
+  $(document).ready(function () {
+
+    $('.select2').select2({
+      placeholder: '搜尋地點',
+      allowClear: true,
+      width: '100%',
+      minimumResultsForSearch: 0
+    });
+
+    $('.select2').on('select2:open', function () {
+
+      setTimeout(function () {
+
+        const searchField =
+          document.querySelector('.select2-search__field');
+
+        if (searchField) {
+          searchField.focus();
+        }
+
+      }, 100);
+
+    });
+
+  });
+
+</script>
+
 {% endblock %}

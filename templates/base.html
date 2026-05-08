@@ -7,7 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WhereNow</title>
 
+    <!-- 原本 CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    <!-- Select2 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
 
     <style>
       * {
@@ -296,6 +303,7 @@
                 <span class="nav-notice-badge">{{ invite_count }}</span>
               {% endif %}
             </button>
+
             <div class="nav-menu">
               <div class="nav-menu-label">情侶功能</div>
               <a href="{% url 'couple_home' %}">情侶首頁</a>
@@ -351,5 +359,12 @@
     <div class="footer">
       WhereNow © 2026
     </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
   </body>
 </html>
