@@ -1,17 +1,13 @@
 from pathlib import Path
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
 SECRET_KEY = 'django-insecure-=cj8lgumjda3kb-81xy$dosnl@)om88r(^e_pn2)(zrj-^#)5f'
 DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -20,7 +16,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    
 
     # third-party
     'rest_framework',
@@ -41,10 +36,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
 
-    # 🌍 多語系 Middleware
+    # 多語系 Middleware
     'django.middleware.locale.LocaleMiddleware',
 
     'django.middleware.common.CommonMiddleware',
@@ -77,7 +71,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'wherenow.wsgi.application'
 
 
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -93,7 +86,6 @@ DATABASES = {
 }
 
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -109,46 +101,41 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # =========================
 # Internationalization
 # =========================
-
 from django.utils.translation import gettext_lazy as _
 
 LANGUAGE_CODE = 'zh-hant'
-
 TIME_ZONE = 'Asia/Taipei'
 
 USE_I18N = True
-
 USE_TZ = True
 
-
-# 支援語言
 LANGUAGES = [
     ('zh-hant', _('繁體中文')),
     ('en', _('English')),
 ]
 
-
-# locale 資料夾位置
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
 
 
-# Static files
+# =========================
+# Static / Media
+# =========================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-# Media files
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
@@ -168,16 +155,19 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 ACCOUNT_LOGOUT_ON_GET = True
 
-# 你現在用的是 Django 內建 User，所以 username 要保留
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+# 新版 django-allauth 寫法
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 
-# Google 登入自動建立帳號
+ACCOUNT_SIGNUP_FIELDS = [
+    'email*',
+    'username*',
+    'password1*',
+    'password2*',
+]
+
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-# 使用你自己的 adapter，避免 username 空值或重複問題
 SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -190,7 +180,9 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
+# =========================
 # Logging
+# =========================
 LOG_DIR = BASE_DIR / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
@@ -242,4 +234,14 @@ LOGGING = {
             'propagate': False,
         },
     },
+}
+
+# =========================
+# DRF + JWT
+# =========================
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
