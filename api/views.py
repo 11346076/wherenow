@@ -86,13 +86,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 # =========================
-# API VIEWS
+# LIST / CREATE API
+# GET：查詢全部
+# POST：新增
 # =========================
-
-class PlaceListAPI(generics.ListCreateAPIView):
-    queryset = Place.objects.all()
-    serializer_class = PlaceSerializer
-
 
 class CategoryListAPI(generics.ListCreateAPIView):
     queryset = Category.objects.all()
@@ -102,6 +99,11 @@ class CategoryListAPI(generics.ListCreateAPIView):
 class TagListAPI(generics.ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+
+class PlaceListAPI(generics.ListCreateAPIView):
+    queryset = Place.objects.all()
+    serializer_class = PlaceSerializer
 
 
 class FavoritePlaceListAPI(generics.ListCreateAPIView):
@@ -135,5 +137,63 @@ class CoupleRelationshipListAPI(generics.ListCreateAPIView):
 
 
 class ProfileListAPI(generics.ListCreateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+
+# =========================
+# DETAIL / UPDATE / DELETE API
+# GET：查詢單筆
+# PUT：完整修改
+# PATCH：部分修改
+# DELETE：刪除
+# =========================
+
+class CategoryDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class TagDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+
+
+class PlaceDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Place.objects.all()
+    serializer_class = PlaceSerializer
+
+
+class FavoritePlaceDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = FavoritePlace.objects.all()
+    serializer_class = FavoritePlaceSerializer
+
+
+class RandomPickHistoryDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = RandomPickHistory.objects.all()
+    serializer_class = RandomPickHistorySerializer
+
+
+class MemoryDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Memory.objects.all()
+    serializer_class = MemorySerializer
+
+
+class MemoryPhotoDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MemoryPhoto.objects.all()
+    serializer_class = MemoryPhotoSerializer
+
+
+class CoupleInvitationDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CoupleInvitation.objects.all()
+    serializer_class = CoupleInvitationSerializer
+
+
+class CoupleRelationshipDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CoupleRelationship.objects.all()
+    serializer_class = CoupleRelationshipSerializer
+
+
+class ProfileDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
