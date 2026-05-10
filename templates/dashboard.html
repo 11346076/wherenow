@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  .dashboard-wrap {
+    padding: 44px 0 70px;
+  }
+
+  .dashboard-head {
+    margin-bottom: 30px;
+  }
+
+  .dashboard-label {
+    color: #a97457;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .dashboard-title {
+    font-size: 38px;
+    margin: 0 0 12px;
+    color: #1f2a30;
+  }
+
+  .dashboard-desc {
+    color: #6d777c;
+    line-height: 1.8;
+    max-width: 760px;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 20px;
+    margin-bottom: 34px;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 24px;
+    padding: 26px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+    border: 1px solid #eee6dd;
+  }
+
+  .stat-card h3 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    color: #68757a;
+    font-weight: 600;
+  }
+
+  .stat-card .number {
+    font-size: 38px;
+    font-weight: 800;
+    color: #1f2a30;
+  }
+
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .chart-card {
+    background: white;
+    border-radius: 26px;
+    padding: 28px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+    border: 1px solid #eee6dd;
+  }
+
+  .chart-card h2 {
+    margin: 0 0 22px;
+    color: #1f2a30;
+    font-size: 22px;
+  }
+
+  .chart-box {
+    position: relative;
+    width: 100%;
+    min-height: 330px;
+  }
+
+  @media (max-width: 900px) {
+    .chart-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-title {
+      font-size: 30px;
+    }
+  }
+</style>
+
+<div class="dashboard-wrap">
+
+  <div class="dashboard-head">
+    <div class="dashboard-label">Dashboard</div>
+
+    <h1 class="dashboard-title">
+      系統統計儀表板
+    </h1>
+
+    <p class="dashboard-desc">
+      這個頁面用來統計 WhereNow 系統中的地點、回憶、公開資料、私人資料與情侶共享資料，
+      並將原本的文字統計結果改以圖表方式呈現，方便展示系統資料分析功能。
+    </p>
+  </div>
+
+  <div class="stat-grid">
+
+    <div class="stat-card">
+      <h3>地點總數</h3>
+      <div class="number">{{ total_places }}</div>
+    </div>
+
+    <div class="stat-card">
+      <h3>回憶總數</h3>
+      <div class="number">{{ total_memories }}</div>
+    </div>
+
+    <div class="stat-card">
+      <h3>我的地點</h3>
+      <div class="number">{{ my_places }}</div>
+    </div>
+
+    <div class="stat-card">
+      <h3>我的回憶</h3>
+      <div class="number">{{ my_memories }}</div>
+    </div>
+
+    <div class="stat-card">
+      <h3>公開地點</h3>
+      <div class="number">{{ public_places }}</div>
+    </div>
+
+    <div class="stat-card">
+      <h3>私人地點</h3>
+      <div class="number">{{ private_places }}</div>
+    </div>
+
+    <div class="stat-card">
+      <h3>情侶共享地點</h3>
+      <div class="number">{{ shared_places }}</div>
+    </div>
+
+    <div class="stat-card">
+      <h3>情侶共享回憶</h3>
+      <div class="number">{{ shared_memories }}</div>
+    </div>
+
+  </div>
+
+  <div class="chart-grid">
+
+    <div class="chart-card">
+      <h2>各分類地點數量</h2>
+
+      <div class="chart-box">
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>地點公開狀態統計</h2>
+
+      <div class="chart-box">
+        <canvas id="visibilityChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const categoryLabels = {{ category_labels|safe }};
+  const categoryData = {{ category_data|safe }};
+
+  const visibilityLabels = {{ visibility_labels|safe }};
+  const visibilityData = {{ visibility_data|safe }};
+
+  const categoryCtx = document.getElementById('categoryChart');
+
+  new Chart(categoryCtx, {
+    type: 'bar',
+    data: {
+      labels: categoryLabels,
+      datasets: [{
+        label: '地點數量',
+        data: categoryData,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+
+  const visibilityCtx = document.getElementById('visibilityChart');
+
+  new Chart(visibilityCtx, {
+    type: 'doughnut',
+    data: {
+      labels: visibilityLabels,
+      datasets: [{
+        label: '地點數量',
+        data: visibilityData,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+</script>
+
+{% endblock %}

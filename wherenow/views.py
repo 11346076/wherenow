@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from places.models import Category, Place
 from memories.models import Memory
@@ -52,7 +52,6 @@ def explore_page(request):
 
     partner = get_partner(request.user)
 
-    # 地點：公開 / 自己 / 情侶共享
     place_visibility_filter = Q(is_public=True) | Q(user=request.user)
     if partner:
         place_visibility_filter |= Q(user=partner, shared_with_couple=True)
@@ -61,7 +60,6 @@ def explore_page(request):
         'user', 'category'
     )
 
-    # 回憶：公開 / 自己 / 情侶共享
     memory_visibility_filter = Q(is_public=True) | Q(user=request.user)
     if partner:
         memory_visibility_filter |= Q(user=partner, shared_with_couple=True)
@@ -70,7 +68,6 @@ def explore_page(request):
         'user', 'place', 'place__category'
     ).prefetch_related('photos')
 
-    # 關鍵字搜尋
     if query:
         places = places.filter(
             Q(name__icontains=query) |
@@ -87,17 +84,14 @@ def explore_page(request):
             Q(user__username__icontains=query)
         )
 
-    # 分類
     if category:
         places = places.filter(category__id=category)
         memories = memories.filter(place__category__id=category)
 
-    # 地區
     if area:
         places = places.filter(area__icontains=area)
         memories = memories.filter(place__area__icontains=area)
 
-    # 最低預算
     if budget_min:
         try:
             budget_min_value = int(budget_min)
@@ -106,7 +100,6 @@ def explore_page(request):
         except ValueError:
             pass
 
-    # 最高預算
     if budget_max:
         try:
             budget_max_value = int(budget_max)
@@ -177,4 +170,46 @@ def explore_page(request):
         'area': area,
         'budget_min': budget_min,
         'budget_max': budget_max,
+    })
+
+
+@login_required
+def dashboard(request):
+    total_places = Place.objects.count()
+    total_memories = Memory.objects.count()
+
+    my_places = Place.objects.filter(user=request.user).count()
+    my_memories = Memory.objects.filter(user=request.user).count()
+
+    public_places = Place.objects.filter(is_public=True).count()
+    private_places = Place.objects.filter(is_public=False).count()
+
+    shared_places = Place.objects.filter(shared_with_couple=True).count()
+    shared_memories = Memory.objects.filter(shared_with_couple=True).count()
+
+    category_stats = (
+        Category.objects
+        .annotate(place_count=Count('place'))
+        .order_by('-place_count')
+    )
+
+    category_labels = [category.name for category in category_stats]
+    category_data = [category.place_count for category in category_stats]
+
+    visibility_labels = ['公開地點', '私人地點', '情侶共享地點']
+    visibility_data = [public_places, private_places, shared_places]
+
+    return render(request, 'dashboard.html', {
+        'total_places': total_places,
+        'total_memories': total_memories,
+        'my_places': my_places,
+        'my_memories': my_memories,
+        'public_places': public_places,
+        'private_places': private_places,
+        'shared_places': shared_places,
+        'shared_memories': shared_memories,
+        'category_labels': category_labels,
+        'category_data': category_data,
+        'visibility_labels': visibility_labels,
+        'visibility_data': visibility_data,
     })

@@ -2,7 +2,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import root_redirect, home, explore_page
+
+from .views import (
+    root_redirect,
+    home,
+    explore_page,
+    dashboard,
+)
 
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -27,7 +33,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # 🌍 i18n 語言切換
+    # i18n 語言切換
     path('i18n/', include('django.conf.urls.i18n')),
 
     # Swagger / Redoc API 文件
@@ -49,8 +55,11 @@ urlpatterns = [
     # 真正首頁
     path('home/', home, name='home'),
 
-    # 探索頁（地點＋回憶混合）
+    # 探索頁
     path('explore/', explore_page, name='explore_page'),
+
+    # 統計儀表板
+    path('dashboard/', dashboard, name='dashboard'),
 
     path('users/', include('users.urls')),
     path('couples/', include('couples.urls')),
