@@ -33,6 +33,8 @@ jobs:
           pip install -r requirements.txt
         fi
 
-    - name: Run Tests
+    - name: Run Pytest
       run: |
-        python manage.py test --settings=wherenow.ci_settings
+        pytest --ds=wherenow.ci_settings
+
+    
