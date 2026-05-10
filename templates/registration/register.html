@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+  .register-wrap {
+    max-width: 680px;
+    margin: 60px auto;
+  }
+
+  .register-card {
+    background: white;
+    padding: 36px;
+    border-radius: 28px;
+    border: 1px solid #eadfd2;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.06);
+  }
+
+  .register-title {
+    font-size: 40px;
+    margin-bottom: 14px;
+    color: #1f2a30;
+  }
+
+  .register-desc {
+    color: #6c7880;
+    line-height: 1.8;
+    margin-bottom: 30px;
+  }
+
+  .register-card p {
+    margin-bottom: 18px;
+  }
+
+  .register-card label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .register-card input {
+    width: 100%;
+    padding: 13px 15px;
+    border-radius: 14px;
+    border: 1px solid #d9cfc5;
+    font-size: 15px;
+  }
+
+  .btn-register {
+    width: 100%;
+    border: none;
+    background: #1f2a30;
+    color: white;
+    padding: 15px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+
+  .btn-register:hover {
+    background: #142029;
+  }
+
+  .errorlist {
+    color: #d64545;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .login-link {
+    text-align: center;
+    margin-top: 22px;
+    color: #6d777c;
+  }
+
+  .login-link a {
+    color: #a97457;
+    text-decoration: none;
+  }
+</style>
+
+<section class="register-wrap">
+
+  <div class="register-card">
+
+    <h1 class="register-title">
+      建立帳號
+    </h1>
+
+    <p class="register-desc">
+      建立 WhereNow 一般登入帳號後，
+      即可使用帳號密碼登入與 CAPTCHA 驗證功能。
+    </p>
+
+    <form method="post">
+
+      {% csrf_token %}
+
+      {{ form.as_p }}
+
+      <button type="submit" class="btn-register">
+        註冊帳號
+      </button>
+
+    </form>
+
+    <div class="login-link">
+      已經有帳號？
+      <a href="{% url 'account_login' %}">
+        前往登入
+      </a>
+    </div>
+
+  </div>
+
+</section>
+
+{% endblock %}

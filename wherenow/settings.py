@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'django_select2',
+    'captcha',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -165,6 +166,11 @@ ACCOUNT_SIGNUP_FIELDS = [
     'password2*',
 ]
 
+# CAPTCHA 客製化登入表單
+ACCOUNT_FORMS = {
+    'login': 'users.forms.CustomLoginForm',
+}
+
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
@@ -178,6 +184,15 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     }
 }
+
+
+# =========================
+# CAPTCHA
+# =========================
+CAPTCHA_LENGTH = 4
+CAPTCHA_TIMEOUT = 5
+CAPTCHA_FONT_SIZE = 32
+CAPTCHA_IMAGE_SIZE = (140, 45)
 
 
 # =========================
@@ -236,10 +251,10 @@ LOGGING = {
     },
 }
 
+
 # =========================
 # DRF + JWT
 # =========================
-
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',

@@ -3,6 +3,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from users.views import custom_login_view
+
 from .views import (
     root_redirect,
     home,
@@ -29,15 +31,24 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # i18n 語言切換
+    # CAPTCHA
+    path('captcha/', include('captcha.urls')),
+
+    # 客製化登入頁
+    path('accounts/login/', custom_login_view, name='account_login'),
+
+    # allauth
+    path('accounts/', include('allauth.urls')),
+
+    # i18n
     path('i18n/', include('django.conf.urls.i18n')),
 
-    # Swagger / Redoc API 文件
+    # Swagger
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
     # API
@@ -46,28 +57,26 @@ urlpatterns = [
     # select2
     path('select2/', include('django_select2.urls')),
 
-    # allauth
-    path('accounts/', include('allauth.urls')),
-
-    # 首頁先判斷登入狀態
+    # 首頁
     path('', root_redirect, name='root'),
 
-    # 真正首頁
     path('home/', home, name='home'),
 
-    # 探索頁
     path('explore/', explore_page, name='explore_page'),
 
-    # 統計儀表板
     path('dashboard/', dashboard, name='dashboard'),
 
     path('users/', include('users.urls')),
+
     path('couples/', include('couples.urls')),
+
     path('places/', include('places.urls')),
+
     path('memories/', include('memories.urls')),
 
     # JWT
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 

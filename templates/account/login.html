@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登入 WhereNow</title>
+
     <style>
         * {
             box-sizing: border-box;
@@ -88,6 +89,109 @@
             color: #7c8a93;
         }
 
+        .divider {
+            margin: 36px 0;
+            text-align: center;
+            position: relative;
+            color: #7b8790;
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 42%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .login-form {
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1f2a30;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+            background: white;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 999px;
+            background: #1f2a30;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            background: #142029;
+        }
+
+        .captcha-box {
+            background: #f8f4ef;
+            border: 1px solid #eadfd2;
+            border-radius: 18px;
+            padding: 18px;
+            margin-top: 12px;
+        }
+
+        .captcha-box img {
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            background: white;
+        }
+
+        .refresh-captcha {
+            border: none;
+            background: #e8ddd1;
+            color: #5e4737;
+            padding: 10px 16px;
+            border-radius: 999px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .refresh-captcha:hover {
+            background: #d8c6b6;
+        }
+
+        .errorlist {
+            color: #d64545;
+            font-size: 14px;
+            padding-left: 18px;
+        }
+
         @media (max-width: 640px) {
             .login-card {
                 padding: 36px 24px;
@@ -105,23 +209,116 @@
     </style>
 </head>
 <body>
-    <section class="login-page">
-        <div class="login-card">
-            <div class="page-label">WHERENOW</div>
-            <h1 class="page-title">Keep places.<br>Keep memories.</h1>
-            <p class="page-desc">
-                用 Google 登入 WhereNow，開始整理你的地點清單、收藏與回憶紀錄，
-                也能和重要的人一起保存生活中的每段足跡。
-            </p>
 
-            <a href="{% provider_login_url 'google' %}" class="btn-google">
-                使用 Google 登入
-            </a>
+<section class="login-page">
+    <div class="login-card">
 
-            <div class="hint">
-                登入後會自動進入首頁。
-            </div>
+        <div class="page-label">WHERENOW</div>
+
+        <h1 class="page-title">
+            Keep places.<br>
+            Keep memories.
+        </h1>
+
+        <p class="page-desc">
+            用 Google 登入 WhereNow，開始整理你的地點清單、收藏與回憶紀錄，
+            也能和重要的人一起保存生活中的每段足跡。
+        </p>
+
+        <!-- Google 登入 -->
+        <a href="{% provider_login_url 'google' %}" class="btn-google">
+            使用 Google 登入
+        </a>
+
+        <div class="hint">
+            登入後會自動進入首頁。
         </div>
-    </section>
+
+        <div class="divider">
+            OR
+        </div>
+
+        <!-- 一般登入 -->
+        <form method="post" class="login-form">
+
+            {% csrf_token %}
+
+            {{ form.non_field_errors }}
+
+            <div class="form-group">
+                <label>帳號或 Email</label>
+                {{ form.login }}
+                {{ form.login.errors }}
+            </div>
+
+            <div class="form-group">
+                <label>密碼</label>
+                {{ form.password }}
+                {{ form.password.errors }}
+            </div>
+
+            <div class="captcha-box">
+
+                <label style="font-weight:600;">
+                    圖形驗證碼
+                </label>
+
+                {{ form.captcha }}
+
+                <button type="button" class="refresh-captcha">
+                    換一張驗證碼
+                </button>
+
+                {{ form.captcha.errors }}
+
+            </div>
+
+            <button type="submit" class="btn-login">
+                一般登入
+            </button>
+
+        </form>
+
+    </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const refreshButton = document.querySelector(".refresh-captcha");
+
+    if (refreshButton) {
+
+        refreshButton.addEventListener("click", function () {
+
+            fetch("/captcha/refresh/")
+                .then(response => response.json())
+                .then(data => {
+
+                    const captchaImage = document.querySelector(".captcha");
+                    const captchaKey = document.querySelector("input[name='captcha_0']");
+                    const captchaInput = document.querySelector("input[name='captcha_1']");
+
+                    if (captchaImage) {
+                        captchaImage.src = data.image_url;
+                    }
+
+                    if (captchaKey) {
+                        captchaKey.value = data.key;
+                    }
+
+                    if (captchaInput) {
+                        captchaInput.value = "";
+                    }
+
+                });
+
+        });
+
+    }
+
+});
+</script>
+
 </body>
 </html>
