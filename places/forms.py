@@ -1,16 +1,23 @@
 from django import forms
+from django_select2.forms import ModelSelect2Widget
 
 from .models import Place, Category
 
 
 class PlaceForm(forms.ModelForm):
+
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
         required=False,
         label='分類',
-        widget=forms.Select(attrs={
-            'class': 'select2',
-        })
+        widget=ModelSelect2Widget(
+            model=Category,
+            search_fields=['name__icontains'],
+            attrs={
+                'data-placeholder': '搜尋或選擇分類',
+                'style': 'width: 100%;',
+            }
+        )
     )
 
     class Meta:
