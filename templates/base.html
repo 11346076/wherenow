@@ -153,7 +153,7 @@
     }
 
     .dropdown.active .dropdown-content {
-     display: block;
+      display: block;
     }
 
     .notify-badge {
@@ -228,7 +228,7 @@
         <!-- 地點 -->
         <div class="dropdown">
 
-          <button class="dropbtn">
+          <button class="dropbtn" type="button">
             {% trans "地點" %}
           </button>
 
@@ -265,7 +265,7 @@
         <!-- 回憶 -->
         <div class="dropdown">
 
-          <button class="dropbtn">
+          <button class="dropbtn" type="button">
             {% trans "回憶" %}
           </button>
 
@@ -290,7 +290,7 @@
         <!-- 情侶 -->
         <div class="dropdown">
 
-          <button class="dropbtn">
+          <button class="dropbtn" type="button">
 
             {% trans "情侶" %}
 
@@ -376,6 +376,41 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const dropdowns = document.querySelectorAll(".dropdown");
+
+      dropdowns.forEach(dropdown => {
+
+        const button = dropdown.querySelector(".dropbtn");
+
+        button.addEventListener("click", function (e) {
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          dropdowns.forEach(d => {
+            if (d !== dropdown) {
+              d.classList.remove("active");
+            }
+          });
+
+          dropdown.classList.toggle("active");
+        });
+      });
+
+      document.addEventListener("click", function () {
+        dropdowns.forEach(d => {
+          d.classList.remove("active");
+        });
+      });
+
+    });
+
+  </script>
 
 </body>
 
