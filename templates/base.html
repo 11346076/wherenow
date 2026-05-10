@@ -1,306 +1,382 @@
-{% load static %} {% load couple_tags %} {% load i18n %}
+{% load static %}
+{% load couple_tags %}
+{% load i18n %}
 
 <!doctype html>
 <html lang="zh-Hant">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WhereNow</title>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhereNow</title>
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-      rel="stylesheet"
-    />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
-    <style>
-      * {
-        box-sizing: border-box;
-      }
+  <link
+    href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+    rel="stylesheet"
+  />
 
-      body {
-        margin: 0;
-        font-family: "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
-        background: #f7f4ef;
-        color: #1f2a30;
-      }
+  <style>
 
-      a {
-        text-decoration: none;
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      .navbar {
-        width: 100%;
-        background: rgba(255, 255, 255, 0.92);
-        border-bottom: 1px solid #e9e2d8;
-        padding: 18px 48px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        backdrop-filter: blur(8px);
-      }
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+      background: #f7f4ef;
+      color: #1f2a30;
+    }
 
-      .logo a {
-        color: #182126;
-        font-size: 32px;
-        font-weight: 700;
-      }
+    a {
+      text-decoration: none;
+    }
 
-      .nav-links {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        align-items: center;
-      }
+    .navbar {
+      width: 100%;
+      background: rgba(255,255,255,0.92);
+      border-bottom: 1px solid #e9e2d8;
+      padding: 18px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(8px);
+    }
 
-      .nav-links > a {
-        color: #4e5c62;
-        font-size: 15px;
-        transition: 0.2s;
-      }
+    .logo a {
+      color: #182126;
+      font-size: 32px;
+      font-weight: 700;
+    }
 
-      .nav-links > a:hover {
-        color: #a97457;
-      }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
 
-      .auth-btn {
-        border: 1px solid #1f2a30;
-        padding: 6px 14px;
-        border-radius: 999px;
-        font-size: 14px;
-        color: #1f2a30;
-        background: none;
-        cursor: pointer;
-        transition: 0.2s;
-      }
+    .nav-links > a {
+      color: #4e5c62;
+      font-size: 15px;
+      transition: 0.2s;
+    }
 
-      .auth-btn:hover {
-        background: #1f2a30;
-        color: white;
-      }
+    .nav-links > a:hover {
+      color: #a97457;
+    }
 
-      .lang-select {
-        padding: 6px 12px;
-        border-radius: 999px;
-        border: 1px solid #ddd;
-        background: white;
-        font-size: 14px;
-        cursor: pointer;
-      }
+    .auth-btn {
+      border: 1px solid #1f2a30;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      color: #1f2a30;
+      background: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-      .container {
-        max-width: 1180px;
-        margin: 0 auto;
-        padding: 0 28px;
-      }
+    .auth-btn:hover {
+      background: #1f2a30;
+      color: white;
+    }
 
-      .footer {
-        text-align: center;
-        padding: 34px 20px 40px;
-        color: #7b7b7b;
-        font-size: 14px;
-      }
+    .lang-select {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid #ddd;
+      background: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
 
-      /* dropdown */
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
 
-      .dropdown {
-        position: relative;
-        display: inline-block;
-      }
+    .footer {
+      text-align: center;
+      padding: 34px 20px 40px;
+      color: #7b7b7b;
+      font-size: 14px;
+    }
 
-      .dropbtn {
-        background: none;
-        border: none;
-        color: #4e5c62;
-        font-size: 15px;
-        cursor: pointer;
-        font-family: inherit;
-      }
+    /* dropdown */
 
-      .dropbtn:hover {
-        color: #a97457;
-      }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
 
-      .dropdown-content {
-        display: none;
-        position: absolute;
-        background: white;
-        min-width: 190px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        border-radius: 18px;
-        padding: 10px 0;
-        z-index: 1000;
-        top: 32px;
-      }
+    .dropbtn {
+      background: none;
+      border: none;
+      color: #4e5c62;
+      font-size: 15px;
+      cursor: pointer;
+      font-family: inherit;
+    }
 
-      .dropdown-content a {
-        color: #333;
-        padding: 12px 18px;
-        display: block;
-        font-size: 14px;
-      }
+    .dropbtn:hover {
+      color: #a97457;
+    }
 
-      .dropdown-content a:hover {
-        background: #f7f4ef;
-      }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background: white;
+      min-width: 190px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      border-radius: 18px;
+      padding: 10px 0;
+      z-index: 1000;
+      top: 32px;
+    }
 
-      .dropdown:hover .dropdown-content {
-        display: block;
-      }
+    .dropdown-content a {
+      color: #333;
+      padding: 12px 18px;
+      display: block;
+      font-size: 14px;
+    }
 
-      .notify-badge {
-        background: #ff4d6d;
-        color: white;
-        border-radius: 999px;
-        padding: 2px 7px;
-        font-size: 12px;
-        margin-left: 4px;
-        vertical-align: middle;
-      }
-    </style>
-  </head>
+    .dropdown-content a:hover {
+      background: #f7f4ef;
+    }
 
-  <body>
-    <div class="navbar">
-      <div class="logo">
-        <a href="{% url 'home' %}"> WhereNow </a>
-      </div>
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
 
-      <div class="nav-links">
-        <!-- 語言切換 -->
-        <form action="{% url 'set_language' %}" method="post">
-          {% csrf_token %}
+    .notify-badge {
+      background: #ff4d6d;
+      color: white;
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 12px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
 
-          <input name="next" type="hidden" value="{{ request.path }}" />
+  </style>
 
-          <select
-            name="language"
-            onchange="this.form.submit()"
-            class="lang-select"
+</head>
+
+<body>
+
+  <div class="navbar">
+
+    <div class="logo">
+      <a href="{% url 'home' %}">
+        WhereNow
+      </a>
+    </div>
+
+    <div class="nav-links">
+
+      <!-- 語言切換 -->
+      <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+
+        <input
+          name="next"
+          type="hidden"
+          value="{{ request.path }}"
+        >
+
+        <select
+          name="language"
+          onchange="this.form.submit()"
+          class="lang-select"
+        >
+
+          <option
+            value="zh-hant"
+            {% if LANGUAGE_CODE == 'zh-hant' %}
+              selected
+            {% endif %}
           >
-            <option
-              value="zh-hant"
-              {%
-              if
-              LANGUAGE_CODE=""
-              ="zh-hant"
-              %}
+            中文
+          </option>
+
+          <option
+            value="en"
+            {% if LANGUAGE_CODE == 'en' %}
               selected
-              {%
-              endif
-              %}
-            >
-              中文
-            </option>
+            {% endif %}
+          >
+            English
+          </option>
 
-            <option
-              value="en"
-              {%
-              if
-              LANGUAGE_CODE=""
-              ="en"
-              %}
-              selected
-              {%
-              endif
-              %}
-            >
-              English
-            </option>
-          </select>
-        </form>
+        </select>
+      </form>
 
-        {% if user.is_authenticated %}
+      {% if user.is_authenticated %}
 
-        <a href="{% url 'home' %}"> {% trans "首頁" %} </a>
+        <a href="{% url 'home' %}">
+          {% trans "首頁" %}
+        </a>
 
         <!-- 地點 -->
         <div class="dropdown">
-          <button class="dropbtn">{% trans "地點" %}</button>
+
+          <button class="dropbtn">
+            {% trans "地點" %}
+          </button>
 
           <div class="dropdown-content">
-            <a href="{% url 'place_list' %}"> 我的地點 </a>
 
-            <a href="{% url 'shared_place_list' %}"> 共享地點 </a>
+            <a href="{% url 'place_list' %}">
+              我的地點
+            </a>
 
-            <a href="{% url 'place_create' %}"> 新增地點 </a>
+            <a href="{% url 'shared_place_list' %}">
+              共享地點
+            </a>
 
-            <a href="{% url 'favorite_list' %}"> 收藏地點 </a>
+            <a href="{% url 'place_create' %}">
+              新增地點
+            </a>
 
-            <a href="{% url 'random_pick' %}"> 隨機推薦 </a>
+            <a href="{% url 'favorite_list' %}">
+              收藏地點
+            </a>
 
-            <a href="{% url 'random_pick_history' %}"> 抽選紀錄 </a>
+            <a href="{% url 'random_pick' %}">
+              隨機推薦
+            </a>
+
+            <a href="{% url 'random_pick_history' %}">
+              抽選紀錄
+            </a>
+
           </div>
+
         </div>
 
         <!-- 回憶 -->
         <div class="dropdown">
-          <button class="dropbtn">{% trans "回憶" %}</button>
+
+          <button class="dropbtn">
+            {% trans "回憶" %}
+          </button>
 
           <div class="dropdown-content">
-            <a href="{% url 'memory_list' %}"> 我的回憶 </a>
 
-            <a href="{% url 'shared_memory_list' %}"> 共享回憶 </a>
+            <a href="{% url 'memory_list' %}">
+              我的回憶
+            </a>
 
-            <a href="{% url 'memory_create' %}"> 新增回憶 </a>
+            <a href="{% url 'shared_memory_list' %}">
+              共享回憶
+            </a>
+
+            <a href="{% url 'memory_create' %}">
+              新增回憶
+            </a>
+
           </div>
+
         </div>
 
         <!-- 情侶 -->
         <div class="dropdown">
+
           <button class="dropbtn">
-            {% trans "情侶" %} {% pending_invitation_count user as invite_count
-            %} {% if invite_count > 0 %}
-            <span class="notify-badge"> {{ invite_count }} </span>
+
+            {% trans "情侶" %}
+
+            {% pending_invitation_count user as invite_count %}
+
+            {% if invite_count > 0 %}
+              <span class="notify-badge">
+                {{ invite_count }}
+              </span>
             {% endif %}
+
           </button>
 
           <div class="dropdown-content">
-            <a href="{% url 'couple_home' %}"> 情侶功能 </a>
 
-            <a href="{% url 'couple_status' %}"> 情侶首頁 </a>
-
-            <a href="{% url 'send_invitation' %}"> 傳送邀請 </a>
-
-            <a href="{% url 'received_invitations' %}">
-              收到的邀請 {% if invite_count > 0 %} ({{ invite_count }}) {% endif
-              %}
+            <a href="{% url 'couple_home' %}">
+              情侶功能
             </a>
 
-            <a href="{% url 'edit_anniversary' %}"> 設定紀念日 </a>
+            <a href="{% url 'couple_status' %}">
+              情侶首頁
+            </a>
+
+            <a href="{% url 'send_invitation' %}">
+              傳送邀請
+            </a>
+
+            <a href="{% url 'received_invitations' %}">
+              收到的邀請
+
+              {% if invite_count > 0 %}
+                ({{ invite_count }})
+              {% endif %}
+            </a>
+
+            <a href="{% url 'edit_anniversary' %}">
+              設定紀念日
+            </a>
+
           </div>
+
         </div>
 
-        <a href="{% url 'explore_page' %}"> {% trans "探索" %} </a>
+        <a href="{% url 'explore_page' %}">
+          {% trans "探索" %}
+        </a>
 
-        <a href="{% url 'profile' %}"> {% trans "個人資料" %} </a>
+        <a href="{% url 'profile' %}">
+          {% trans "個人資料" %}
+        </a>
 
         <form action="{% url 'account_logout' %}" method="post">
           {% csrf_token %}
 
-          <button type="submit" class="auth-btn">{% trans "登出" %}</button>
+          <button type="submit" class="auth-btn">
+            {% trans "登出" %}
+          </button>
         </form>
 
-        {% else %}
+      {% else %}
 
         <a href="{% url 'account_login' %}" class="auth-btn">
           {% trans "登入" %}
         </a>
 
-        {% endif %}
-      </div>
+      {% endif %}
+
     </div>
 
-    <div class="container">{% block content %} {% endblock %}</div>
+  </div>
 
-    <div class="footer">WhereNow © 2026</div>
+  <div class="container">
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    {% block content %}
+    {% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  </body>
+  </div>
+
+  <div class="footer">
+    WhereNow © 2026
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+</body>
+
 </html>
