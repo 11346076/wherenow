@@ -189,7 +189,7 @@ def dashboard(request):
 
     category_stats = (
         Category.objects
-        .annotate(place_count=Count('place'))
+        .annotate(place_count=Count('places'))
         .order_by('-place_count')
     )
 
