@@ -46,6 +46,29 @@
     font-size: 15px;
   }
 
+  .captcha {
+    border-radius: 10px;
+    border: 1px solid #d9cfc5;
+    margin-bottom: 10px;
+    background: white;
+  }
+
+  .refresh-captcha {
+    margin: 4px 0 18px;
+    border: 1px solid #d8c9bb;
+    background: white;
+    color: #6b4f3f;
+    padding: 9px 15px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .refresh-captcha:hover {
+    background: #1f2a30;
+    color: white;
+  }
+
   .btn-register {
     width: 100%;
     border: none;
@@ -78,6 +101,7 @@
   .login-link a {
     color: #a97457;
     text-decoration: none;
+    font-weight: 700;
   }
 </style>
 
@@ -100,6 +124,10 @@
 
       {{ form.as_p }}
 
+      <button type="button" class="refresh-captcha">
+        換一張驗證碼
+      </button>
+
       <button type="submit" class="btn-register">
         註冊帳號
       </button>
@@ -116,5 +144,35 @@
   </div>
 
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const refreshButton = document.querySelector(".refresh-captcha");
+
+  if (refreshButton) {
+    refreshButton.addEventListener("click", function () {
+      fetch("/captcha/refresh/")
+        .then(response => response.json())
+        .then(data => {
+          const captchaImage = document.querySelector(".captcha");
+          const captchaKey = document.querySelector("input[name='captcha_0']");
+          const captchaInput = document.querySelector("input[name='captcha_1']");
+
+          if (captchaImage) {
+            captchaImage.src = data.image_url;
+          }
+
+          if (captchaKey) {
+            captchaKey.value = data.key;
+          }
+
+          if (captchaInput) {
+            captchaInput.value = "";
+          }
+        });
+    });
+  }
+});
+</script>
 
 {% endblock %}
