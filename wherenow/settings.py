@@ -3,9 +3,25 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-=cj8lgumjda3kb-81xy$dosnl@)om88r(^e_pn2)(zrj-^#)5f'
-DEBUG = True
-ALLOWED_HOSTS = []
+# Load environment variables from .env if present
+ENV_PATH = BASE_DIR / '.env'
+if ENV_PATH.exists():
+    with open(ENV_PATH, encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            if '=' not in line:
+                continue
+            key, value = line.split('=', 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = value
+
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-=cj8lgumjda3kb-81xy$dosnl@)om88r(^e_pn2)(zrj-^#)5f')
+DEBUG = os.getenv('DEBUG', 'True').lower() in ('1', 'true', 'yes')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else []
 
 
 INSTALLED_APPS = [
@@ -143,7 +159,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # =========================
 # allauth / login settings
 # =========================
-SITE_ID = 1
+SITE_ID = int(os.getenv('SITE_ID', '1'))
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -181,9 +197,22 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {
             'access_type': 'online',
+            'prompt': 'select_account',  # 強制顯示帳號選擇，避免 silent/iframe 流程導致 session 遺失
         },
     }
 }
+
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = os.getenv('ACCOUNT_DEFAULT_HTTP_PROTOCOL', 'http')
+
+# =========================
+# Session / Cookie settings
+# =========================
+# OAuth callback requires session cookie to be sent on cross-site redirect from Google
+# SameSite=Lax (default) will block the cookie on Google's redirect, causing 401
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = False  # Must be False on http://127.0.0.1
+SESSION_SAVE_EVERY_REQUEST = True
+CSRF_COOKIE_SAMESITE = 'Lax'
 
 
 # =========================

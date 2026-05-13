@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Count
+import json
 
 from places.models import Category, Place
 from memories.models import Memory
@@ -208,8 +209,8 @@ def dashboard(request):
         'private_places': private_places,
         'shared_places': shared_places,
         'shared_memories': shared_memories,
-        'category_labels': category_labels,
-        'category_data': category_data,
-        'visibility_labels': visibility_labels,
-        'visibility_data': visibility_data,
+        'category_labels': json.dumps(category_labels),
+        'category_data': json.dumps(category_data),
+        'visibility_labels': json.dumps(visibility_labels),
+        'visibility_data': json.dumps(visibility_data),
     })

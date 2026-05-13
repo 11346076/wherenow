@@ -135,6 +135,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+# .env files contain local secret keys and OAuth credentials, do not commit
 .env
 .envrc
 .venv

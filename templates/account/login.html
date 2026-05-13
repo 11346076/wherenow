@@ -1,324 +1,309 @@
 {% load socialaccount %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>登入 WhereNow</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
+      * {
+        box-sizing: border-box;
+      }
 
-        body {
-            margin: 0;
-            font-family: "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
-            background: #f7f4ef;
-            color: #1f2a30;
-            min-height: 100vh;
-        }
+      body {
+        margin: 0;
+        font-family: "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+        background: #f7f4ef;
+        color: #1f2a30;
+        min-height: 100vh;
+      }
 
-        .login-page {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 24px;
-        }
+      .login-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 24px;
+      }
 
+      .login-card {
+        width: 100%;
+        max-width: 760px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid #e5ddd2;
+        border-radius: 32px;
+        padding: 56px 48px;
+        box-shadow: 0 20px 60px rgba(31, 42, 48, 0.08);
+      }
+
+      .page-label {
+        font-size: 14px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #9b7b63;
+        margin-bottom: 18px;
+      }
+
+      .page-title {
+        font-size: clamp(42px, 7vw, 76px);
+        line-height: 1.02;
+        font-weight: 700;
+        margin: 0 0 22px;
+        color: #142029;
+      }
+
+      .page-desc {
+        font-size: 22px;
+        line-height: 1.8;
+        color: #55646f;
+        margin: 0 0 36px;
+        max-width: 620px;
+      }
+
+      .btn-google {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        min-width: 220px;
+        padding: 16px 28px;
+        border-radius: 999px;
+        background: #1f2a30;
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 600;
+        transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease,
+          background 0.18s ease;
+        box-shadow: 0 10px 24px rgba(31, 42, 48, 0.14);
+      }
+
+      .btn-google:hover {
+        background: #142029;
+        transform: translateY(-1px);
+      }
+
+      .hint {
+        margin-top: 18px;
+        font-size: 14px;
+        color: #7c8a93;
+      }
+
+      .divider {
+        margin: 36px 0;
+        text-align: center;
+        position: relative;
+        color: #7b8790;
+        font-size: 14px;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 42%;
+        height: 1px;
+        background: #ddd;
+      }
+
+      .divider::before {
+        left: 0;
+      }
+
+      .divider::after {
+        right: 0;
+      }
+
+      .login-form {
+        margin-top: 10px;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #1f2a30;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 14px;
+        border: 1px solid #ddd;
+        font-size: 15px;
+        background: white;
+      }
+
+      .btn-login {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 999px;
+        background: #1f2a30;
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      .btn-login:hover {
+        background: #142029;
+      }
+
+      .captcha-box {
+        background: #f8f4ef;
+        border: 1px solid #eadfd2;
+        border-radius: 18px;
+        padding: 18px;
+        margin-top: 12px;
+      }
+
+      .captcha-box img {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        background: white;
+      }
+
+      .refresh-captcha {
+        border: none;
+        background: #e8ddd1;
+        color: #5e4737;
+        padding: 10px 16px;
+        border-radius: 999px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-size: 14px;
+      }
+
+      .refresh-captcha:hover {
+        background: #d8c6b6;
+      }
+
+      .errorlist {
+        color: #d64545;
+        font-size: 14px;
+        padding-left: 18px;
+      }
+
+      @media (max-width: 640px) {
         .login-card {
-            width: 100%;
-            max-width: 760px;
-            background: rgba(255, 255, 255, 0.72);
-            border: 1px solid #e5ddd2;
-            border-radius: 32px;
-            padding: 56px 48px;
-            box-shadow: 0 20px 60px rgba(31, 42, 48, 0.08);
-        }
-
-        .page-label {
-            font-size: 14px;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: #9b7b63;
-            margin-bottom: 18px;
-        }
-
-        .page-title {
-            font-size: clamp(42px, 7vw, 76px);
-            line-height: 1.02;
-            font-weight: 700;
-            margin: 0 0 22px;
-            color: #142029;
+          padding: 36px 24px;
+          border-radius: 24px;
         }
 
         .page-desc {
-            font-size: 22px;
-            line-height: 1.8;
-            color: #55646f;
-            margin: 0 0 36px;
-            max-width: 620px;
+          font-size: 18px;
         }
 
         .btn-google {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            min-width: 220px;
-            padding: 16px 28px;
-            border-radius: 999px;
-            background: #1f2a30;
-            color: #fff;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 600;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
-            box-shadow: 0 10px 24px rgba(31, 42, 48, 0.14);
+          width: 100%;
         }
-
-        .btn-google:hover {
-            background: #142029;
-            transform: translateY(-1px);
-        }
-
-        .hint {
-            margin-top: 18px;
-            font-size: 14px;
-            color: #7c8a93;
-        }
-
-        .divider {
-            margin: 36px 0;
-            text-align: center;
-            position: relative;
-            color: #7b8790;
-            font-size: 14px;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            width: 42%;
-            height: 1px;
-            background: #ddd;
-        }
-
-        .divider::before {
-            left: 0;
-        }
-
-        .divider::after {
-            right: 0;
-        }
-
-        .login-form {
-            margin-top: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #1f2a30;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 14px;
-            border: 1px solid #ddd;
-            font-size: 15px;
-            background: white;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 999px;
-            background: #1f2a30;
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn-login:hover {
-            background: #142029;
-        }
-
-        .captcha-box {
-            background: #f8f4ef;
-            border: 1px solid #eadfd2;
-            border-radius: 18px;
-            padding: 18px;
-            margin-top: 12px;
-        }
-
-        .captcha-box img {
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            margin-bottom: 10px;
-            background: white;
-        }
-
-        .refresh-captcha {
-            border: none;
-            background: #e8ddd1;
-            color: #5e4737;
-            padding: 10px 16px;
-            border-radius: 999px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        .refresh-captcha:hover {
-            background: #d8c6b6;
-        }
-
-        .errorlist {
-            color: #d64545;
-            font-size: 14px;
-            padding-left: 18px;
-        }
-
-        @media (max-width: 640px) {
-            .login-card {
-                padding: 36px 24px;
-                border-radius: 24px;
-            }
-
-            .page-desc {
-                font-size: 18px;
-            }
-
-            .btn-google {
-                width: 100%;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-
-<section class="login-page">
-    <div class="login-card">
-
+  </head>
+  <body>
+    <section class="login-page">
+      <div class="login-card">
         <div class="page-label">WHERENOW</div>
 
         <h1 class="page-title">
-            Keep places.<br>
-            Keep memories.
+          Keep places.<br />
+          Keep memories.
         </h1>
 
         <p class="page-desc">
-            用 Google 登入 WhereNow，開始整理你的地點清單、收藏與回憶紀錄，
-            也能和重要的人一起保存生活中的每段足跡。
+          用 Google 登入 WhereNow，開始整理你的地點清單、收藏與回憶紀錄，
+          也能和重要的人一起保存生活中的每段足跡。
         </p>
 
         <!-- Google 登入 -->
         <a href="{% provider_login_url 'google' %}" class="btn-google">
-            使用 Google 登入
+          使用 Google 登入
         </a>
 
-        <div class="hint">
-            登入後會自動進入首頁。
-        </div>
+        <div class="hint">登入後會自動進入首頁。</div>
 
-        <div class="divider">
-            OR
-        </div>
+        <div class="divider">OR</div>
 
         <!-- 一般登入 -->
         <form method="post" class="login-form">
+          {% csrf_token %} {{ form.non_field_errors }}
 
-            {% csrf_token %}
+          <div class="form-group">
+            <label>帳號或 Email</label>
+            {{ form.login }} {{ form.login.errors }}
+          </div>
 
-            {{ form.non_field_errors }}
+          <div class="form-group">
+            <label>密碼</label>
+            {{ form.password }} {{ form.password.errors }}
+          </div>
 
-            <div class="form-group">
-                <label>帳號或 Email</label>
-                {{ form.login }}
-                {{ form.login.errors }}
-            </div>
+          <div class="captcha-box">
+            <label style="font-weight: 600"> 圖形驗證碼 </label>
 
-            <div class="form-group">
-                <label>密碼</label>
-                {{ form.password }}
-                {{ form.password.errors }}
-            </div>
+            {{ form.captcha }}
 
-            <div class="captcha-box">
+            <button type="button" class="refresh-captcha">換一張驗證碼</button>
 
-                <label style="font-weight:600;">
-                    圖形驗證碼
-                </label>
+            {{ form.captcha.errors }}
+          </div>
 
-                {{ form.captcha }}
-
-                <button type="button" class="refresh-captcha">
-                    換一張驗證碼
-                </button>
-
-                {{ form.captcha.errors }}
-
-            </div>
-
-            <button type="submit" class="btn-login">
-                一般登入
-            </button>
-
+          <button type="submit" class="btn-login">一般登入</button>
         </form>
 
-    </div>
-</section>
+        <div class="hint" style="margin-top: 24px; text-align: center">
+          還沒有帳號？<a
+            href="/users/register/"
+            style="color: #1f2a30; text-decoration: underline; font-weight: 600"
+            >立即註冊</a
+          >
+        </div>
+      </div>
+    </section>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const refreshButton = document.querySelector(".refresh-captcha");
 
-    const refreshButton = document.querySelector(".refresh-captcha");
-
-    if (refreshButton) {
-
-        refreshButton.addEventListener("click", function () {
-
+        if (refreshButton) {
+          refreshButton.addEventListener("click", function () {
             fetch("/captcha/refresh/")
-                .then(response => response.json())
-                .then(data => {
+              .then((response) => response.json())
+              .then((data) => {
+                const captchaImage = document.querySelector(".captcha");
+                const captchaKey = document.querySelector(
+                  "input[name='captcha_0']",
+                );
+                const captchaInput = document.querySelector(
+                  "input[name='captcha_1']",
+                );
 
-                    const captchaImage = document.querySelector(".captcha");
-                    const captchaKey = document.querySelector("input[name='captcha_0']");
-                    const captchaInput = document.querySelector("input[name='captcha_1']");
+                if (captchaImage) {
+                  captchaImage.src = data.image_url;
+                }
 
-                    if (captchaImage) {
-                        captchaImage.src = data.image_url;
-                    }
+                if (captchaKey) {
+                  captchaKey.value = data.key;
+                }
 
-                    if (captchaKey) {
-                        captchaKey.value = data.key;
-                    }
-
-                    if (captchaInput) {
-                        captchaInput.value = "";
-                    }
-
-                });
-
-        });
-
-    }
-
-});
-</script>
-
-</body>
+                if (captchaInput) {
+                  captchaInput.value = "";
+                }
+              });
+          });
+        }
+      });
+    </script>
+  </body>
 </html>
