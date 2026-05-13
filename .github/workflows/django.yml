@@ -1,4 +1,4 @@
-name: Django CI/CD
+name: Django CI CT CD
 
 on:
   push:
@@ -12,43 +12,40 @@ on:
       - master
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  ci-ct-cd:
+    name: CI / CT / CD
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+      - name: Prepare Test Log Files
+        run: |
+          mkdir -p logs
+          touch logs/django.log
+          touch logs/error.log
+          chmod 777 logs
+          chmod 666 logs/django.log
+          chmod 666 logs/error.log
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-
-          if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
-          fi
+          pip install -r requirements.txt
 
       - name: Run Pytest
         run: |
           pytest --ds=wherenow.ci_settings
 
-  deploy:
-    needs: test
-    runs-on: self-hosted
-    if: github.event_name == 'push'
-
-    steps:
-      - name: Pull latest code and restart Apache
+      - name: Deploy to Linux and Restart Apache
+        if: github.event_name == 'push'
         run: |
           cd /home/xinmei/projects/wherenow
 
           git fetch origin
           git reset --hard origin/main
-          git clean -fd -e logs/
+          git clean -fd -e logs/ -e media/ -e staticfiles/
 
           mkdir -p logs
           touch logs/django.log
