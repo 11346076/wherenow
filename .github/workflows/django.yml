@@ -1,4 +1,4 @@
-name: Django CI CT CD
+name: Django CI
 
 on:
   push:
@@ -12,16 +12,17 @@ on:
       - master
 
 jobs:
-  ci-ct-cd:
-    name: CI / CT / CD
+  test:
+    name: test
     runs-on: self-hosted
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Prepare Test Log Files
+      - name: Prepare Log Files
         run: |
+          cd /home/xinmei/projects/wherenow
           mkdir -p logs
           touch logs/django.log
           touch logs/error.log
@@ -31,11 +32,15 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          cd /home/xinmei/projects/wherenow
+          source venv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run Pytest
         run: |
+          cd /home/xinmei/projects/wherenow
+          source venv/bin/activate
           pytest --ds=wherenow.ci_settings
 
       - name: Deploy to Linux and Restart Apache
@@ -50,13 +55,11 @@ jobs:
           mkdir -p logs
           touch logs/django.log
           touch logs/error.log
-
           chmod 777 logs
           chmod 666 logs/django.log
           chmod 666 logs/error.log
 
           source venv/bin/activate
-
           pip install -r requirements.txt
 
           python manage.py check
