@@ -226,14 +226,13 @@
           也能和重要的人一起保存生活中的每段足跡。
         </p>
 
-        <!-- Google 登入 -->
+        {% if has_google_login %}
         <a href="{% provider_login_url 'google' %}" class="btn-google">
           使用 Google 登入
         </a>
-
         <div class="hint">登入後會自動進入首頁。</div>
-
         <div class="divider">OR</div>
+        {% endif %}
 
         <!-- 一般登入 -->
         <form method="post" class="login-form">

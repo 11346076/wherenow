@@ -1,3 +1,5 @@
+import logging
+
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
@@ -5,6 +7,8 @@ from urllib.request import urlopen
 from urllib.error import URLError, HTTPError
 
 from .models import Profile
+
+logger = logging.getLogger('wherenow')
 
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):

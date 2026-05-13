@@ -1,0 +1,16 @@
+.env
+.git
+.gitignore
+*.md
+__pycache__/
+*.py[codz]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.sqlite3
+.DS_Store
+logs/
+staticfiles/

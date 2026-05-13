@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.conf import settings
 
 from .forms import (
     ProfileForm,
@@ -10,27 +11,13 @@ from .forms import (
 
 from places.models import Place, FavoritePlace
 from memories.models import Memory
-from couples.models import CoupleRelationship
+from couples.utils import get_partner
 
 
-def get_partner(user):
-    relationship = CoupleRelationship.objects.filter(
-        user_1=user,
-        is_active=True
-    ).first()
-
-    if relationship:
-        return relationship.user_2
-
-    relationship = CoupleRelationship.objects.filter(
-        user_2=user,
-        is_active=True
-    ).first()
-
-    if relationship:
-        return relationship.user_1
-
-    return None
+def _google_login_available():
+    google = settings.SOCIALACCOUNT_PROVIDERS.get('google', {})
+    app = google.get('APP', {})
+    return bool(app.get('client_id') and app.get('secret'))
 
 
 def custom_login_view(request):
@@ -58,6 +45,7 @@ def custom_login_view(request):
 
     return render(request, 'account/login.html', {
         'form': form,
+        'has_google_login': _google_login_available(),
     })
 
 

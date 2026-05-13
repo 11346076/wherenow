@@ -21,7 +21,7 @@ if ENV_PATH.exists():
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-=cj8lgumjda3kb-81xy$dosnl@)om88r(^e_pn2)(zrj-^#)5f')
 DEBUG = os.getenv('DEBUG', 'True').lower() in ('1', 'true', 'yes')
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else ['127.0.0.1', 'localhost', 'wherenow.nsir.uk']
 
 
 INSTALLED_APPS = [
@@ -90,17 +90,24 @@ WSGI_APPLICATION = 'wherenow.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': Path(os.getenv('DB_DIR', str(BASE_DIR))) / (os.getenv('DB_NAME', 'db.sqlite3')),
+    }
+}
+
+# Use MySQL if DB_ENGINE is set to 'mysql'
+if os.getenv('DB_ENGINE') == 'mysql':
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'wherenow',
-        'USER': 'root',
-        'PASSWORD': 'Anna1109',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'NAME': os.getenv('DB_NAME', 'wherenow'),
+        'USER': os.getenv('DB_USER', 'root'),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+        'PORT': os.getenv('DB_PORT', '3306'),
         'OPTIONS': {
             'charset': 'utf8mb4',
         },
     }
-}
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -194,25 +201,45 @@ SOCIALACCOUNT_ADAPTER = 'users.adapters.CustomSocialAccountAdapter'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID', ''),
+            'secret': os.getenv('GOOGLE_CLIENT_SECRET', ''),
+            'key': '',
+        },
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {
             'access_type': 'online',
-            'prompt': 'select_account',  # 強制顯示帳號選擇，避免 silent/iframe 流程導致 session 遺失
+            'prompt': 'select_account',
         },
     }
 }
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = os.getenv('ACCOUNT_DEFAULT_HTTP_PROTOCOL', 'http')
 
+# Trust Cloudflare / reverse proxy HTTPS header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # =========================
 # Session / Cookie settings
 # =========================
-# OAuth callback requires session cookie to be sent on cross-site redirect from Google
-# SameSite=Lax (default) will block the cookie on Google's redirect, causing 401
-SESSION_COOKIE_SAMESITE = 'Lax'
-SESSION_COOKIE_SECURE = False  # Must be False on http://127.0.0.1
+# Google OAuth callback: SameSite=None + Secure=True for HTTPS, Lax for HTTP
+# The callback from accounts.google.com is a cross-site request; the browser
+# will NOT send the session cookie with SameSite=Lax + Secure=False on HTTP.
+# For local dev (HTTP), we set SameSite=None + Secure=False so the cookie is
+# always sent. For production HTTPS, set SameSite=None + Secure=True.
+SESSION_COOKIE_SAMESITE = os.getenv('SESSION_COOKIE_SAMESITE', 'None')
+SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'False').lower() in ('1', 'true')
 SESSION_SAVE_EVERY_REQUEST = True
-CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = os.getenv('CSRF_COOKIE_SAMESITE', 'None')
+CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', 'False').lower() in ('1', 'true')
+
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if os.getenv('CSRF_TRUSTED_ORIGINS') else [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'http://127.0.0.1',
+    'http://localhost',
+    'https://wherenow.nsir.uk',
+]
 
 
 # =========================

@@ -5,27 +5,7 @@ import json
 
 from places.models import Category, Place
 from memories.models import Memory
-from couples.models import CoupleRelationship
-
-
-def get_partner(user):
-    relationship = CoupleRelationship.objects.filter(
-        user_1=user,
-        is_active=True
-    ).first()
-
-    if relationship:
-        return relationship.user_2
-
-    relationship = CoupleRelationship.objects.filter(
-        user_2=user,
-        is_active=True
-    ).first()
-
-    if relationship:
-        return relationship.user_1
-
-    return None
+from couples.utils import get_partner
 
 
 def root_redirect(request):
