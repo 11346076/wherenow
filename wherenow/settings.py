@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'allauth.account.middleware.AccountMiddleware',
+    'users.debug_middleware.SocialLoginDebugMiddleware',
 ]
 
 ROOT_URLCONF = 'wherenow.urls'
@@ -166,7 +167,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # =========================
 # allauth / login settings
 # =========================
-SITE_ID = int(os.getenv('SITE_ID', '1'))
+# SITE_ID = 1 (Removed to enable dynamic domain resolution based on request host)
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -214,24 +215,20 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = os.getenv('ACCOUNT_DEFAULT_HTTP_PROTOCOL', 'http')
-
-# Trust Cloudflare / reverse proxy HTTPS header
+# Trust Cloudflare / reverse proxy HTTPS header (Catch-all for dynamic protocol)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # =========================
-# Session / Cookie settings
+# Session / Cookie settings (Catch-all setup)
 # =========================
-# Google OAuth callback: SameSite=None + Secure=True for HTTPS, Lax for HTTP
-# The callback from accounts.google.com is a cross-site request; the browser
-# will NOT send the session cookie with SameSite=Lax + Secure=False on HTTP.
-# For local dev (HTTP), we set SameSite=None + Secure=False so the cookie is
-# always sent. For production HTTPS, set SameSite=None + Secure=True.
-SESSION_COOKIE_SAMESITE = os.getenv('SESSION_COOKIE_SAMESITE', 'None')
-SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'False').lower() in ('1', 'true')
+# Using Lax and Secure=False allows cookies to work on both local HTTP and Tunnel HTTPS
+# without browser rejection, while still allowing top-level OAuth redirects.
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SECURE = False
 SESSION_SAVE_EVERY_REQUEST = True
-CSRF_COOKIE_SAMESITE = os.getenv('CSRF_COOKIE_SAMESITE', 'None')
-CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', 'False').lower() in ('1', 'true')
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SECURE = False
+
 
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if os.getenv('CSRF_TRUSTED_ORIGINS') else [
     'http://127.0.0.1:8000',

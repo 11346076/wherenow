@@ -216,3 +216,4 @@ staticfiles/
 # Media files (user uploads - avatars, place photos, memory photos)
 media/
 
+cloudflared

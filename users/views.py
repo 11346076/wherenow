@@ -136,3 +136,13 @@ def edit_profile(request):
     return render(request, 'users/edit_profile.html', {
         'form': form
     })
+# --- 調試代碼：監控 Google Callback ---
+from django.contrib.sessions.models import Session
+from django.http import HttpResponse
+
+def debug_session_view(request):
+    print("--- Session Debug ---")
+    print(f"Session Key: {request.session.session_key}")
+    for key, value in request.session.items():
+        print(f"  {key}: {value}")
+    return HttpResponse("Debug info printed to console.")
