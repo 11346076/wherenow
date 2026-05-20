@@ -33,7 +33,7 @@ services:
         echo 'CLOUDFLARE_TUNNEL_TOKEN not set — skipping tunnel';
         sleep infinity;
       else
-        exec tunnel --no-autoupdate run --token \"$$TUNNEL_TOKEN\";
+        exec cloudflared --no-autoupdate tunnel run --token "$$TUNNEL_TOKEN";
       fi
       "
 

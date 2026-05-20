@@ -23,6 +23,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-=cj8lgumjda3kb-81xy$dosnl@
 DEBUG = os.getenv('DEBUG', 'True').lower() in ('1', 'true', 'yes')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') if os.getenv('ALLOWED_HOSTS') else ['127.0.0.1', 'localhost', 'wherenow.nsir.uk']
 
+SITE_ID = int(os.getenv('SITE_ID', '1'))
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
