@@ -1,10 +1,12 @@
 import logging
 
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import Http404
 
+from .forms import MemoryForm, MemoryPhotoInlineFormset
 from .models import Memory, MemoryPhoto
 from places.models import Place, Category
 from couples.models import CoupleRelationship
@@ -108,51 +110,36 @@ def memory_detail(request, pk):
 @login_required
 def memory_create(request):
     if request.method == 'POST':
-        try:
-            place_id = request.POST.get('place')
-            place = Place.objects.get(id=place_id, user=request.user)
+        memory_form = MemoryForm(request.POST, request.FILES, user=request.user)
+        photo_formset = MemoryPhotoInlineFormset(request.POST, request.FILES, instance=Memory(user=request.user))
 
-            memory = Memory.objects.create(
-                user=request.user,
-                place=place,
-                visit_date=request.POST.get('visit_date'),
-                comment=request.POST.get('comment'),
-                rating=request.POST.get('rating') or 0,
-                cost=request.POST.get('cost') or 0,
-                recommended=bool(request.POST.get('recommended')),
-                shared_with_couple=bool(request.POST.get('shared_with_couple')),
-                is_public=bool(request.POST.get('is_public')),
-            )
+        if memory_form.is_valid() and photo_formset.is_valid():
+            try:
+                with transaction.atomic():
+                    memory = memory_form.save(commit=False)
+                    memory.user = request.user
+                    memory.save()
+                    photo_formset.instance = memory
+                    photo_formset.save()
 
-            image_count = 0
-            for image in request.FILES.getlist('images'):
-                MemoryPhoto.objects.create(
-                    memory=memory,
-                    image=image
+                    logger.info(
+                        f'使用者 {request.user.username} 新增回憶成功，回憶ID：{memory.id}，照片數：{photo_formset.total_form_count()}'
+                    )
+
+                    return redirect('memory_detail', pk=memory.pk)
+
+            except Exception as e:
+                logger.exception(
+                    f'使用者 {request.user.username} 新增回憶時發生系統錯誤：{str(e)}'
                 )
-                image_count += 1
+                raise
+    else:
+        memory_form = MemoryForm(user=request.user)
+        photo_formset = MemoryPhotoInlineFormset(instance=Memory(user=request.user))
 
-            logger.info(
-                f'使用者 {request.user.username} 新增回憶成功，回憶ID：{memory.id}，地點：{place.name}，照片數：{image_count}'
-            )
-
-            return redirect('memory_detail', pk=memory.pk)
-
-        except Place.DoesNotExist:
-            logger.warning(
-                f'使用者 {request.user.username} 新增回憶失敗：找不到地點 ID {request.POST.get("place")}'
-            )
-            raise Http404("找不到對應地點")
-
-        except Exception as e:
-            logger.exception(
-                f'使用者 {request.user.username} 新增回憶時發生系統錯誤：{str(e)}'
-            )
-            raise
-
-    places = Place.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'memories/memory_create.html', {
-        'places': places
+        'memory_form': memory_form,
+        'photo_formset': photo_formset
     })
 
 
@@ -161,47 +148,30 @@ def memory_edit(request, pk):
     memory = get_object_or_404(Memory, pk=pk, user=request.user)
 
     if request.method == 'POST':
-        try:
-            place_id = request.POST.get('place')
-            place = Place.objects.get(id=place_id, user=request.user)
+        memory_form = MemoryForm(request.POST, request.FILES, instance=memory, user=request.user)
+        photo_formset = MemoryPhotoInlineFormset(request.POST, request.FILES, instance=memory)
 
-            memory.place = place
-            memory.visit_date = request.POST.get('visit_date')
-            memory.comment = request.POST.get('comment')
-            memory.rating = request.POST.get('rating') or 0
-            memory.cost = request.POST.get('cost') or 0
-            memory.recommended = bool(request.POST.get('recommended'))
-            memory.shared_with_couple = bool(request.POST.get('shared_with_couple'))
-            memory.is_public = bool(request.POST.get('is_public'))
-            memory.save()
+        if memory_form.is_valid() and photo_formset.is_valid():
+            try:
+                with transaction.atomic():
+                    memory_form.save()
+                    photo_formset.save()
 
-            image_count = 0
-            for image in request.FILES.getlist('images'):
-                MemoryPhoto.objects.create(
-                    memory=memory,
-                    image=image
+                    logger.info(
+                        f'使用者 {request.user.username} 編輯回憶成功，回憶ID：{memory.id}，照片數：{photo_formset.total_form_count()}'
+                    )
+
+                    return redirect('memory_detail', pk=memory.pk)
+
+            except Exception as e:
+                logger.exception(
+                    f'使用者 {request.user.username} 編輯回憶時發生系統錯誤，回憶ID：{memory.id}，錯誤：{str(e)}'
                 )
-                image_count += 1
+                raise
+    else:
+        memory_form = MemoryForm(instance=memory, user=request.user)
+        photo_formset = MemoryPhotoInlineFormset(instance=memory)
 
-            logger.info(
-                f'使用者 {request.user.username} 編輯回憶成功，回憶ID：{memory.id}，新增照片數：{image_count}'
-            )
-
-            return redirect('memory_detail', pk=memory.pk)
-
-        except Place.DoesNotExist:
-            logger.warning(
-                f'使用者 {request.user.username} 編輯回憶失敗：找不到地點 ID {request.POST.get("place")}'
-            )
-            raise Http404("找不到對應地點")
-
-        except Exception as e:
-            logger.exception(
-                f'使用者 {request.user.username} 編輯回憶時發生系統錯誤，回憶ID：{memory.id}，錯誤：{str(e)}'
-            )
-            raise
-
-    places = Place.objects.filter(user=request.user).order_by('-created_at')
     photos = memory.photos.all()
 
     logger.info(
@@ -210,7 +180,8 @@ def memory_edit(request, pk):
 
     return render(request, 'memories/memory_edit.html', {
         'memory': memory,
-        'places': places,
+        'memory_form': memory_form,
+        'photo_formset': photo_formset,
         'photos': photos,
     })
 

@@ -1,17 +1,9 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <section class="page-section">
-
   <div class="form-wrap">
+    <div class="page-label">Memory Form</div>
 
-    <div class="page-label">
-      Memory Form
-    </div>
-
-    <h1 class="page-title">
-      新增回憶
-    </h1>
+    <h1 class="page-title">新增回憶</h1>
 
     <p class="page-desc">
       記錄一次造訪的日期、感受、評分與照片，
@@ -19,204 +11,88 @@
     </p>
 
     <div class="form-card">
-
       <form method="post" enctype="multipart/form-data">
-
-        {% csrf_token %}
+        {% csrf_token %} {% if memory_form.non_field_errors %}
+        <div class="form-errors">{{ memory_form.non_field_errors }}</div>
+        {% endif %}
 
         <div class="form-grid">
-
-          <!-- 地點 -->
-
           <div class="form-group">
-
-            <label>
-              地點
-            </label>
-
-            <select
-              name="place"
-              class="select2"
-              required
-            >
-
-              <option value="">
-                請選擇地點
-              </option>
-
-              {% for place in places %}
-
-                <option value="{{ place.id }}">
-                  {{ place.name }}
-                </option>
-
-              {% endfor %}
-
-            </select>
-
+            <label for="id_place">地點</label>
+            {{ memory_form.place }} {{ memory_form.place.errors }}
           </div>
 
-          <!-- 日期 + 評分 -->
-
           <div class="double-grid">
-
             <div class="form-group">
-
-              <label>
-                造訪日期
-              </label>
-
-              <input
-                type="date"
-                name="visit_date"
-                required
-              >
-
+              <label for="id_visit_date">造訪日期</label>
+              {{ memory_form.visit_date }} {{ memory_form.visit_date.errors }}
             </div>
 
             <div class="form-group">
-
-              <label>
-                評分
-              </label>
-
-              <input
-                type="number"
-                name="rating"
-                min="0"
-                max="5"
-                value="0"
-              >
-
+              <label for="id_rating">評分</label>
+              {{ memory_form.rating }} {{ memory_form.rating.errors }}
             </div>
-
           </div>
 
-          <!-- 花費 + 圖片 -->
-
           <div class="double-grid">
-
             <div class="form-group">
-
-              <label>
-                花費
-              </label>
-
-              <input
-                type="number"
-                name="cost"
-                value="0"
-              >
-
+              <label for="id_cost">花費</label>
+              {{ memory_form.cost }} {{ memory_form.cost.errors }}
             </div>
 
             <div class="file-group">
-
-              <label>
-                上傳照片
-              </label>
-
-              <input
-                type="file"
-                name="images"
-                multiple
-              >
+              <label>回憶照片</label>
+              {{ photo_formset.management_form }} {% for form in photo_formset
+              %}
+              <div class="photo-form-item">
+                {{ form.image.label_tag }} {{ form.image }} {{ form.image.errors
+                }} {% if form.instance.pk %}
+                <label class="checkbox-item">
+                  {{ form.DELETE }} 刪除此張照片
+                </label>
+                {% endif %}
+              </div>
+              {% endfor %}
 
               <div class="file-help">
-                可一次選擇多張照片，
-                替這次回憶留下更多片段。
+                可一次新增多張照片，或保留現有回憶影像。
               </div>
-
             </div>
-
           </div>
-
-          <!-- 心得 -->
 
           <div class="form-group">
-
-            <label>
-              心得
-            </label>
-
-            <textarea name="comment"></textarea>
-
+            <label for="id_comment">心得</label>
+            {{ memory_form.comment }} {{ memory_form.comment.errors }}
           </div>
-
-          <!-- checkbox -->
 
           <div class="checkbox-group">
-
-            <label>
-              回憶設定
-            </label>
-
+            <label>回憶設定</label>
             <div class="checkbox-wrap">
-
               <label class="checkbox-item">
-
-                <input
-                  type="checkbox"
-                  name="recommended"
-                >
-
-                是否推薦
-
+                {{ memory_form.recommended }} 是否推薦
               </label>
 
               <label class="checkbox-item">
-
-                <input
-                  type="checkbox"
-                  name="shared_with_couple"
-                >
-
-                是否與情侶共享
-
+                {{ memory_form.shared_with_couple }} 是否與情侶共享
               </label>
 
               <label class="checkbox-item">
-
-                <input
-                  type="checkbox"
-                  name="is_public"
-                  checked
-                >
-
-                是否公開
-
+                {{ memory_form.is_public }} 是否公開
               </label>
-
             </div>
-
           </div>
-
         </div>
-
-        <!-- buttons -->
 
         <div class="action-row">
-
-          <button type="submit" class="btn-main">
-            儲存回憶
-          </button>
-
-          <a href="{% url 'memory_list' %}" class="btn-sub">
-            回回憶列表
-          </a>
-
+          <button type="submit" class="btn-main">儲存回憶</button>
+          <a href="{% url 'memory_list' %}" class="btn-sub"> 回回憶列表 </a>
         </div>
-
       </form>
-
     </div>
-
   </div>
-
 </section>
 
 <style>
-
   /* Select2 */
 
   .select2-container {
@@ -231,16 +107,16 @@
   }
 
   .select2-container--default
-  .select2-selection--single
-  .select2-selection__rendered {
+    .select2-selection--single
+    .select2-selection__rendered {
     line-height: 48px;
     color: #334047;
     padding-left: 14px;
   }
 
   .select2-container--default
-  .select2-selection--single
-  .select2-selection__arrow {
+    .select2-selection--single
+    .select2-selection__arrow {
     height: 48px;
   }
 
@@ -251,7 +127,6 @@
   .select2-results__options {
     max-height: 260px !important;
   }
-
 </style>
 
 <!-- jQuery -->
@@ -261,33 +136,24 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-
   $(document).ready(function () {
-
-    $('.select2').select2({
-      placeholder: '搜尋地點',
+    $(".select2").select2({
+      placeholder: "搜尋地點",
       allowClear: true,
-      width: '100%',
-      minimumResultsForSearch: 0
+      width: "100%",
+      minimumResultsForSearch: 0,
     });
 
-    $('.select2').on('select2:open', function () {
-
+    $(".select2").on("select2:open", function () {
       setTimeout(function () {
-
-        const searchField =
-          document.querySelector('.select2-search__field');
+        const searchField = document.querySelector(".select2-search__field");
 
         if (searchField) {
           searchField.focus();
         }
-
       }, 100);
-
     });
-
   });
-
 </script>
 
 {% endblock %}
