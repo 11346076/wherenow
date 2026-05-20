@@ -25,15 +25,15 @@ services:
     depends_on:
       - web
     restart: unless-stopped
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-}
+    volumes:
+      - ./.cloudflared:/etc/cloudflared:ro
     command:
       - tunnel
+      - --config
+      - /etc/cloudflared/config.yml
       - run
       - --token
       - ${CLOUDFLARE_TUNNEL_TOKEN}
-      - --url
-      - http://web:8000
 
 volumes:
   wherenow-data:
