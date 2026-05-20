@@ -24,18 +24,17 @@ services:
     container_name: wherenow-tunnel
     depends_on:
       - web
+    entrypoint: ["/bin/sh", "-c"]
     restart: unless-stopped
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-}
     command: >
-      /bin/sh -c "
-      if [ -z \"$$TUNNEL_TOKEN\" ]; then
+      if [ -z "$$TUNNEL_TOKEN" ]; then
         echo 'CLOUDFLARE_TUNNEL_TOKEN not set — skipping tunnel';
         sleep infinity;
       else
-        exec cloudflared --no-autoupdate tunnel run --token "$$TUNNEL_TOKEN";
+        exec cloudflared --no-autoupdate tunnel run --token "$$TUNNEL_TOKEN" --url http://web:8000;
       fi
-      "
 
 volumes:
   wherenow-data:
