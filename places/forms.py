@@ -7,7 +7,7 @@ from .models import Place, Category
 class PlaceForm(forms.ModelForm):
 
     category = forms.ModelChoiceField(
-        queryset=Category.objects.all(),
+        queryset=Category.objects.all().order_by('name'),
         required=False,
         label='分類',
         widget=ModelSelect2Widget(

@@ -1,4 +1,7 @@
-url: http://web:8000
+ingress:
+  - hostname: wherenow.nsir.uk
+    service: http://web:8000
+  - service: http_status:404
 edge_ip_version: 4
 no-autoupdate: true
 loglevel: info
