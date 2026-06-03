@@ -65,4 +65,220 @@
     </div>
   </div>
 </section>
+
+<style>
+  .page-section { padding: 60px 0 80px; }
+  .wrap-md { max-width: 800px; margin: 0 auto; }
+  .page-label { display: inline-block; margin-bottom: 12px; padding: 6px 12px; border-radius: 999px; background: #efe4da; color: #9a6d50; font-size: 13px; font-weight: 700; letter-spacing: .04em; }
+  .page-title { font-size: 40px; margin: 0 0 12px; color: #1d262c; font-weight: 700; }
+  .page-desc { color: #66757c; margin-bottom: 28px; line-height: 1.8; }
+
+  .invite-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .invite-list-item {
+    background: #fffdf9;
+    border: 1px solid #eee2d6;
+    border-radius: 24px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 10px 24px rgba(93, 63, 41, 0.04);
+    transition: border-color 0.2s ease;
+  }
+
+  .invite-list-item:hover {
+    border-color: #a97457;
+  }
+
+  .invite-user-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .invite-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(93, 63, 41, 0.08);
+    flex-shrink: 0;
+  }
+
+  .invite-avatar-default {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e9decb;
+    color: #7a5d48;
+    font-weight: 700;
+    font-size: 24px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(93, 63, 41, 0.08);
+  }
+
+  .invite-user-info {
+    min-width: 0;
+  }
+
+  .invite-user-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1d262c;
+    margin-bottom: 4px;
+  }
+
+  .invite-user-email {
+    font-size: 13px;
+    color: #8d7967;
+    word-break: break-all;
+  }
+
+  .invite-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .btn-accept, .btn-danger, .btn-main, .btn-sub {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.22s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-main {
+    background: #1f2d36;
+    color: #fff;
+    height: 46px;
+    min-width: 120px;
+    font-size: 15px;
+  }
+
+  .btn-main:hover {
+    background: #18242c;
+    transform: translateY(-2px);
+  }
+
+  .btn-sub {
+    background: transparent;
+    border: 1px solid #d9cab9;
+    color: #7a5d48;
+    height: 46px;
+    min-width: 120px;
+    font-size: 15px;
+  }
+
+  .btn-sub:hover {
+    background: #f8f1ea;
+  }
+
+  .btn-accept {
+    background: #eef6ef;
+    color: #4f7a57;
+    border: 1px solid #d4e5d6;
+  }
+
+  .btn-accept:hover {
+    background: #dceedd;
+    transform: translateY(-1px);
+  }
+
+  .btn-danger {
+    background: #fff;
+    color: #b05c52;
+    border: 1px solid #e8c8c2;
+  }
+
+  .btn-danger:hover {
+    background: #ffeded;
+    color: #9c3f35;
+    border-color: #dca39c;
+    transform: translateY(-1px);
+  }
+
+  .card-empty {
+    text-align: center;
+    padding: 56px 34px;
+    background: #fffdf9;
+    border-radius: 28px;
+    border: 1px solid #eee2d6;
+    box-shadow: 0 16px 36px rgba(93, 63, 41, 0.06);
+  }
+
+  .empty-icon {
+    font-size: 54px;
+    margin-bottom: 16px;
+  }
+
+  .empty-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1d262c;
+    margin-bottom: 8px;
+  }
+
+  .empty-desc {
+    color: #66757c;
+    line-height: 1.8;
+  }
+
+  /* Actions Row */
+  .action-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+
+  .action-center {
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .invite-list-item {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .invite-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .invite-actions a {
+      flex: 1;
+      text-align: center;
+      padding: 12px 10px;
+      height: 44px;
+      font-size: 15px;
+    }
+
+    .page-title {
+      font-size: 32px;
+    }
+  }
+</style>
 {% endblock %}

@@ -170,7 +170,10 @@ img {
 }
 
 .btn-danger:hover {
-  background: #fff5f3;
+  background: #ffeded;
+  color: #9c3f35;
+  border-color: #dca39c;
+  transform: translateY(-1px);
 }
 
 .btn-accept {
@@ -357,6 +360,13 @@ img {
 
 .card-stat {
   padding: 26px 28px;
+  transition: all 0.25s ease;
+}
+
+.card-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(28, 35, 39, 0.08);
+  border-color: #a97457;
 }
 
 .stat-label,
@@ -596,11 +606,11 @@ form ul.errorlist {
 }
 
 .form-wrap .form-card {
-  background: #fffdf9;
-  border: 1px solid #eee2d6;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #e5ddd2;
   border-radius: 28px;
   padding: 32px;
-  box-shadow: 0 16px 36px rgba(93, 63, 41, 0.07);
+  box-shadow: 0 20px 60px rgba(31, 42, 48, 0.08);
 }
 
 .form-wrap .form-grid {
@@ -688,10 +698,14 @@ form ul.errorlist {
 
 .form-wrap .photo-form-item {
   margin-bottom: 12px;
-  padding: 14px 16px;
-  border: 1px dashed #dccfbe;
+  padding: 14px 18px;
+  border: 1px solid #d8cdc1;
   border-radius: 16px;
-  background: #fffdfa;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
 }
 
 .form-wrap .photo-form-item label[for*="memoryphoto"] {
@@ -700,6 +714,11 @@ form ul.errorlist {
 
 .form-wrap .photo-form-item input[type="file"] {
   width: 100%;
+  border-radius: 12px;
+}
+
+.form-wrap .photo-form-item .checkbox-item {
+  align-self: flex-start;
 }
 
 .form-wrap .form-errors {
@@ -903,6 +922,17 @@ form ul.errorlist {
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
   height: 48px;
+  right: 12px;
+}
+
+.select2-container--default .select2-selection--single:focus-within {
+  border-color: #a97457;
+  box-shadow: 0 0 0 4px rgba(169, 116, 87, 0.1);
+}
+
+.form-wrap .checkbox-item {
+  background: #f9f6f2;
+  border: 1px solid #ece3d8;
 }
 
 /* 地點列表卡片 */
@@ -1418,10 +1448,14 @@ form ul.errorlist {
     grid-template-columns: 1fr;
   }
 
-  .meta-list,
+  .meta-list {
+    grid-template-columns: 110px 1fr;
+    gap: 10px 16px;
+  }
+
   .hero-meta {
-    grid-template-columns: 1fr;
-    gap: 6px 0;
+    grid-template-columns: 110px 1fr;
+    gap: 10px 16px;
   }
 }
 
@@ -1453,10 +1487,51 @@ form ul.errorlist {
     align-items: flex-start;
   }
 
+  .invite-list-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .invite-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .invite-actions a,
+  .invite-actions button,
+  .invite-action-form button,
+  .invite-action-form a {
+    flex: 1;
+    text-align: center;
+    padding: 12px 10px;
+  }
+
+  .invite-action-form {
+    display: flex;
+    width: 100%;
+    margin-top: 4px;
+  }
+
   .invite-search-row,
   .invite-user-item {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .hero-top {
+    flex-direction: column-reverse;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .hero-meta {
+    grid-template-columns: 110px 1fr;
+    text-align: left;
+    max-width: 280px;
+    margin: 18px auto 0;
   }
 
   .form-wrap .form-grid,

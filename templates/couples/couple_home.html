@@ -126,4 +126,304 @@
 
   </div>
 </section>
+
+<style>
+  .page-section { padding: 60px 0 80px; }
+  .container-lg { max-width: 1040px; margin: 0 auto; }
+  .page-label { display: inline-block; margin-bottom: 12px; padding: 6px 12px; border-radius: 999px; background: #efe4da; color: #9a6d50; font-size: 13px; font-weight: 700; letter-spacing: .04em; }
+  .page-title { font-size: 44px; margin: 0 0 12px; color: #1d262c; }
+  .page-desc { color: #66757c; margin-bottom: 28px; line-height: 1.8; }
+  
+  /* Hero card */
+  .card-hero {
+    background: linear-gradient(135deg, #fdfaf6 0%, #f6efe7 100%);
+    border: 1px solid #e7dcd0;
+    border-radius: 28px;
+    padding: 34px;
+    box-shadow: 0 16px 36px rgba(93, 63, 41, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card-hero::before {
+    content: "❤️";
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    font-size: 120px;
+    opacity: 0.05;
+    transform: rotate(-15deg);
+    pointer-events: none;
+  }
+
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .hero-name {
+    font-size: 32px;
+    color: #1d262c;
+    margin: 0 0 14px;
+    font-weight: 700;
+  }
+
+  .hero-meta {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 12px 18px;
+    margin-top: 20px;
+  }
+
+  .meta-label {
+    color: #8d7967;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }
+
+  .meta-value {
+    color: #1d262c;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  /* Avatar styling */
+  .invite-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 8px 20px rgba(93, 63, 41, 0.12);
+  }
+
+  .invite-avatar-default {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e9decb;
+    color: #7a5d48;
+    font-weight: 700;
+    font-size: 32px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: 0 8px 20px rgba(93, 63, 41, 0.12);
+  }
+
+  .invite-user-email {
+    font-size: 14px;
+    color: #8d7967;
+    margin-top: 6px;
+    word-break: break-all;
+    font-weight: 500;
+  }
+
+  /* Stats Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .card-stat {
+    background: #fffdf9;
+    border-radius: 24px;
+    padding: 24px 28px;
+    border: 1px solid #eee2d6;
+    box-shadow: 0 10px 24px rgba(93, 63, 41, 0.04);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  }
+
+  .card-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(93, 63, 41, 0.08);
+    border-color: #a97457;
+  }
+
+  .stat-label {
+    color: #8d7967;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .stat-value {
+    color: #1d262c;
+    font-size: 38px;
+    font-weight: 800;
+  }
+
+  /* Memory List Card */
+  .card {
+    background: #fffdf9;
+    border-radius: 28px;
+    padding: 34px;
+    border: 1px solid #eee2d6;
+    box-shadow: 0 14px 34px rgba(93, 63, 41, 0.06);
+  }
+
+  .section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1d262c;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f6efe7;
+    padding-bottom: 12px;
+  }
+
+  .memory-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .memory-item {
+    background: #fffcf8;
+    border: 1px solid #f1e6da;
+    border-radius: 18px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .memory-item:hover {
+    background: #fffdfb;
+    border-color: #a97457;
+  }
+
+  .memory-main a {
+    color: #1d262c;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .memory-main a:hover {
+    color: #a97457;
+  }
+
+  .memory-sub {
+    color: #8d7967;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .empty-box {
+    text-align: center;
+    padding: 48px 24px;
+    background: #fbf9f6;
+    border: 1px dashed #decbb9;
+    border-radius: 20px;
+    color: #8d7967;
+    font-size: 15px;
+  }
+
+  /* Actions Row */
+  .action-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+
+  .btn-main, .btn-sub {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 126px;
+    height: 46px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.22s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-main {
+    background: #1f2d36;
+    color: #fff;
+  }
+
+  .btn-main:hover {
+    background: #18242c;
+    transform: translateY(-2px);
+  }
+
+  .btn-sub {
+    background: transparent;
+    border: 1px solid #d9cab9;
+    color: #7a5d48;
+  }
+
+  .btn-sub:hover {
+    background: #f8f1ea;
+  }
+
+  /* Empty state for no relationship */
+  .card-empty {
+    text-align: center;
+    padding: 56px 34px;
+  }
+
+  .empty-state-icon {
+    font-size: 54px;
+    margin-bottom: 16px;
+  }
+
+  .empty-state-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1d262c;
+    margin-bottom: 10px;
+  }
+
+  .empty-state-desc {
+    color: #66757c;
+    line-height: 1.8;
+    margin-bottom: 24px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-top {
+      flex-direction: column-reverse;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+    }
+
+    .hero-meta {
+      grid-template-columns: 110px 1fr;
+      text-align: left;
+      max-width: 280px;
+      margin: 18px auto 0;
+    }
+
+    .page-title {
+      font-size: 34px;
+    }
+
+    .card {
+      padding: 24px;
+    }
+  }
+</style>
 {% endblock %}
