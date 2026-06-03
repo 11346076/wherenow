@@ -24,6 +24,10 @@ img {
   padding: 88px 0 100px;
 }
 
+.page-section.page-content {
+  padding: 60px 0 72px;
+}
+
 .wrap-sm {
   max-width: 720px;
   margin: 0 auto;
@@ -477,14 +481,18 @@ form ul.errorlist {
   line-height: 1.6;
 }
 
-.form-wrap {
-  max-width: 860px;
+/* List / form / random / history — shared page chrome */
+.list-wrap {
+  max-width: 1100px;
   margin: 0 auto;
 }
 
-.form-wrap .page-label {
+.list-wrap .page-label,
+.form-wrap .page-label,
+.page-head-center .page-label,
+.history-wrap .page-label {
   display: inline-block;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   padding: 6px 12px;
   border-radius: 999px;
   background: #efe4da;
@@ -495,15 +503,96 @@ form ul.errorlist {
   text-transform: none;
 }
 
-.form-wrap .page-title {
+.list-wrap .page-title,
+.form-wrap .page-title,
+.page-head-center .page-title,
+.history-wrap .page-title {
   margin: 0 0 12px;
-  font-size: 46px;
+  font-size: 44px;
   line-height: 1.15;
+  color: #1d262c;
 }
 
-.form-wrap .page-desc {
-  margin: 0 0 28px;
+.list-wrap .page-desc,
+.form-wrap .page-desc,
+.page-head-center .page-desc,
+.history-wrap .page-desc {
+  color: #66757c;
+  margin: 0 0 20px;
+  line-height: 1.8;
   max-width: none;
+}
+
+.top-actions {
+  margin-bottom: 24px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.page-content .btn-main,
+.form-wrap .btn-main,
+.random-page .btn-main,
+.history-wrap .btn-main,
+.list-wrap .btn-main {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: #1f2d36;
+  color: #fff;
+  transition: 0.2s ease;
+}
+
+.page-content .btn-main:hover,
+.form-wrap .btn-main:hover,
+.random-page .btn-main:hover,
+.history-wrap .btn-main:hover,
+.list-wrap .btn-main:hover {
+  transform: translateY(-2px);
+  background: #18242c;
+}
+
+.page-content .btn-sub,
+.form-wrap .btn-sub,
+.random-page .btn-sub,
+.history-wrap .btn-sub,
+.list-wrap .btn-sub {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  border: 1px solid #dec8b8;
+  color: #7a5d48;
+  background: transparent;
+  transition: 0.2s ease;
+}
+
+.page-content .btn-sub:hover,
+.form-wrap .btn-sub:hover,
+.random-page .btn-sub:hover,
+.history-wrap .btn-sub:hover,
+.list-wrap .btn-sub:hover {
+  background: #f8f1ea;
+}
+
+.form-wrap {
+  max-width: 860px;
+  margin: 0 auto;
 }
 
 .form-wrap .form-card {
@@ -515,8 +604,66 @@ form ul.errorlist {
 }
 
 .form-wrap .form-grid {
+  display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
+}
+
+.form-wrap .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-wrap .form-group label {
+  color: #7e6858;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.form-wrap .form-group input:not([type="checkbox"]):not([type="file"]),
+.form-wrap .form-group select,
+.form-wrap .form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e6d9cd;
+  border-radius: 14px;
+  background: #fff;
+  font-size: 15px;
+  color: #334047;
+  box-sizing: border-box;
+}
+
+.form-wrap .form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-wrap .form-group input[type="file"] {
+  padding: 10px;
+  background: #faf7f2;
+}
+
+.form-wrap .form-group input:focus,
+.form-wrap .form-group select:focus,
+.form-wrap .form-group textarea:focus {
+  outline: none;
+  border-color: #b58262;
+  box-shadow: 0 0 0 3px rgba(181, 130, 98, 0.12);
+}
+
+.form-wrap .checkbox-group > label:first-child {
+  color: #7e6858;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.form-wrap .file-group > label:first-child {
+  color: #7e6858;
+  font-weight: 700;
+  font-size: 14px;
 }
 
 .form-wrap .form-group.full-width {
@@ -541,6 +688,18 @@ form ul.errorlist {
 
 .form-wrap .photo-form-item {
   margin-bottom: 12px;
+  padding: 14px 16px;
+  border: 1px dashed #dccfbe;
+  border-radius: 16px;
+  background: #fffdfa;
+}
+
+.form-wrap .photo-form-item label[for*="memoryphoto"] {
+  display: none;
+}
+
+.form-wrap .photo-form-item input[type="file"] {
+  width: 100%;
 }
 
 .form-wrap .form-errors {
@@ -705,8 +864,149 @@ form ul.errorlist {
 
 .random-page .btn-large {
   min-width: 170px;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  height: 50px;
+}
+
+.random-page .empty-icon {
+  font-size: 54px;
+  margin-bottom: 14px;
+}
+
+.random-page .empty-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1d262c;
+  margin-bottom: 10px;
+}
+
+.history-wrap .empty-box {
+  margin-top: 8px;
+}
+
+/* Select2（表單頁共用） */
+.select2-container {
+  width: 100% !important;
+}
+
+.select2-container--default .select2-selection--single {
+  height: 48px;
+  border: 1px solid #e6d9cd;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 48px;
+  color: #334047;
+  padding-left: 14px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 48px;
+}
+
+/* 地點列表卡片 */
+.list-wrap .card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.list-wrap .card {
+  background: #fffdf9;
+  border-radius: 26px;
+  padding: 20px;
+  border: 1px solid #eee2d6;
+  box-shadow: 0 10px 24px rgba(93, 63, 41, 0.05);
+}
+
+.list-wrap .place-image {
+  width: 100%;
+  height: 180px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  background: #f6efe7;
+}
+
+.list-wrap .place-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.list-wrap .card-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #1d262c;
+}
+
+.list-wrap .card-meta {
+  color: #5d6870;
+}
+
+.list-wrap .meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0e7de;
+}
+
+.list-wrap .meta-label {
+  color: #8a7f74;
+}
+
+.list-wrap .meta-value {
+  color: #333;
+  text-align: right;
+}
+
+.list-wrap .address-text {
+  display: block;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-word;
+  line-height: 1.7;
+}
+
+.list-wrap .tag-row {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.list-wrap .tag-chip {
+  padding: 6px 10px;
+  background: #f2e7dc;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #7a5d48;
+}
+
+.list-wrap .card-actions {
+  margin-top: 14px;
+}
+
+.list-wrap .detail-link {
+  color: #a97457;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.list-wrap .detail-link:hover {
+  color: #8c5f46;
+}
+
+.list-wrap .empty-box {
+  text-align: center;
+  padding: 60px 24px;
+  background: #fffdf9;
+  border: 1px solid #eee2d6;
+  border-radius: 26px;
 }
 
 .invite-action-form {
@@ -1159,8 +1459,21 @@ form ul.errorlist {
     align-items: stretch;
   }
 
-  .form-wrap .form-grid {
+  .form-wrap .form-grid,
+  .list-wrap .card-grid {
     grid-template-columns: 1fr;
+  }
+
+  .list-wrap .page-title,
+  .form-wrap .page-title,
+  .page-head-center .page-title,
+  .history-wrap .page-title {
+    font-size: 34px;
+  }
+
+  .form-wrap .form-card {
+    padding: 22px;
+    border-radius: 22px;
   }
 
   .random-page .random-card {
@@ -1172,9 +1485,15 @@ form ul.errorlist {
     font-size: 28px;
   }
 
-  .page-head-center .page-title,
-  .random-page .page-title {
-    font-size: 32px;
+  .list-wrap .meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .list-wrap .meta-value,
+  .list-wrap .address-text {
+    text-align: left;
+    max-width: 100%;
   }
 
   .hero-name {

@@ -103,11 +103,11 @@ MemoryPhotoInlineFormset = inlineformset_factory(
     Memory,
     MemoryPhoto,
     fields=('image',),
-    extra=3,
+    extra=1,
     can_delete=True,
     widgets={
         'image': forms.ClearableFileInput(attrs={
-            'class': 'form-control-file'
+            'class': 'form-control-file',
         }),
-    }
+    },
 )

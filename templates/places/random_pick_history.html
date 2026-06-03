@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-<section class="page-section">
+<section class="page-section page-content">
   <div class="history-wrap">
     <div class="page-head-center">
       <div class="page-label">{% trans "Random Pick" %}</div>
@@ -12,7 +12,7 @@
       </p>
     </div>
 
-    <div class="action-row action-center" style="margin-top: 0; margin-bottom: 28px;">
+    <div class="top-actions">
       <a href="{% url 'random_pick' %}" class="btn-main">{% trans "回到隨機抽選" %}</a>
     </div>
 

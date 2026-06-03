@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-<section class="page-section">
+<section class="page-section page-content">
   <div class="form-wrap">
     <div class="page-label">{% trans "Memory Form" %}</div>
 
@@ -52,7 +52,6 @@
             {{ photo_formset.management_form }}
             {% for form in photo_formset %}
               <div class="photo-form-item">
-                {{ form.image.label_tag }}
                 {{ form.image }}
                 {{ form.image.errors }}
                 {% if form.instance.pk %}
@@ -99,29 +98,6 @@
     </div>
   </div>
 </section>
-
-<style>
-  .select2-container {
-    width: 100% !important;
-  }
-
-  .select2-container--default .select2-selection--single {
-    height: 48px;
-    border: 1px solid #e6d9cd;
-    border-radius: 14px;
-    background: #fff;
-  }
-
-  .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 48px;
-    color: #334047;
-    padding-left: 14px;
-  }
-
-  .select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 48px;
-  }
-</style>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
