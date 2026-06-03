@@ -477,6 +477,99 @@ form ul.errorlist {
   line-height: 1.6;
 }
 
+.form-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.form-wrap .page-label {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #efe4da;
+  color: #9a6d50;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.form-wrap .page-title {
+  margin: 0 0 12px;
+  font-size: 46px;
+  line-height: 1.15;
+}
+
+.form-wrap .page-desc {
+  margin: 0 0 28px;
+  max-width: none;
+}
+
+.form-wrap .form-card {
+  background: #fffdf9;
+  border: 1px solid #eee2d6;
+  border-radius: 28px;
+  padding: 32px;
+  box-shadow: 0 16px 36px rgba(93, 63, 41, 0.07);
+}
+
+.form-wrap .form-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.form-wrap .form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-wrap .file-group {
+  grid-column: 1 / -1;
+}
+
+.form-wrap .checkbox-group {
+  grid-column: 1 / -1;
+}
+
+.form-wrap .photo-form-item {
+  margin-bottom: 12px;
+}
+
+.page-head-center {
+  text-align: center;
+  margin-bottom: 34px;
+}
+
+.page-head-center .page-label {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #efe4da;
+  color: #9a6d50;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.page-head-center .page-title {
+  margin: 0 0 12px;
+}
+
+.page-head-center .page-desc {
+  margin: 0 auto;
+  max-width: 560px;
+}
+
+.history-wrap {
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.history-wrap .history-list {
+  margin-top: 8px;
+}
+
 .form-grid {
   display: grid;
   gap: 22px;
@@ -571,13 +664,128 @@ form ul.errorlist {
   gap: 18px;
 }
 
-.invite-card {
+.invite-list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 18px;
   flex-wrap: wrap;
-  padding: 26px 28px;
+  padding: 18px 20px;
+}
+
+.invite-form-panel {
+  padding: 32px;
+}
+
+.invite-form-panel .invite-search-form {
+  margin-bottom: 28px;
+}
+
+.invite-form-panel .invite-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #1f2a30;
+}
+
+.invite-search-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.invite-input {
+  flex: 1;
+  height: 54px;
+  padding: 0 18px;
+  border: 1.5px solid #dccfbe;
+  border-radius: 18px;
+  background: #fff;
+  font-size: 16px;
+  color: #1f2a30;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.invite-input:focus {
+  border-color: #1f2a30;
+  box-shadow: 0 0 0 3px rgba(31, 42, 48, 0.08);
+}
+
+.invite-user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.invite-user-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  border: 1px solid #e7ddd0;
+  border-radius: 20px;
+  background: #fffdf9;
+}
+
+.invite-user-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.invite-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.invite-avatar-default {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d9d0c3;
+  color: #1f2a30;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.invite-user-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1f2a30;
+  margin-bottom: 4px;
+}
+
+.invite-user-email {
+  font-size: 14px;
+  color: #7d7d7d;
+  word-break: break-all;
+}
+
+.invite-result-title {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #1f2a30;
+}
+
+.partner-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.help-text {
+  display: block;
+  margin-top: 8px;
+  color: #8c969b;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .invite-info {
@@ -795,10 +1003,21 @@ form ul.errorlist {
     grid-template-columns: 1fr;
   }
 
-  .invite-card {
+  .invite-list-item,
+  .invite-form-panel {
     padding: 22px 20px;
     border-radius: 20px;
     align-items: flex-start;
+  }
+
+  .invite-search-row,
+  .invite-user-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-wrap .form-grid {
+    grid-template-columns: 1fr;
   }
 
   .hero-name {

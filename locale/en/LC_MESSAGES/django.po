@@ -342,3 +342,247 @@ msgstr "Traditional Chinese"
 #: .\wherenow\settings.py:130
 msgid "English"
 msgstr "English"
+
+#: .\templates\base.html
+msgid "情侶"
+msgstr "Couple"
+
+msgid "我的地點"
+msgstr "My Places"
+
+msgid "共享地點"
+msgstr "Shared Places"
+
+msgid "收藏地點"
+msgstr "Favorites"
+
+msgid "隨機推薦"
+msgstr "Random Pick"
+
+msgid "抽選紀錄"
+msgstr "Pick History"
+
+msgid "我的回憶"
+msgstr "My Memories"
+
+msgid "共享回憶"
+msgstr "Shared Memories"
+
+msgid "情侶首頁"
+msgstr "Couple Home"
+
+msgid "情侶狀態"
+msgstr "Couple Status"
+
+msgid "傳送邀請"
+msgstr "Send Invite"
+
+msgid "收到的邀請"
+msgstr "Received Invites"
+
+msgid "設定紀念日"
+msgstr "Set Anniversary"
+
+msgid "統計儀表板"
+msgstr "Dashboard"
+
+msgid "Random Pick"
+msgstr "Random Pick"
+
+msgid "隨機抽選歷史"
+msgstr "Random Pick History"
+
+msgid "這裡記錄你每次隨機抽到的地點，幫助你回顧當時的選擇。"
+msgstr "Records of every place you randomly picked, so you can look back."
+
+msgid "回到隨機抽選"
+msgstr "Back to Random Pick"
+
+msgid "還沒有抽選紀錄"
+msgstr "No pick history yet"
+
+msgid "當你開始使用隨機抽選功能，這裡會顯示紀錄。"
+msgstr "Your picks will show up here once you start using random pick."
+
+msgid "Memory Form"
+msgstr "Memory Form"
+
+msgid "記錄一次造訪的日期、感受、評分與照片，把重要的瞬間整理成可以反覆回看的回憶。"
+msgstr "Record visit date, feelings, rating, and photos to revisit important moments."
+
+msgid "造訪日期"
+msgstr "Visit Date"
+
+msgid "評分"
+msgstr "Rating"
+
+msgid "回憶照片"
+msgstr "Memory Photos"
+
+msgid "刪除此張照片"
+msgstr "Delete this photo"
+
+msgid "可一次新增多張照片，或保留現有回憶影像。"
+msgstr "You can add multiple photos at once."
+
+msgid "心得"
+msgstr "Comment"
+
+msgid "回憶設定"
+msgstr "Memory Settings"
+
+msgid "是否推薦"
+msgstr "Recommended"
+
+msgid "是否與情侶共享"
+msgstr "Share with Partner"
+
+msgid "儲存回憶"
+msgstr "Save Memory"
+
+msgid "回回憶列表"
+msgstr "Back to Memories"
+
+msgid "搜尋地點"
+msgstr "Search place"
+
+msgid "Couple"
+msgstr "Couple"
+
+msgid "送出情侶邀請"
+msgstr "Send Couple Invite"
+
+msgid "搜尋對方的 Email 或帳號，邀請他與你建立共享回憶的關係。"
+msgstr "Search by email or username to invite someone to share memories."
+
+msgid "搜尋對象"
+msgstr "Search User"
+
+msgid "輸入 Email 或帳號"
+msgstr "Enter email or username"
+
+msgid "搜尋結果"
+msgstr "Search Results"
+
+msgid "未提供 Email"
+msgstr "No email provided"
+
+msgid "送出邀請"
+msgstr "Send Invite"
+
+msgid "找不到符合的使用者。"
+msgstr "No matching users found."
+
+msgid "查看邀請"
+msgstr "View Invites"
+
+msgid "回首頁"
+msgstr "Back to Home"
+
+msgid "Invitations"
+msgstr "Invitations"
+
+msgid "收到的情侶邀請"
+msgstr "Received Couple Invites"
+
+msgid "在這裡查看別人傳給你的情侶邀請，並選擇接受或拒絕。"
+msgstr "View and accept or decline couple invitations from others."
+
+msgid "邀請你成為情侶"
+msgstr "Invited you to be their partner"
+
+msgid "接受"
+msgstr "Accept"
+
+msgid "拒絕"
+msgstr "Decline"
+
+msgid "目前沒有邀請"
+msgstr "No invitations yet"
+
+msgid "當有人邀請你成為情侶時，這裡會顯示通知。"
+msgstr "Invitations will appear here when someone invites you."
+
+msgid "查看情侶狀態"
+msgstr "View Couple Status"
+
+msgid "記錄你們的重要日期，讓系統替你保存這段關係的重要時刻。"
+msgstr "Save important dates for your relationship."
+
+msgid "目前情侶："
+msgstr "Current partner:"
+
+msgid "在一起紀念日"
+msgstr "Anniversary"
+
+msgid "可設定你們開始交往或想紀念的重要日期。"
+msgstr "Set the date you started dating or another important date."
+
+msgid "儲存日期"
+msgstr "Save Date"
+
+msgid "回情侶首頁"
+msgstr "Back to Couple Home"
+
+msgid "Couple Home"
+msgstr "Couple Home"
+
+msgid "在這裡查看你們的共享地點、共同回憶與重要日期，讓這段關係的日常與紀錄都被好好保存。"
+msgstr "View shared places, memories, and important dates for your relationship."
+
+msgid "我的情侶："
+msgstr "My partner:"
+
+msgid "尚未設定"
+msgstr "Not set"
+
+msgid "已經在一起"
+msgstr "Together for"
+
+msgid "尚未設定紀念日"
+msgstr "Anniversary not set"
+
+msgid "共同地點數"
+msgstr "Shared Places"
+
+msgid "共同回憶數"
+msgstr "Shared Memories"
+
+msgid "最近共享回憶"
+msgstr "Recent Shared Memories"
+
+msgid "建立者："
+msgstr "Created by:"
+
+msgid "目前沒有共享回憶。"
+msgstr "No shared memories yet."
+
+msgid "設定 / 修改紀念日"
+msgstr "Set / Edit Anniversary"
+
+msgid "查看共享地點"
+msgstr "View Shared Places"
+
+msgid "你目前沒有情侶關係"
+msgstr "You do not have a couple relationship yet"
+
+msgid "建立情侶關係後，就可以開始共享地點與回憶，並在這裡查看你們的共同紀錄。"
+msgstr "After pairing up, you can share places and memories here."
+
+msgid "先去發送情侶邀請"
+msgstr "Send a couple invite"
+
+msgid "你目前的情侶是："
+msgstr "Your partner is:"
+
+msgid "前往情侶首頁"
+msgstr "Go to Couple Home"
+
+msgid "解除關係"
+msgstr "Break Up"
+
+msgid "你目前還沒有情侶關係"
+msgstr "You do not have a couple relationship yet"
+
+msgid "天"
+msgstr "days"

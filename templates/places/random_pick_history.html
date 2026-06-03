@@ -1,27 +1,19 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
-<style>
-  .history-wrap {
-    max-width: 880px;
-    margin: 0 auto;
-  }
-
-  .top-action {
-    margin-bottom: 24px;
-  }
-</style>
-
 <section class="page-section">
   <div class="history-wrap">
-    <div class="page-label">Random Pick</div>
-    <h1 class="page-title">隨機抽選歷史</h1>
-    <p class="page-desc">
-      這裡記錄你每次隨機抽到的地點，幫助你回顧當時的選擇。
-    </p>
+    <div class="page-head-center">
+      <div class="page-label">{% trans "Random Pick" %}</div>
+      <h1 class="page-title">{% trans "隨機抽選歷史" %}</h1>
+      <p class="page-desc">
+        {% trans "這裡記錄你每次隨機抽到的地點，幫助你回顧當時的選擇。" %}
+      </p>
+    </div>
 
-    <div class="top-action">
-      <a href="{% url 'random_pick' %}" class="btn-main">回到隨機抽選</a>
+    <div class="action-row action-center" style="margin-top: 0; margin-bottom: 28px;">
+      <a href="{% url 'random_pick' %}" class="btn-main">{% trans "回到隨機抽選" %}</a>
     </div>
 
     {% if histories %}
@@ -38,9 +30,9 @@
     {% else %}
       <div class="empty-box">
         <div class="empty-icon">🎲</div>
-        <div class="empty-title">還沒有抽選紀錄</div>
+        <div class="empty-title">{% trans "還沒有抽選紀錄" %}</div>
         <div class="empty-desc">
-          當你開始使用隨機抽選功能，這裡會顯示紀錄。
+          {% trans "當你開始使用隨機抽選功能，這裡會顯示紀錄。" %}
         </div>
       </div>
     {% endif %}

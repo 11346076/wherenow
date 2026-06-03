@@ -1,37 +1,33 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="page-section">
   <div class="wrap-sm">
-    <div class="page-label text-center">Couple</div>
-    <h1 class="page-title text-center">設定紀念日</h1>
+    <div class="page-label text-center">{% trans "Couple" %}</div>
+    <h1 class="page-title text-center">{% trans "設定紀念日" %}</h1>
     <p class="page-desc text-center">
-      記錄你們的重要日期，讓系統替你保存這段關係的重要時刻。
+      {% trans "記錄你們的重要日期，讓系統替你保存這段關係的重要時刻。" %}
     </p>
 
     <div class="card">
-      <div
-        class="card-hero partner-box"
-        style="margin-bottom: 24px; display:flex; align-items:center; gap:14px;"
-      >
+      <div class="card-hero partner-box" style="margin-bottom: 24px;">
         {% if partner.profile.avatar %}
           <img
             src="{{ partner.profile.avatar.url }}"
             alt="partner avatar"
-            style="width:54px; height:54px; border-radius:50%; object-fit:cover;"
+            class="invite-avatar"
           >
         {% else %}
-          <div
-            style="width:54px; height:54px; border-radius:50%; background:#d8cfc3; color:#1f2a30; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:700;"
-          >
+          <div class="invite-avatar invite-avatar-default">
             {{ partner.profile.nickname|default:partner.first_name|default:partner.username|slice:":1" }}
           </div>
         {% endif %}
 
         <div>
-          目前情侶：
+          {% trans "目前情侶：" %}
           <strong>{{ partner.profile.nickname|default:partner.first_name|default:partner.username }}</strong>
-          <div style="font-size: 14px; color: #7b746b; margin-top: 4px;">
+          <div class="invite-user-email" style="margin-top: 4px;">
             {{ partner.email|default:"" }}
           </div>
         </div>
@@ -41,7 +37,7 @@
         {% csrf_token %}
 
         <div class="form-group">
-          <label for="anniversary_date">在一起紀念日</label>
+          <label for="anniversary_date">{% trans "在一起紀念日" %}</label>
           <input
             type="date"
             id="anniversary_date"
@@ -49,13 +45,13 @@
             value="{% if relationship.anniversary_date %}{{ relationship.anniversary_date|date:'Y-m-d' }}{% endif %}"
           >
           <div class="help-text">
-            可設定你們開始交往或想紀念的重要日期。
+            {% trans "可設定你們開始交往或想紀念的重要日期。" %}
           </div>
         </div>
 
         <div class="action-row action-center">
-          <button type="submit" class="btn-main">儲存日期</button>
-          <a href="{% url 'couple_home' %}" class="btn-sub">回情侶首頁</a>
+          <button type="submit" class="btn-main">{% trans "儲存日期" %}</button>
+          <a href="{% url 'couple_home' %}" class="btn-sub">{% trans "回情侶首頁" %}</a>
         </div>
       </form>
     </div>

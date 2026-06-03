@@ -1,70 +1,67 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 <section class="page-section">
   <div class="wrap-md">
-    <div class="page-label text-center">Invitations</div>
-    <h1 class="page-title text-center">收到的情侶邀請</h1>
+    <div class="page-label text-center">{% trans "Invitations" %}</div>
+    <h1 class="page-title text-center">{% trans "收到的情侶邀請" %}</h1>
     <p class="page-desc text-center">
-      在這裡查看別人傳給你的情侶邀請，並選擇接受或拒絕。
+      {% trans "在這裡查看別人傳給你的情侶邀請，並選擇接受或拒絕。" %}
     </p>
 
     {% if invitations %}
-      <div class="invite-list" style="margin-bottom: 28px;">
+      <div class="invite-list">
         {% for invitation in invitations %}
-          <div
-            class="card-soft invite-card"
-            style="display:flex; justify-content:space-between; align-items:center; gap:18px; padding:18px 20px; margin-bottom:14px;"
-          >
-            <div style="display:flex; align-items:center; gap:14px; min-width:0;">
+          <div class="card-soft invite-list-item">
+            <div class="invite-user-left">
               {% if invitation.sender.profile.avatar %}
                 <img
                   src="{{ invitation.sender.profile.avatar.url }}"
                   alt="sender avatar"
-                  style="width:56px; height:56px; border-radius:50%; object-fit:cover; flex-shrink:0;"
+                  class="invite-avatar"
+                  style="width:56px; height:56px;"
                 >
               {% else %}
-                <div
-                  style="width:56px; height:56px; border-radius:50%; background:#d8cfc3; color:#1f2a30; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; flex-shrink:0;"
-                >
+                <div class="invite-avatar invite-avatar-default" style="width:56px; height:56px; font-size:22px;">
                   {{ invitation.sender.profile.nickname|default:invitation.sender.first_name|default:invitation.sender.username|slice:":1" }}
                 </div>
               {% endif %}
 
-              <div style="min-width:0;">
-                <div style="font-size:18px; font-weight:700; color:#1f2a30; margin-bottom:4px;">
+              <div class="invite-user-info">
+                <div class="invite-user-name">
                   {{ invitation.sender.profile.nickname|default:invitation.sender.first_name|default:invitation.sender.username }}
                 </div>
-                <div style="font-size:14px; color:#7d7d7d; margin-bottom:6px;">
-                  {{ invitation.sender.email|default:"未提供 Email" }}
+                <div class="invite-user-email">
+                  {% if invitation.sender.email %}{{ invitation.sender.email }}{% else %}{% trans "未提供 Email" %}{% endif %}
                 </div>
-                <div style="font-size:15px; color:#5c6770;">
-                  邀請你成為情侶
+                <div style="font-size:15px; color:#5c6770; margin-top:6px;">
+                  {% trans "邀請你成為情侶" %}
                 </div>
               </div>
             </div>
 
-            <div class="invite-actions" style="display:flex; gap:10px; flex-shrink:0;">
-              <a href="{% url 'accept_invitation' invitation.id %}" class="btn-accept">接受</a>
-              <a href="{% url 'reject_invitation' invitation.id %}" class="btn-danger">拒絕</a>
+            <div class="invite-actions">
+              <a href="{% url 'accept_invitation' invitation.id %}" class="btn-accept">{% trans "接受" %}</a>
+              <a href="{% url 'reject_invitation' invitation.id %}" class="btn-danger">{% trans "拒絕" %}</a>
             </div>
           </div>
         {% endfor %}
       </div>
     {% else %}
-      <div class="card card-empty" style="margin-bottom: 28px;">
+      <div class="card card-empty">
         <div class="empty-icon">💌</div>
-        <div class="empty-title">目前沒有邀請</div>
+        <div class="empty-title">{% trans "目前沒有邀請" %}</div>
         <div class="empty-desc">
-          當有人邀請你成為情侶時，這裡會顯示通知。
+          {% trans "當有人邀請你成為情侶時，這裡會顯示通知。" %}
         </div>
       </div>
     {% endif %}
 
     <div class="action-row action-center">
-      <a href="{% url 'send_invitation' %}" class="btn-main">送出情侶邀請</a>
-      <a href="{% url 'couple_status' %}" class="btn-sub">查看情侶狀態</a>
-      <a href="{% url 'home' %}" class="btn-sub">回首頁</a>
+      <a href="{% url 'send_invitation' %}" class="btn-main">{% trans "送出情侶邀請" %}</a>
+      <a href="{% url 'couple_status' %}" class="btn-sub">{% trans "查看情侶狀態" %}</a>
+      <a href="{% url 'home' %}" class="btn-sub">{% trans "回首頁" %}</a>
     </div>
   </div>
 </section>
