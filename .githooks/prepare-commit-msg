@@ -1,0 +1,7 @@
+#!/bin/sh
+MSG_FILE="$1"
+[ -f "$MSG_FILE" ] || exit 0
+tmp="${MSG_FILE}.tmp"
+grep -v '^Co-authored-by: Cursor <cursoragent@cursor.com>$' "$MSG_FILE" > "$tmp" 2>/dev/null || true
+mv "$tmp" "$MSG_FILE"
+exit 0

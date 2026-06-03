@@ -1,0 +1,11 @@
+---
+description: Git 提交僅用 nasircy 身分
+alwaysApply: true
+---
+
+# Git 提交規則（WhereNow）
+
+- 提交者：`nasircy <238443453+nasircy@users.noreply.github.com>`
+- commit 訊息用一般中文描述功能，勿寫工具名、bot、co-author 等字樣
+- 推送前確認 `git log -1 --format=%B` 僅有標題與說明
+- 需要時使用 `scripts/git-commit-clean.sh`
