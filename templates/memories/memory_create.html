@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-<section class="page-section page-content">
+<section class="page-section wn-page">
   <div class="form-wrap">
     <div class="page-label">{% trans "Memory Form" %}</div>
 
@@ -54,16 +54,9 @@
               <div class="photo-form-item">
                 {{ form.image }}
                 {{ form.image.errors }}
-                {% if form.instance.pk %}
-                  <label class="checkbox-item">
-                    {{ form.DELETE }} {% trans "刪除此張照片" %}
-                  </label>
-                {% endif %}
               </div>
             {% endfor %}
-            <div class="file-help">
-              {% trans "可一次新增多張照片，或保留現有回憶影像。" %}
-            </div>
+            <div class="file-help">{% trans "可新增一張照片，儲存後仍可再編輯補充。" %}</div>
           </div>
 
           <div class="form-group full-width">
@@ -72,7 +65,7 @@
             {{ memory_form.comment.errors }}
           </div>
 
-          <div class="checkbox-group full-width">
+          <div class="checkbox-group">
             <label>{% trans "回憶設定" %}</label>
             <div class="checkbox-wrap">
               <label class="checkbox-item">

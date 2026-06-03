@@ -2,9 +2,9 @@
 {% load i18n %}
 
 {% block content %}
-<section class="page-section page-content">
+<section class="page-section wn-page">
   <div class="history-wrap">
-    <div class="page-head-center">
+    <div class="page-head">
       <div class="page-label">{% trans "Random Pick" %}</div>
       <h1 class="page-title">{% trans "隨機抽選歷史" %}</h1>
       <p class="page-desc">
@@ -21,9 +21,7 @@
         {% for history in histories %}
           <div class="history-card">
             <div class="history-place">{{ history.place.name }}</div>
-            <div class="history-time">
-              {{ history.picked_at|date:"Y-m-d H:i" }}
-            </div>
+            <div class="history-time">{{ history.picked_at|date:"Y-m-d H:i" }}</div>
           </div>
         {% endfor %}
       </div>
