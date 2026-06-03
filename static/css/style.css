@@ -166,7 +166,10 @@ img {
 }
 
 .btn-danger:hover {
-  background: #fff5f3;
+  background: #ffeded;
+  color: #9c3f35;
+  border-color: #dca39c;
+  transform: translateY(-1px);
 }
 
 .btn-accept {
@@ -353,6 +356,13 @@ img {
 
 .card-stat {
   padding: 26px 28px;
+  transition: all 0.25s ease;
+}
+
+.card-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(28, 35, 39, 0.08);
+  border-color: #a97457;
 }
 
 .stat-label,
@@ -1118,10 +1128,14 @@ form ul.errorlist {
     grid-template-columns: 1fr;
   }
 
-  .meta-list,
+  .meta-list {
+    grid-template-columns: 110px 1fr;
+    gap: 10px 16px;
+  }
+
   .hero-meta {
-    grid-template-columns: 1fr;
-    gap: 6px 0;
+    grid-template-columns: 110px 1fr;
+    gap: 10px 16px;
   }
 }
 
@@ -1153,10 +1167,51 @@ form ul.errorlist {
     align-items: flex-start;
   }
 
+  .invite-list-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .invite-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .invite-actions a,
+  .invite-actions button,
+  .invite-action-form button,
+  .invite-action-form a {
+    flex: 1;
+    text-align: center;
+    padding: 12px 10px;
+  }
+
+  .invite-action-form {
+    display: flex;
+    width: 100%;
+    margin-top: 4px;
+  }
+
   .invite-search-row,
   .invite-user-item {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .hero-top {
+    flex-direction: column-reverse;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .hero-meta {
+    grid-template-columns: 110px 1fr;
+    text-align: left;
+    max-width: 280px;
+    margin: 18px auto 0;
   }
 
   .form-wrap .form-grid {
