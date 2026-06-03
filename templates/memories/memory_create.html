@@ -41,13 +41,13 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group full-width">
             <label for="id_cost">{% trans "花費" %}</label>
             {{ memory_form.cost }}
             {{ memory_form.cost.errors }}
           </div>
 
-          <div class="file-group full-width">
+          <div class="file-group">
             <label>{% trans "回憶照片" %}</label>
             {{ photo_formset.management_form }}
             {% for form in photo_formset %}

@@ -586,3 +586,78 @@ msgstr "You do not have a couple relationship yet"
 
 msgid "天"
 msgstr "days"
+
+msgid "今天要去哪裡？"
+msgstr "Where should we go today?"
+
+msgid "從你的地點清單中隨機抽出一個地方，幫你解決選擇困難。"
+msgstr "Pick a place from your list to help you decide."
+
+msgid "抽選結果"
+msgstr "Pick Result"
+
+msgid "查看地點"
+msgstr "View Place"
+
+msgid "再抽一次"
+msgstr "Pick Again"
+
+msgid "準備好抽選了嗎？"
+msgstr "Ready to pick?"
+
+msgid "按下按鈕，讓 WhereNow 幫你從清單中選出今天的目的地。"
+msgstr "Press the button and let WhereNow choose today's destination."
+
+msgid "開始抽選"
+msgstr "Start Picking"
+
+msgid "Memory Edit"
+msgstr "Memory Edit"
+
+msgid "編輯回憶"
+msgstr "Edit Memory"
+
+msgid "修改這次回憶的內容、評分、花費與照片，讓記錄保持完整。"
+msgstr "Update this memory's details, rating, cost, and photos."
+
+msgid "照片管理"
+msgstr "Photo Management"
+
+msgid "新增、替換或刪除這個回憶的照片。"
+msgstr "Add, replace, or remove photos for this memory."
+
+msgid "儲存修改"
+msgstr "Save Changes"
+
+msgid "回回憶詳細頁"
+msgstr "Back to Memory"
+
+msgid "目前照片"
+msgstr "Current Photos"
+
+msgid "你可以在這裡查看目前已上傳的照片，並移除不需要的內容。"
+msgstr "View uploaded photos here and remove any you no longer need."
+
+msgid "刪除照片"
+msgstr "Delete Photo"
+
+msgid "目前還沒有照片。"
+msgstr "No photos yet."
+
+msgid "Place Form"
+msgstr "Place Form"
+
+msgid "編輯地點"
+msgstr "Edit Place"
+
+msgid "把想去的地方、去過的地方，或想和另一半共享的地點記錄下來，讓每個日常與回憶都有地方可以保存。"
+msgstr "Save places you want to visit, have visited, or want to share with your partner."
+
+msgid "儲存地點"
+msgstr "Save Place"
+
+msgid "返回列表"
+msgstr "Back to List"
+
+msgid "搜尋或選擇分類"
+msgstr "Search or select category"

@@ -1,121 +1,165 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
 <section class="page-section">
-  <div class="wrap-lg">
-    <div class="page-label">Memory Edit</div>
-    <h1 class="page-title">編輯回憶</h1>
+  <div class="form-wrap">
+    <div class="page-label">{% trans "Memory Edit" %}</div>
+    <h1 class="page-title">{% trans "編輯回憶" %}</h1>
     <p class="page-desc">
-      修改這次回憶的內容、評分、花費與照片，讓記錄保持完整。
+      {% trans "修改這次回憶的內容、評分、花費與照片，讓記錄保持完整。" %}
     </p>
 
-    <div class="card" style="margin-bottom: 24px">
+    <div class="form-card" style="margin-bottom: 24px">
       <form method="post" enctype="multipart/form-data">
-        {% csrf_token %} {% if memory_form.non_field_errors %}
-        <div class="form-errors">{{ memory_form.non_field_errors }}</div>
+        {% csrf_token %}
+
+        {% if memory_form.non_field_errors %}
+          <div class="form-errors">{{ memory_form.non_field_errors }}</div>
         {% endif %}
 
         <div class="form-grid">
-          <div class="form-group">
-            <label for="id_place">地點</label>
-            {{ memory_form.place }} {{ memory_form.place.errors }}
+          <div class="form-group full-width">
+            <label for="id_place">{% trans "地點" %}</label>
+            {{ memory_form.place }}
+            {{ memory_form.place.errors }}
           </div>
 
           <div class="double-grid">
             <div class="form-group">
-              <label for="id_visit_date">造訪日期</label>
-              {{ memory_form.visit_date }} {{ memory_form.visit_date.errors }}
+              <label for="id_visit_date">{% trans "造訪日期" %}</label>
+              {{ memory_form.visit_date }}
+              {{ memory_form.visit_date.errors }}
             </div>
 
             <div class="form-group">
-              <label for="id_rating">評分</label>
-              {{ memory_form.rating }} {{ memory_form.rating.errors }}
+              <label for="id_rating">{% trans "評分" %}</label>
+              {{ memory_form.rating }}
+              {{ memory_form.rating.errors }}
             </div>
           </div>
 
-          <div class="double-grid">
-            <div class="form-group">
-              <label for="id_cost">花費</label>
-              {{ memory_form.cost }} {{ memory_form.cost.errors }}
-            </div>
+          <div class="form-group full-width">
+            <label for="id_cost">{% trans "花費" %}</label>
+            {{ memory_form.cost }}
+            {{ memory_form.cost.errors }}
+          </div>
 
-            <div class="file-group">
-              <label>照片管理</label>
-              {{ photo_formset.management_form }} {% for form in photo_formset
-              %}
+          <div class="file-group">
+            <label>{% trans "照片管理" %}</label>
+            {{ photo_formset.management_form }}
+            {% for form in photo_formset %}
               <div class="photo-form-item">
-                {{ form.image.label_tag }} {{ form.image }} {{ form.image.errors
-                }} {% if form.instance.pk %}
-                <label class="checkbox-item">
-                  {{ form.DELETE }} 刪除此張照片
-                </label>
+                {{ form.image.label_tag }}
+                {{ form.image }}
+                {{ form.image.errors }}
+                {% if form.instance.pk %}
+                  <label class="checkbox-item">
+                    {{ form.DELETE }} {% trans "刪除此張照片" %}
+                  </label>
                 {% endif %}
               </div>
-              {% endfor %}
-
-              <div class="file-help">新增、替換或刪除這個回憶的照片。</div>
+            {% endfor %}
+            <div class="file-help">
+              {% trans "新增、替換或刪除這個回憶的照片。" %}
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="id_comment">心得</label>
-            {{ memory_form.comment }} {{ memory_form.comment.errors }}
+          <div class="form-group full-width">
+            <label for="id_comment">{% trans "心得" %}</label>
+            {{ memory_form.comment }}
+            {{ memory_form.comment.errors }}
           </div>
 
           <div class="checkbox-group">
-            <label>回憶設定</label>
+            <label>{% trans "回憶設定" %}</label>
             <div class="checkbox-wrap">
               <label class="checkbox-item">
-                {{ memory_form.recommended }} 是否推薦
+                {{ memory_form.recommended }} {% trans "是否推薦" %}
               </label>
 
               <label class="checkbox-item">
-                {{ memory_form.shared_with_couple }} 是否與情侶共享
+                {{ memory_form.shared_with_couple }} {% trans "是否與情侶共享" %}
               </label>
 
               <label class="checkbox-item">
-                {{ memory_form.is_public }} 是否公開
+                {{ memory_form.is_public }} {% trans "是否公開" %}
               </label>
             </div>
           </div>
         </div>
 
         <div class="action-row">
-          <button type="submit" class="btn-main">儲存修改</button>
-          <a href="{% url 'memory_detail' memory.id %}" class="btn-sub"
-            >回回憶詳細頁</a
-          >
+          <button type="submit" class="btn-main">{% trans "儲存修改" %}</button>
+          <a href="{% url 'memory_detail' memory.id %}" class="btn-sub">{% trans "回回憶詳細頁" %}</a>
         </div>
       </form>
     </div>
 
-    <div class="card">
-      <h2 class="section-title">目前照片</h2>
+    <div class="form-card">
+      <h2 class="section-title">{% trans "目前照片" %}</h2>
       <p class="section-desc">
-        你可以在這裡查看目前已上傳的照片，並移除不需要的內容。
+        {% trans "你可以在這裡查看目前已上傳的照片，並移除不需要的內容。" %}
       </p>
 
       {% if photos %}
-      <div class="photo-grid">
-        {% for photo in photos %}
-        <div class="photo-item">
-          <img src="{{ photo.image.url }}" alt="memory photo" />
-
-          <div class="photo-item-body">
-            <form
-              method="post"
-              action="{% url 'memory_photo_delete' photo.id %}"
-              class="photo-delete-form"
-            >
-              {% csrf_token %}
-              <button type="submit" class="btn-danger">刪除照片</button>
-            </form>
-          </div>
+        <div class="photo-grid">
+          {% for photo in photos %}
+            <div class="photo-item">
+              <img src="{{ photo.image.url }}" alt="memory photo" />
+              <div class="photo-item-body">
+                <form
+                  method="post"
+                  action="{% url 'memory_photo_delete' photo.id %}"
+                  class="photo-delete-form"
+                >
+                  {% csrf_token %}
+                  <button type="submit" class="btn-danger">{% trans "刪除照片" %}</button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
         </div>
-        {% endfor %}
-      </div>
       {% else %}
-      <div class="empty-box">目前還沒有照片。</div>
+        <div class="empty-box">{% trans "目前還沒有照片。" %}</div>
       {% endif %}
     </div>
   </div>
 </section>
+
+<style>
+  .select2-container {
+    width: 100% !important;
+  }
+
+  .select2-container--default .select2-selection--single {
+    height: 48px;
+    border: 1px solid #e6d9cd;
+    border-radius: 14px;
+    background: #fff;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 48px;
+    color: #334047;
+    padding-left: 14px;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 48px;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.jQuery && jQuery.fn.select2) {
+      jQuery(".select2").select2({
+        placeholder: "{% trans '搜尋地點' %}",
+        allowClear: true,
+        width: "100%",
+        minimumResultsForSearch: 0,
+      });
+    }
+  });
+</script>
 {% endblock %}
