@@ -36,5 +36,5 @@ urllib3==2.6.3
 # Production WSGI server
 gunicorn==23.0.0
 
-# MySQL (optional — only needed if using MySQL; requires libmysqlclient-dev)
-# mysqlclient==2.2.8
+# MySQL (optional ??only needed if using MySQL; requires libmysqlclient-dev)
+mysqlclient==2.2.8

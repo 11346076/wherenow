@@ -19,6 +19,5 @@ RUN python manage.py collectstatic --noinput --clear
 EXPOSE 8000
 
 ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=wherenow.settings
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
