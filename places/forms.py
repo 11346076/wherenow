@@ -1,5 +1,4 @@
 from django import forms
-from django_select2.forms import ModelSelect2Widget
 
 from .models import Place, Category
 
@@ -10,10 +9,9 @@ class PlaceForm(forms.ModelForm):
         queryset=Category.objects.all().order_by('name'),
         required=False,
         label='分類',
-        widget=ModelSelect2Widget(
-            model=Category,
-            search_fields=['name__icontains'],
+        widget=forms.Select(
             attrs={
+                'class': 'select2',
                 'data-placeholder': '搜尋或選擇分類',
                 'style': 'width: 100%;',
             }

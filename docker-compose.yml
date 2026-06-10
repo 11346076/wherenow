@@ -14,6 +14,7 @@ services:
       /bin/sh -c "
       mkdir -p /app/logs /app/data &&
       python manage.py migrate --noinput &&
+      python manage.py setup_admin_user &&
       SITE_DOMAIN=\"$${SITE_DOMAIN:-127.0.0.1:8000}\" &&
       python manage.py setup_social_app --domain \"$$SITE_DOMAIN\" &&
       exec gunicorn wherenow.wsgi:application --bind 0.0.0.0:8000 --workers 4
