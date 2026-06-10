@@ -32,9 +32,11 @@ services:
       - wherenow-data:/app/data
       - ./media:/app/media
       - ./logs:/app/logs
+      - staticfiles:/app/staticfiles
     command: >
       /bin/sh -c "
       mkdir -p /app/logs /app/data &&
+      python manage.py collectstatic --noinput &&
       python manage.py migrate --noinput &&
       python manage.py setup_admin_user &&
       SITE_DOMAIN=\"$${SITE_DOMAIN:-127.0.0.1:8000}\" &&
@@ -42,11 +44,25 @@ services:
       exec gunicorn wherenow.wsgi:application --bind 0.0.0.0:8000 --workers 4
       "
 
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: wherenow-nginx
+    depends_on:
+      - web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - staticfiles:/app/staticfiles:ro
+      - ./media:/app/media:ro
+      - ./logs/nginx:/var/log/nginx
+
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: wherenow-tunnel
     depends_on:
-      - web
+      - nginx
     restart: unless-stopped
     volumes:
       - ./.cloudflared:/etc/cloudflared:ro
@@ -61,3 +77,4 @@ services:
 volumes:
   wherenow-data:
   mariadb-data:
+  staticfiles:
