@@ -1,99 +1,131 @@
-# WhereNow Use Case 說明
+# WhereNow Use Case Diagram
 
-系統名稱：WhereNow－地點清單與情侶回憶管理系統
+WhereNow 是一套以「地點紀錄、回憶保存、情侶共享、探索推薦」為核心的 Django Web Application。系統提供一般使用者記錄地點與回憶，也提供情侶使用者共享資料，管理者則可透過 Django Admin 維護基礎資料與使用者資料。
 
----
-![WhereNow Use Case](./images/wherenow%20Use%20Case.jpg)
+## 1. Actors
 
-# 系統角色（Actors）
+| Actor | 說明 |
+|---|---|
+| Visitor | 尚未登入的訪客，可註冊、登入、切換語言與通過 CAPTCHA 驗證。 |
+| User | 一般登入使用者，可管理自己的地點、回憶、收藏與隨機推薦紀錄。 |
+| Couple User | 已建立情侶關係的使用者，可查看與另一半共享的地點與回憶。 |
+| Admin | 系統管理者，可進入 Django Admin 管理使用者、分類、地點、回憶與系統資料。 |
+| External Client | 外部系統或 API 使用者，可透過 JWT 呼叫 DRF REST API。 |
 
-### User（一般使用者）
-一般註冊會員，可以使用基本功能。
+## 2. Use Case Diagram
 
-### Couple User（情侶使用者）
-已建立情侶關係的使用者，可以使用共享功能。
+```mermaid
+flowchart LR
+    Visitor["Visitor\n訪客"]
+    User["User\n一般使用者"]
+    Couple["Couple User\n情侶使用者"]
+    Admin["Admin\n管理者"]
+    Client["External Client\n外部 API 呼叫端"]
 
-### Admin（管理員）
-負責管理系統資料與使用者。
+    subgraph AUTH["帳號與認證"]
+        UC_Register["註冊帳號"]
+        UC_Login["登入系統"]
+        UC_Captcha["輸入 / 更新 CAPTCHA"]
+        UC_Language["切換中英文介面"]
+        UC_Profile["檢視與編輯個人資料"]
+    end
 
----
+    subgraph PLACE["地點管理"]
+        UC_PlaceList["查看我的地點"]
+        UC_PlaceCreate["新增地點"]
+        UC_PlaceEdit["編輯 / 刪除地點"]
+        UC_Category["依分類管理地點"]
+        UC_Favorite["收藏 / 取消收藏地點"]
+        UC_RandomPick["隨機推薦地點"]
+        UC_RandomHistory["查看抽獎紀錄"]
+    end
 
-# 核心 Use Cases
+    subgraph MEMORY["回憶管理"]
+        UC_MemoryList["查看我的回憶"]
+        UC_MemoryCreate["新增回憶"]
+        UC_MemoryEdit["編輯 / 刪除回憶"]
+        UC_Photo["上傳 / 刪除回憶照片"]
+        UC_PublicSearch["搜尋公開回憶"]
+    end
 
-## 1. 使用者註冊與登入
+    subgraph COUPLE["情侶共享"]
+        UC_SendInvite["送出情侶邀請"]
+        UC_ReplyInvite["接受 / 拒絕邀請"]
+        UC_CoupleHome["查看情侶首頁"]
+        UC_SharedPlaces["查看共享地點"]
+        UC_SharedMemories["查看共享回憶"]
+        UC_Anniversary["設定紀念日"]
+        UC_BreakUp["解除情侶關係"]
+    end
 
-### 說明
-新使用者可以建立帳號並登入系統。
+    subgraph ADMIN["後台管理"]
+        UC_AdminUsers["管理使用者與角色"]
+        UC_AdminCategories["管理地點分類"]
+        UC_AdminContent["管理地點、回憶與情侶資料"]
+    end
 
-### 基本流程
-1. 使用者進入註冊頁面
-2. 輸入帳號與密碼
-3. 系統建立帳號
-4. 使用者登入系統
+    subgraph API["REST API"]
+        UC_Token["取得 / 更新 JWT Token"]
+        UC_APIPlaces["呼叫 Places API"]
+        UC_APIMemories["呼叫 Memories API"]
+        UC_APICouples["呼叫 Couples API"]
+        UC_APIProfiles["呼叫 Profiles API"]
+        UC_APIDocs["查看 Swagger / ReDoc 文件"]
+    end
 
----
+    Visitor --> UC_Register
+    Visitor --> UC_Login
+    Visitor --> UC_Captcha
+    Visitor --> UC_Language
 
-## 2. 登入系統
+    User --> UC_Profile
+    User --> UC_PlaceList
+    User --> UC_PlaceCreate
+    User --> UC_PlaceEdit
+    User --> UC_Category
+    User --> UC_Favorite
+    User --> UC_RandomPick
+    User --> UC_RandomHistory
+    User --> UC_MemoryList
+    User --> UC_MemoryCreate
+    User --> UC_MemoryEdit
+    User --> UC_Photo
+    User --> UC_PublicSearch
+    User --> UC_SendInvite
+    User --> UC_ReplyInvite
 
-### 說明
-已註冊之使用者輸入帳號密碼登入系統。
-- **前置條件**：使用者已完成註冊
-- **基本流程**：
-1. 使用者進入登入頁面
-2. 輸入帳號與密碼
-3. 系統驗證帳號密碼
-4. 驗證成功後進入系統首頁
+    Couple --> UC_CoupleHome
+    Couple --> UC_SharedPlaces
+    Couple --> UC_SharedMemories
+    Couple --> UC_Anniversary
+    Couple --> UC_BreakUp
 
----
+    Admin --> UC_AdminUsers
+    Admin --> UC_AdminCategories
+    Admin --> UC_AdminContent
+    Admin --> UC_APIDocs
 
-## 3. 情侶邀請與綁定
+    Client --> UC_Token
+    Client --> UC_APIPlaces
+    Client --> UC_APIMemories
+    Client --> UC_APICouples
+    Client --> UC_APIProfiles
+    Client --> UC_APIDocs
+```
 
-### 說明
-使用者向另一位使用者發送綁定邀請，以建立共享關係。
+## 3. 主要 Use Case 說明
 
-**前置條件**：雙方皆已註冊帳號
-- **基本流程**：
-1. 使用者輸入對方帳號資訊
-2. 系統送出邀請
-3. 對方收到邀請通知
-4. 對方接受後建立綁定關係
-
----
-
-## 4. 收藏地點
-
-### 說明
-使用者可將感興趣或重要地點加入收藏清單，以利後續快速查看。
-
-### 功能包含
-1. 使用者瀏覽地點資料
-2. 點擊收藏按鈕
-3. 系統將地點加入收藏清單
-4. 使用者可於收藏頁面查看結果
-
----
-
-## 5. 隨機抽選地點
-
-### 說明
-系統可以從地點清單中隨機抽選一個地點。
-
-### 基本流程
-1. 使用者設定抽選條件
-2. 系統隨機選出地點
-3. 顯示抽選結果
-
-情侶使用者可以進行 **共同抽選地點**。
-
----
-
-## 6. 建立去過紀錄
-
-### 說明
-使用者可以記錄已去過的地點並留下回憶。
-
-### 功能包含
-- 上傳照片
-- 填寫心得
-- 給予評分
-- 記錄花費
+| Use Case | Actor | 說明 |
+|---|---|---|
+| 註冊帳號 | Visitor | 建立 WhereNow 帳號，系統自動建立 Profile。 |
+| 登入系統 | Visitor | 使用帳號密碼登入，登入頁包含 CAPTCHA 驗證。 |
+| 切換中英文介面 | Visitor / User | 透過 Django i18n 切換中文與英文頁面語系。 |
+| 新增地點 | User | 建立地點資料，包含分類、地區、地址、Google 地圖連結、預算、照片、公開與共享設定。 |
+| 收藏地點 | User | 將喜歡的地點加入收藏清單，或從收藏中移除。 |
+| 隨機推薦地點 | User | 依條件隨機抽出地點，並寫入 RandomPickHistory。 |
+| 新增回憶 | User | 將回憶連結到地點，記錄日期、心得、評分、花費、推薦與公開設定。 |
+| 上傳回憶照片 | User | 為回憶新增一張或多張照片。 |
+| 情侶邀請 | User | 送出、接受或拒絕情侶邀請，接受後建立 CoupleRelationship。 |
+| 共享地點與回憶 | Couple User | 查看另一半共享的地點與回憶。 |
+| 後台管理 | Admin | 管理使用者、Profile、分類、地點、回憶與情侶資料。 |
+| REST API 呼叫 | External Client | 透過 JWT Token 呼叫 DRF API。 |
