@@ -21,6 +21,7 @@ services:
   web:
     build: .
     container_name: wherenow-web
+    restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
