@@ -1,0 +1,40 @@
+{
+  "name": "WhereNow",
+  "short_name": "WhereNow",
+  "description": "地點紀錄、回憶保存與情侶共享系統",
+  "start_url": "/home/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#1f2d36",
+  "orientation": "portrait-primary",
+  "categories": ["lifestyle", "travel", "productivity"],
+  "icons": [
+    {
+      "src": "/static/pwa/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "新增地點",
+      "short_name": "新增地點",
+      "url": "/places/create/",
+      "description": "快速新增一筆想去或去過的地點"
+    },
+    {
+      "name": "新增回憶",
+      "short_name": "新增回憶",
+      "url": "/memories/create/",
+      "description": "快速建立一筆地點回憶"
+    },
+    {
+      "name": "隨機推薦",
+      "short_name": "推薦",
+      "url": "/places/random-pick/",
+      "description": "隨機抽出一個推薦地點"
+    }
+  ]
+}

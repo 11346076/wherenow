@@ -1016,3 +1016,62 @@
     flex-direction: column;
   }
 }
+
+/* Unified responsive card grids for place, favorite, memory and public-search pages. */
+.card-grid,
+.memory-grid,
+.explore-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+.wn-page .card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  justify-content: stretch;
+}
+
+.card,
+.memory-card,
+.explore-card {
+  min-width: 0;
+  height: 100%;
+}
+
+.memory-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.memory-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.memory-comment {
+  flex: 1;
+}
+
+.memory-link {
+  margin-top: auto;
+}
+
+@media (min-width: 1180px) {
+  .card-grid,
+  .memory-grid,
+  .explore-grid,
+  .wn-page .card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .card-grid,
+  .memory-grid,
+  .explore-grid,
+  .wn-page .card-grid {
+    grid-template-columns: 1fr;
+  }
+}

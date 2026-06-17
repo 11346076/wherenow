@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="WhereNow icon">
+  <rect width="512" height="512" rx="112" fill="#1f2d36"/>
+  <circle cx="256" cy="214" r="92" fill="#f7f4ef"/>
+  <path d="M256 96c-82 0-148 64-148 144 0 104 118 190 143 207a9 9 0 0 0 10 0c25-17 143-103 143-207 0-80-66-144-148-144Zm0 214a70 70 0 1 1 0-140 70 70 0 0 1 0 140Z" fill="#a97457"/>
+  <circle cx="256" cy="240" r="48" fill="#1f2d36"/>
+  <path d="M154 398c30 31 64 55 88 71a25 25 0 0 0 28 0c24-16 58-40 88-71" fill="none" stroke="#f7f4ef" stroke-width="28" stroke-linecap="round"/>
+</svg>

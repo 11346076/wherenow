@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.generic import TemplateView
 
 from users.views import custom_login_view
 
@@ -34,6 +35,29 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # PWA
+    path(
+        'service-worker.js',
+        TemplateView.as_view(
+            template_name='pwa/service-worker.js',
+            content_type='application/javascript',
+        ),
+        name='service_worker',
+    ),
+    path(
+        'manifest.webmanifest',
+        TemplateView.as_view(
+            template_name='pwa/manifest.webmanifest',
+            content_type='application/manifest+json',
+        ),
+        name='webmanifest',
+    ),
+    path(
+        'offline/',
+        TemplateView.as_view(template_name='pwa/offline.html'),
+        name='offline',
+    ),
 
     # CAPTCHA
     path('captcha/', include('captcha.urls')),
