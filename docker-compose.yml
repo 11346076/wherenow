@@ -68,6 +68,8 @@ services:
       - ./.cloudflared:/etc/cloudflared:ro
     command:
       - tunnel
+      - --protocol
+      - http2
       - --config
       - /etc/cloudflared/config.yml
       - run
