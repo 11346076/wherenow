@@ -60,11 +60,7 @@ def register(request):
 
         if form.is_valid():
 
-            user = form.save(commit=False)
-
-            user.email = form.cleaned_data.get('email')
-
-            user.save()
+            form.save()
 
             messages.success(
                 request,

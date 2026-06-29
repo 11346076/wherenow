@@ -167,10 +167,28 @@
         margin-top: 12px;
       }
 
+      .captcha-field {
+        display: grid;
+        gap: 10px;
+        align-items: start;
+      }
+
       .captcha-box img {
         border-radius: 10px;
         border: 1px solid #ddd;
         margin-bottom: 10px;
+        background: white;
+        max-width: 100%;
+        height: auto;
+        display: inline-block;
+      }
+
+      .captcha-box input[type="text"] {
+        width: min(280px, 100%);
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid #ddd;
+        font-size: 15px;
         background: white;
       }
 
@@ -251,7 +269,9 @@
           <div class="captcha-box">
             <label style="font-weight: 600"> 圖形驗證碼 </label>
 
-            {{ form.captcha }}
+            <div class="captcha-field">
+              {{ form.captcha }}
+            </div>
 
             <button type="button" class="refresh-captcha">換一張驗證碼</button>
 
@@ -277,8 +297,17 @@
 
         if (refreshButton) {
           refreshButton.addEventListener("click", function () {
-            fetch("/captcha/refresh/")
-              .then((response) => response.json())
+            fetch("/captcha/refresh/", {
+              headers: {
+                "X-Requested-With": "XMLHttpRequest",
+              },
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Captcha refresh failed");
+                }
+                return response.json();
+              })
               .then((data) => {
                 const captchaImage = document.querySelector(".captcha");
                 const captchaKey = document.querySelector(
@@ -289,7 +318,7 @@
                 );
 
                 if (captchaImage) {
-                  captchaImage.src = data.image_url;
+                  captchaImage.src = `${data.image_url}?_=${Date.now()}`;
                 }
 
                 if (captchaKey) {
@@ -298,7 +327,11 @@
 
                 if (captchaInput) {
                   captchaInput.value = "";
+                  captchaInput.focus();
                 }
+              })
+              .catch(() => {
+                window.location.reload();
               });
           });
         }
